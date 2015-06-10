@@ -5,7 +5,7 @@ yum -y install epel-release
 # update already installed packages
 yum -y update
 # install new packages
-yum -y install cloud-init git
+yum -y install cloud-init
 
 # set cloud-init to start after boot
 systemctl enable cloud-init-local
@@ -13,13 +13,9 @@ systemctl enable cloud-init
 systemctl enable cloud-config
 systemctl enable cloud-final
 
-# move configuration file to their right place
+# move configuration files to their right place
 mv /root/sshd_config /etc/ssh/sshd_config
 mv /root/cloud.cfg /etc/cloud/cloud.cfg
-
-#mv /root/getty\@ttyS0.service /etc/systemd/system/getty\@ttyS0.service
-#grub2-mkconfig -o /boot/grub2/grub.cfg
-#ln -s /etc/systemd/system/getty\@ttyS0.service /etc/systemd/system/getty.target.wants/getty@ttyS0.service
 
 # remove hardware address (MAC) and UUID from NIC configuration files
 sed -i '/^HWADDR/d' /etc/sysconfig/network-scripts/ifcfg-eth*
