@@ -1,0 +1,38 @@
+{
+  "builders": [{
+    "type": "virtualbox-iso",
+    "guest_os_type": "RedHat_64",
+    "iso_url": "http://centos.cadt.com/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1503.iso",
+    "iso_checksum": "498bb78789ddc7973fe14358822eb1b48521bbaca91c17bd132c7f8c903d79b3",
+    "iso_checksum_type": "sha256",
+    "ssh_username": "root",
+    "ssh_password": "rootpassword",
+    "ssh_wait_timeout": "90m",
+    "shutdown_command": "shutdown -h now",
+    "http_directory": "httpdir",
+    "http_port_min": 8500,
+    "http_port_max": 8550,
+    "vboxmanage": [ ["modifyvm", "{{.Name}}", "--memory", "1024"] ],
+    "boot_command": [
+        "<esc>",
+        " linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos.cfg",
+        "<enter>"
+    ]
+  }],
+  "provisioners": [
+    {
+        "type": "file",
+        "source": "provisioners/cloud.cfg",
+        "destination": "/root/cloud.cfg"
+    },
+    {
+        "type": "file",
+        "source": "provisioners/sshd_config",
+        "destination": "/root/sshd_config"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/script.sh"
+    }
+  ]
+}
