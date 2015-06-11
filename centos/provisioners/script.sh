@@ -17,6 +17,9 @@ systemctl enable cloud-final
 mv /root/sshd_config /etc/ssh/sshd_config
 mv /root/cloud.cfg /etc/cloud/cloud.cfg
 
+# remove ssh keys
+rm -f /etc/ssh/ssh_host_*
+
 # remove hardware address (MAC) and UUID from NIC configuration files
 sed -i '/^HWADDR/d' /etc/sysconfig/network-scripts/ifcfg-eth*
 sed -i '/^UUID/d' /etc/sysconfig/network-scripts/ifcfg-eth*
@@ -35,8 +38,8 @@ chkconfig network on
 # disable NetworkManager
 systemctl disable NetworkManager
 
-# disable root login with password
-passwd -d root
+# look root password
+passwd -l root
 
 # clean bash history and cloud init logs
 rm -f ~/.bash_history

@@ -1,0 +1,40 @@
+{
+  "builders": [{
+    "type": "virtualbox-iso",
+    "guest_os_type": "RedHat_64",
+    "disk_size": 1500,
+    "iso_url": "http://centos.cadt.com/6/isos/x86_64/CentOS-6.6-x86_64-netinstall.iso",
+    "iso_checksum": "ad8f6de098503174c7609d172679fa0dd276f4b669708933d9c4927bd3fe1017",
+    "iso_checksum_type": "sha256",
+    "ssh_username": "root",
+    "ssh_password": "rootpassword",
+    "ssh_wait_timeout": "90m",
+    "shutdown_command": "shutdown -h now",
+    "http_directory": "httpdir",
+    "http_port_min": 8500,
+    "http_port_max": 8550,
+    "vboxmanage": [ ["modifyvm", "{{.Name}}", "--memory", "1024"] ],
+    "boot_command": [
+        "<esc>",
+        " linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-6.cfg",
+        "<enter>"
+    ],
+    "vm_name": "centos.6.20150611"
+  }],
+  "provisioners": [
+    {
+        "type": "file",
+        "source": "provisioners/cloud-centos-6.cfg",
+        "destination": "/root/cloud.cfg"
+    },
+    {
+        "type": "file",
+        "source": "provisioners/sshd_config-centos-6.cfg",
+        "destination": "/root/sshd_config"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/script.sh"
+    }
+  ]
+}
