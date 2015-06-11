@@ -7,6 +7,7 @@ yum -y update
 # install new packages
 yum -y install cloud-init
 
+
 # set cloud-init to start after boot
 systemctl enable cloud-init-local
 systemctl enable cloud-init

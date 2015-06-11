@@ -24,12 +24,12 @@
   "provisioners": [
     {
         "type": "file",
-        "source": "provisioners/cloud-centos-6.cfg",
+        "source": "provisioners/cloud.cfg",
         "destination": "/root/cloud.cfg"
     },
     {
         "type": "file",
-        "source": "provisioners/sshd_config-centos-6.cfg",
+        "source": "provisioners/sshd_config",
         "destination": "/root/sshd_config"
     },
     {
