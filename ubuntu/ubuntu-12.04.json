@@ -1,0 +1,38 @@
+{
+  "builders": [{
+    "type": "virtualbox-iso",
+    "guest_os_type": "Ubuntu_64",
+    "iso_url": "http://archive.ubuntu.com/ubuntu/dists/precise/main/installer-amd64/current/images/netboot/mini.iso",
+    "iso_checksum": "7df121f07878909646c8f7862065ed7182126b95eadbf5e1abb115449cfba714",
+    "iso_checksum_type": "sha256",
+    "ssh_username": "root",
+    "ssh_password": "rootpasswd",
+    "ssh_wait_timeout": "90m",
+    "shutdown_command": "shutdown -h now",
+    "http_directory": "httpdir",
+    "http_port_min": 8500,
+    "http_port_max": 8550,
+    "boot_command": [
+        "<esc>",
+        " install auto=true priority=critical preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu.cfg",
+        "<enter>"
+    ]
+    "vm_name": "Ubuntu 12.04-LTS"
+  }],
+  "provisioners": [
+    {
+        "type": "file",
+        "source": "provisioners/cloud.cfg",
+        "destination": "/root/cloud.cfg"
+    },
+    {
+        "type": "file",
+        "source": "provisioners/sshd_config",
+        "destination": "/root/sshd_config"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/script.sh"
+    }
+  ]
+}
