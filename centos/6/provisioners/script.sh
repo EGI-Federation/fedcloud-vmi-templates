@@ -5,7 +5,7 @@ yum -y install epel-release
 # update already installed packages
 yum -y update
 # install new packages
-yum -y install cloud-init cloud-utils-growpart
+yum -y install cloud-init cloud-utils-growpart dracut-modules-growroot
 
 
 # set cloud-init to start after boot
@@ -39,3 +39,6 @@ passwd -l root
 # clean bash history and cloud init logs
 rm -f ~/.bash_history
 rm -f /var/log/cloud-init*
+
+# Remove virtualbox things
+rm -f VBoxGuestAdditions.iso
