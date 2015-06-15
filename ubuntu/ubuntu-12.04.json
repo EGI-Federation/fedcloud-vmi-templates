@@ -23,7 +23,7 @@
   "provisioners": [
     {
         "type": "file",
-        "source": "provisioners/cloud.cfg",
+        "source": "provisioners/cloud-ubuntu-12.cfg",
         "destination": "/root/cloud.cfg"
     },
     {
