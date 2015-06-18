@@ -19,13 +19,23 @@
         " linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-6.cfg",
         "<enter>"
     ],
-    "vm_name": "centos.6.20150611"
+    "vm_name": "centos.6.20150617"
   }],
   "provisioners": [
     {
         "type": "file",
         "source": "provisioners/cloud.cfg",
         "destination": "/root/cloud.cfg"
+    },
+    {
+        "type": "file",
+        "source": "provisioners/sudoers",
+        "destination": "/root/sudoers"
+    },
+    {
+        "type": "file",
+        "source": "provisioners/cloud-init.patch",
+        "destination": "/root/cloud-init.patch"
     },
     {
         "type": "file",

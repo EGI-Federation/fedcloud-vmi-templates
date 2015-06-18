@@ -5,8 +5,14 @@ yum -y install epel-release
 # update already installed packages
 yum -y update
 # install new packages
-yum -y install cloud-init cloud-utils-growpart dracut-modules-growroot
+yum -y install cloud-init cloud-utils-growpart dracut-modules-growroot patch
 
+# fix cloud-init
+pushd /usr/lib/python2.6/site-packages/cloudinit/sources
+patch < /root/cloud-init.patch
+rm /root/cloud-init.patch
+popd
+python -c "import cloudinit.sources.DataSourceOpenNebula"
 
 # set cloud-init to start after boot
 chkconfig on cloud-init-local
@@ -17,6 +23,7 @@ chkconfig on cloud-final
 # move configuration files to their right place
 mv /root/sshd_config /etc/ssh/sshd_config
 mv /root/cloud.cfg /etc/cloud/cloud.cfg
+mv /root/sudoers  /etc/sudoers
 
 # remove ssh keys
 rm -f /etc/ssh/ssh_host_*
