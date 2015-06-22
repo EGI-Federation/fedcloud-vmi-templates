@@ -18,10 +18,13 @@ OVA_NAME="${OVF_BASENAME%.*}"
 DISK_NAME="${OVA_NAME}-disk1.vmdk"
 DISK_FILE="$WORKDIR/${DISK_NAME}"
 
-MF_DIR=`mktemp -d`
+# this is to make it work in OS X
+MF_DIR=`mktemp -d -t ovf2ova_XXXXXXXX`
 
-echo "SHA1 ("$OVA_NAME.ovf")=`sha1sum "$OVF_FILE" | cut -f1 -d" "`" \ > "$MF_DIR/$OVA_NAME.mf" 
-echo "SHA1 ("$OVA_NAME-disk1.vmdk")=`sha1sum "$DISK_FILE" | cut -f1 -d" "`" \ > "$MF_DIR/$OVA_NAME.mf"
+which sha1sum > /dev/null && SHASUMCMD=sha1sum || SHASUMCMD="shasum -a 1 -p"
+
+echo "SHA1 ("$OVA_NAME.ovf")=`$SHASUMCMD "$OVF_FILE" | cut -f1 -d" "`" \ > "$MF_DIR/$OVA_NAME.mf"
+echo "SHA1 ("$OVA_NAME-disk1.vmdk")=`$SHASUMCMD "$DISK_FILE" | cut -f1 -d" "`" \ > "$MF_DIR/$OVA_NAME.mf"
 
 
 
