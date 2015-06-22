@@ -10,7 +10,7 @@ fi
 
 apt-get update
 apt-get --assume-yes upgrade
-apt-get --assume-yes install cloud-init
+apt-get --assume-yes install cloud-init curl
 
 # move configuration files to their right place
 mv /root/sshd_config /etc/ssh/sshd_config
