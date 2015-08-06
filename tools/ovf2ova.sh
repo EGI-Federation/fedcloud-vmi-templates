@@ -23,8 +23,8 @@ MF_DIR=`mktemp -d -t ovf2ova_XXXXXXXX`
 
 which sha1sum > /dev/null && SHASUMCMD=sha1sum || SHASUMCMD="shasum -a 1 -p"
 
-echo "SHA1 ("$OVA_NAME.ovf")=`$SHASUMCMD "$OVF_FILE" | cut -f1 -d" "`" \ > "$MF_DIR/$OVA_NAME.mf"
-echo "SHA1 ("$OVA_NAME-disk1.vmdk")=`$SHASUMCMD "$DISK_FILE" | cut -f1 -d" "`" \ > "$MF_DIR/$OVA_NAME.mf"
+echo "SHA1 ("$OVA_NAME.ovf")= `$SHASUMCMD "$OVF_FILE" | cut -f1 -d" "`" \ > "$MF_DIR/$OVA_NAME.mf"
+echo "SHA1 ("$OVA_NAME-disk1.vmdk")= `$SHASUMCMD "$DISK_FILE" | cut -f1 -d" "`" \ >> "$MF_DIR/$OVA_NAME.mf"
 
 
 
