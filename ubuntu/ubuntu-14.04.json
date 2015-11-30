@@ -33,7 +33,11 @@
     },
     {
         "type": "shell",
-        "script": "provisioners/script.sh"
+        "script": "provisioners/init.sh"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/clean.sh"
     }
   ]
 }
