@@ -10,4 +10,4 @@ mv /root/mywiki.py /etc/moin/mywiki.py
 a2enmod wsgi
 mv /root/moin.conf /etc/apache2/conf-available/moin.conf
 a2enconf moin
-service apache restart
+service apache2 restart
