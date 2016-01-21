@@ -21,12 +21,9 @@ DISK_FILE="$WORKDIR/${DISK_NAME}"
 # this is to make it work in OS X
 MF_DIR=`mktemp -d -t ovf2ova_XXXXXXXX`
 
-which sha1sum > /dev/null && SHASUMCMD=sha1sum || SHASUMCMD="shasum -a 1 -p"
-
-echo "SHA1 ("$OVA_NAME.ovf")= `$SHASUMCMD "$OVF_FILE" | cut -f1 -d" "`" \ > "$MF_DIR/$OVA_NAME.mf"
-echo "SHA1 ("$OVA_NAME-disk1.vmdk")= `$SHASUMCMD "$DISK_FILE" | cut -f1 -d" "`" \ >> "$MF_DIR/$OVA_NAME.mf"
-
-
+pushd $WORKDIR
+openssl sha1 *.vmdk *.ovf > $MF_DIR/$OVA_NAME.mf
+popd
 
 # create OVA
 tar -cf "$OVA_NAME.ova" -C "$WORKDIR" "$OVA_NAME.ovf" "$DISK_NAME" -C "$MF_DIR" "$OVA_NAME.mf"
