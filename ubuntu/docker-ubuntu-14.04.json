@@ -18,7 +18,7 @@
         " install auto=true priority=critical preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu.cfg",
         "<enter>"
     ],
-    "vm_name": "Docker.Ubuntu.14.04.20152411"
+    "vm_name": "Docker.Ubuntu.14.04.20160120"
   }],
   "provisioners": [
     {

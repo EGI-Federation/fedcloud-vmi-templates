@@ -19,7 +19,7 @@
         " install auto=true priority=critical preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu.cfg",
         "<enter>"
     ],
-    "vm_name": "wiki-ubuntu.14.04.20150617"
+    "vm_name": "wiki-ubuntu.14.04.20160120"
   }],
   "provisioners": [
     {
@@ -44,7 +44,15 @@
     },
     {
         "type": "shell",
-        "script": "provisioners/script.sh"
+        "script": "provisioners/init.sh"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/wiki.sh"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/clean.sh"
     }
   ]
 }
