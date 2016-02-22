@@ -7,6 +7,12 @@ yum -y update
 # install new packages
 yum -y install cloud-init
 
+# rebuild the initramfs for every kernel
+for k in $(rpm -q kernel); do
+    v=$(echo $k | cut -f2- -d-)
+    echo "Rebuilding initramfs for kernel $v"
+    dracut -f -N /boot/initramfs-${v}.img $v
+done
 
 # set cloud-init to start after boot
 systemctl enable cloud-init-local
@@ -20,6 +26,30 @@ mv /root/cloud.cfg /etc/cloud/cloud.cfg
 
 # remove ssh keys
 rm -f /etc/ssh/ssh_host_*
+
+
+cat > /etc/sysconfig/network << EOF
+NETWORKING=yes
+NOZEROCONF=yes
+EOF
+
+# create ifcfg-eth0 conf
+cat > /etc/sysconfig/network-scripts/ifcfg-eth0 << EOF
+DEVICE="eth0"
+BOOTPROTO="dhcp"
+ONBOOT="yes"
+TYPE="Ethernet"
+USERCTL="yes"
+PEERDNS="yes"
+IPV6INIT="no"
+PERSISTENT_DHCLIENT="1"
+EOF
+
+rm /etc/udev/rules.d/80-net-name-slot.rules
+ln -s /dev/null /etc/udev/rules.d/80-net-name-slot.rules 
+
+rm /etc/udev/rules.d/80-net-setup-link.rules
+ln -s /dev/null /etc/udev/rules.d/80-net-setup-link.rules
 
 # remove hardware address (MAC) and UUID from NIC configuration files
 sed -i '/^HWADDR/d' /etc/sysconfig/network-scripts/ifcfg-eth*
