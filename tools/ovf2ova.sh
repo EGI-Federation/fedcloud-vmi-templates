@@ -2,7 +2,7 @@
 
 # simple script to create an OVA from OVF + disk
 # input parameter: OVF file
-# assumes disk is called: <ovfname>-disk1.vmdk 
+# assumes disk is called: <ovfname>-disk1.vmdk
 
 OVF_FILE=$1
 
@@ -27,5 +27,6 @@ popd
 
 # create OVA
 tar -cf "$OVA_NAME.ova" -C "$WORKDIR" "$OVA_NAME.ovf" "$DISK_NAME" -C "$MF_DIR" "$OVA_NAME.mf"
+# "$OVA_NAME.cert"
 
 rm -rf "$MF_DIR"
