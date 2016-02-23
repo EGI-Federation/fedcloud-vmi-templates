@@ -18,7 +18,8 @@
         " install auto=true priority=critical preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu.cfg",
         "<enter>"
     ],
-    "vm_name": "Ubuntu.12.04.20160120"
+    "format": "ova",
+    "vm_name": "Ubuntu.12.04.20160222"
   }],
   "provisioners": [
     {
