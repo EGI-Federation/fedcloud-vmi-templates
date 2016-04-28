@@ -5,7 +5,14 @@ yum -y install epel-release
 # update already installed packages
 yum -y update
 # install new packages
-yum -y install cloud-init cloud-utils-growpart dracut-modules-growroot patch
+yum -y install cloud-init cloud-utils-growpart dracut-modules-growroot patch parted
+
+# rebuild the initramfs for every kernel (allow partition grow)
+for k in $(rpm -q kernel); do
+    v=$(echo $k | cut -f2- -d-)
+    echo "Rebuilding initramfs for kernel $v"
+    dracut -f /boot/initramfs-${v}.img $v
+done
 
 # fix cloud-init
 pushd /usr/lib/python2.6/site-packages/cloudinit/sources
