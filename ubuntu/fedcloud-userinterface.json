@@ -19,7 +19,7 @@
         "<enter>"
     ],
     "format": "ova",
-    "vm_name": "FedCloud-Client-Ubuntu.14.04.2016.04.11"
+    "vm_name": "FedCloud-Client-Ubuntu.14.04.2016.04.12"
   }],
   "provisioners": [
     {
@@ -31,6 +31,10 @@
         "type": "file",
         "source": "provisioners/sshd_config",
         "destination": "/root/sshd_config"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/removei386.sh"
     },
     {
         "type": "shell",
