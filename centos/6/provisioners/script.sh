@@ -39,6 +39,7 @@ unlink /etc/udev/rules.d/70-persistent-cd.rules
 ln -s /dev/null /etc/udev/rules.d/70-persistent-cd.rules
 
 chkconfig network on
+echo "NOZEROCONF=yes" >> /etc/sysconfig/network
 
 # look root password
 passwd -l root
