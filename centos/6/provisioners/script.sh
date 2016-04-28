@@ -15,10 +15,10 @@ popd
 python -c "import cloudinit.sources.DataSourceOpenNebula"
 
 # set cloud-init to start after boot
-chkconfig on cloud-init-local
-chkconfig on cloud-init
-chkconfig on cloud-config
-chkconfig on cloud-final
+chkconfig cloud-init-local on
+chkconfig cloud-init on
+chkconfig cloud-config on
+chkconfig cloud-final on
 
 # move configuration files to their right place
 mv /root/sshd_config /etc/ssh/sshd_config
