@@ -5,7 +5,7 @@ yum -y install epel-release
 # update already installed packages
 yum -y update
 # install new packages
-yum -y install cloud-init
+yum -y install cloud-init cloud-utils-growpart
 
 # rebuild the initramfs for every kernel
 for k in $(rpm -q kernel); do
@@ -75,3 +75,6 @@ passwd -l root
 # clean bash history and cloud init logs
 rm -f ~/.bash_history
 rm -f /var/log/cloud-init*
+
+# Remove virtualbox stuff
+rm /root/VBoxGuestAdditions.iso
