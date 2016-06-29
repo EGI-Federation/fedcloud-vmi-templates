@@ -4,10 +4,10 @@ export DEBIAN_FRONTEND=noninteractive
 apt-get update
 
 # install dependencies
-apt-get install apt-transport-https \
-                ca-certificates \
-                linux-image-extra-$(uname -r) \
-                apparmor
+apt-get install -y apt-transport-https \
+                   ca-certificates \
+                   linux-image-extra-$(uname -r) \
+                   apparmor
 # this should be a noop, but just in case...
 apt-get purge lxc-docker
 
@@ -22,7 +22,4 @@ EOF
 # and do the install
 apt-get update
 
-apt-get install docker-engine
-
-# start docker
-service docker start
+apt-get install -y docker-engine
