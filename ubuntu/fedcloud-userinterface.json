@@ -19,7 +19,7 @@
         "<enter>"
     ],
     "format": "ova",
-    "vm_name": "FedCloud-Client-Ubuntu.14.04.2016.05.03"
+    "vm_name": "FedCloud-Client-Ubuntu.14.04.2016.07.27"
   }],
   "provisioners": [
     {
@@ -47,6 +47,10 @@
     {
         "type": "shell",
         "script": "provisioners/fedcloud-ui.sh"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/fedcloud-dev.sh"
     },
     {
         "type": "shell",
