@@ -7,6 +7,10 @@ cat /tmp/fedcloud.ui | bash -
 
 rm -rf /tmp/fedcloud.ui
 
+# prevent clock skew
+sudo apt-get install -y ntp
+service start ntp
+
 # Install VBoxGuestAdditions
 apt-get update
 apt-get install dkms
