@@ -20,6 +20,6 @@ deb https://apt.dockerproject.org/repo ubuntu-trusty main
 EOF
 
 # and do the install
-apt-get update
+apt-get -q update
 
-apt-get install -y docker-engine
+apt-get -q install -y docker-engine

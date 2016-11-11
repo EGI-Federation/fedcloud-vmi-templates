@@ -5,11 +5,11 @@ if [ "x$(lsb_release -rs)" == "x12.04" ]; then
   add-apt-repository -y ppa:iweb-openstack/cloud-init
 fi
 
-apt-get update
-apt-get --assume-yes install cloud-init curl
+apt-get -q update
+apt-get -q --assume-yes install cloud-init curl
 
 if [ "x$(lsb_release -rs)" == "x12.04" ]; then
-  apt-get --assume-yes install cloud-utils-growpart
+  apt-get -q --assume-yes install cloud-utils-growpart
 fi
 
 mv /root/cloud.cfg /etc/cloud/cloud.cfg
