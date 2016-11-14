@@ -19,7 +19,7 @@
         "<enter>"
     ],
     "format": "ova",
-    "vm_name": "Ubuntu.12.04.20160222"
+    "vm_name": "Ubuntu.12.04-2016.11.11"
   }],
   "provisioners": [
     {

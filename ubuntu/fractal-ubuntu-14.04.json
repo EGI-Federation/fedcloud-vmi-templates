@@ -19,7 +19,7 @@
         "<enter>"
     ],
     "format": "ova",
-    "vm_name": "Fractal.Docker.Ubuntu.14.04.20160330"
+    "vm_name": "Fractal.Docker.Ubuntu.14.04-2016.10.20"
   }],
   "provisioners": [
     {
