@@ -19,13 +19,13 @@
         "<enter>"
     ],
     "format": "ova",
-    "vm_name": "Docker.Ubuntu.14.04-2016.11.14"
+    "vm_name": "Docker.Ubuntu.14.04-2017.01.03"
   }],
   "provisioners": [
     {
         "type": "file",
-        "source": "provisioners/cloud.cfg",
-        "destination": "/root/cloud.cfg"
+        "source": "provisioners/fedcloud.cfg",
+        "destination": "/root/fedcloud.cfg"
     },
     {
         "type": "file",
