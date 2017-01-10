@@ -3,11 +3,13 @@
 # Clean up
 ln -s /dev/null /etc/udev/rules.d/75-persistent-net-generator.rules
 
-# remove ssh keys
+# fix ssh configuration:
+# 1. remove ssh keys
 rm -f /etc/ssh/ssh_host_*
-# use our ssh configuration
-mv /root/sshd_config /etc/ssh/sshd_config
-
+# 2. disable root login
+sed -i 's/^PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
+# 3. disable password authentication (cloud-init should also do this, but just in case)
+sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
 
 # lock root password
 passwd -l root
