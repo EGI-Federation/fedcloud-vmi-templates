@@ -31,18 +31,13 @@
       "<enter>"
     ],
     "format": "ova",
-    "vm_name": "Ubuntu.16.04-2016.11.15"
+    "vm_name": "Ubuntu.16.04-2017.01.09"
   }],
   "provisioners": [
     {
         "type": "file",
-        "source": "provisioners/cloud.cfg",
-        "destination": "/root/cloud.cfg"
-    },
-    {
-        "type": "file",
-        "source": "provisioners/sshd_config",
-        "destination": "/root/sshd_config"
+        "source": "provisioners/fedcloud.cfg",
+        "destination": "/root/fedcloud.cfg"
     },
     {
         "type": "shell",
