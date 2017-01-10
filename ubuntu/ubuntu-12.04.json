@@ -24,8 +24,8 @@
   "provisioners": [
     {
         "type": "file",
-        "source": "provisioners/cloud-ubuntu-12.cfg",
-        "destination": "/root/cloud.cfg"
+        "source": "provisioners/fedcloud.cfg",
+        "destination": "/root/fedcloud.cfg"
     },
     {
         "type": "file",
