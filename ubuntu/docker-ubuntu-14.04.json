@@ -29,8 +29,8 @@
     },
     {
         "type": "file",
-        "source": "provisioners/sshd_config",
-        "destination": "/root/sshd_config"
+        "source": "provisioners/cloud-init.patch",
+        "destination": "/root/cloud-init.patch"
     },
     {
         "type": "shell",
