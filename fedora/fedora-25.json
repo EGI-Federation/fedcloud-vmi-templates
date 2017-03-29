@@ -1,0 +1,36 @@
+{
+  "builders": [{
+    "type": "virtualbox-iso",
+    "guest_os_type": "RedHat_64",
+    "disk_size": 8000,
+    "iso_url": "http://ftp.cica.es/fedora/linux/releases/25/Server/x86_64/iso/Fedora-Server-netinst-x86_64-25-1.3.iso",
+    "iso_checksum": "86bc3694f4938382753d1e9536f2140a6c9c1978207766340c679a89509073c7",
+    "iso_checksum_type": "sha256",
+    "ssh_username": "root",
+    "ssh_password": "rootpassword",
+    "ssh_wait_timeout": "90m",
+    "shutdown_command": "shutdown -h now",
+    "http_directory": "httpdir",
+    "http_port_min": 8500,
+    "http_port_max": 8550,
+    "vboxmanage": [ ["modifyvm", "{{.Name}}", "--memory", "1024"] ],
+    "boot_command": [
+        "<tab>",
+        "linux text biosdevname=0 ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/fedora-25.cfg",
+        "<enter><enter>"
+    ],
+    "format": "ova",
+    "vm_name": "fedora.25-2017.03.29"
+  }],
+  "provisioners": [
+    {
+        "type": "file",
+        "source": "provisioners/fedcloud.cfg",
+        "destination": "/root/fedcloud.cfg"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/script.sh"
+    }
+  ]
+}
