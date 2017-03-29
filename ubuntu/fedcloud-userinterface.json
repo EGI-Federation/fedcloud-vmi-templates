@@ -19,18 +19,18 @@
         "<enter>"
     ],
     "format": "ova",
-    "vm_name": "FedCloud-Client-Ubuntu.14.04-2016.11.14"
+    "vm_name": "FedCloud-Client-Ubuntu.14.04-2017.02.09"
   }],
   "provisioners": [
     {
         "type": "file",
-        "source": "provisioners/cloud.cfg",
-        "destination": "/root/cloud.cfg"
+        "source": "provisioners/fedcloud.cfg",
+        "destination": "/root/fedcloud.cfg"
     },
     {
         "type": "file",
-        "source": "provisioners/sshd_config",
-        "destination": "/root/sshd_config"
+        "source": "provisioners/cloud-init.patch",
+        "destination": "/root/cloud-init.patch"
     },
     {
         "type": "shell",

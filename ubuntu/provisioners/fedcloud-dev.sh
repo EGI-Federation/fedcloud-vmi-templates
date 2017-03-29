@@ -14,6 +14,7 @@ echo 'JAVA_HOME="/usr/lib/jvm/java-7-openjdk-amd64"' >> /etc/environment
 
 # Python
 apt-get -y install python-pip python-dev libffi-dev libssl-dev
+pip install -U pip setuptools
 pip install python-keystoneclient python-swiftclient \
             python-openstackclient PyOpenSSL xmltodict \
             openstack-voms-auth-type
