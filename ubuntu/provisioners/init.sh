@@ -10,6 +10,16 @@ apt-get -q --assume-yes upgrade
 # reboot so we have the working kernel updated
 # shutdown ssh so reboot works (ubuntu 16.04)
 release=$(lsb_release -r -s)
-[[ $release =~ ^16 ]] && (service ssh stop && sleep 10s && reboot -f) || reboot
+if [[ $release =~ ^16 ]]; then
+    nohup shutdown --reboot now </dev/null >/dev/null 2>&1 &
+    for dev in $(ifconfig -s | cut -f1  -d" " | grep -v Iface | grep -v lo); do
+        ifconfig $dev down
+        ifconfig $dev up
+    done
+
+    service ssh stop
+else
+    reboot
+fi
 
 sleep 90s
