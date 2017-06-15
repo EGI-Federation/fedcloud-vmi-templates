@@ -20,3 +20,11 @@ rm -f /var/log/cloud-init*
 
 # Remove virtualbox things
 rm -f VBoxGuestAdditions.iso
+
+# More cleanup
+apt-get autoremove
+rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true
+
+# fill with zeros
+dd if=/dev/zero of=/bigemptyfile bs=4096k || echo "full disk"
+rm -rf /bigemptyfile
