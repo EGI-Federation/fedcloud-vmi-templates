@@ -4,6 +4,11 @@ set -uxeo pipefail
 
 # remove ssh keys
 rm -f /etc/ssh/ssh_host_*
+# 2. disable root login
+sed -i 's/^PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
+# 3. disable password authentication (cloud-init should also do this, but just in case)
+sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+
 
 # remove hardware address (MAC) and UUID from NIC configuration files
 sed -i '/^HWADDR/d' /etc/sysconfig/network-scripts/ifcfg-eth*
