@@ -30,22 +30,24 @@
     },
     {
         "type": "file",
-        "source": "provisioners/sudoers",
-        "destination": "/root/sudoers"
-    },
-    {
-        "type": "file",
         "source": "provisioners/cloud-init.patch",
         "destination": "/root/cloud-init.patch"
     },
     {
-        "type": "file",
-        "source": "provisioners/sshd_config",
-        "destination": "/root/sshd_config"
+        "type": "shell",
+        "script": "provisioners/init.sh"
     },
     {
         "type": "shell",
-        "script": "provisioners/script.sh"
+        "script": "provisioners/cloud-init.sh"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/network-centos6.sh"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/clean.sh"
     }
   ]
 }
