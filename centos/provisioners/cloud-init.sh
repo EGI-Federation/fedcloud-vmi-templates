@@ -24,12 +24,17 @@ if [ "$CENTOS_RELEASE" = "6" ]; then
     python -c "import cloudinit.sources.DataSourceOpenNebula"
 fi
 
+# set cloud-init to start after boot
 if [ "$CENTOS_RELEASE" = "7" ]; then
-    # set cloud-init to start after boot
     systemctl enable cloud-init-local
     systemctl enable cloud-init
     systemctl enable cloud-config
     systemctl enable cloud-final
+else
+    chkconfig cloud-init-local on
+    chkconfig cloud-init on
+    chkconfig cloud-config on
+    chkconfig cloud-final on
 fi
 
 # Use our config
