@@ -29,13 +29,20 @@
         "destination": "/root/cloud.cfg"
     },
     {
-        "type": "file",
-        "source": "provisioners/sshd_config",
-        "destination": "/root/sshd_config"
+        "type": "shell",
+        "script": "provisioners/init.sh"
     },
     {
         "type": "shell",
-        "script": "provisioners/script.sh"
+        "script": "provisioners/cloud-init.sh"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/network-centos7.sh"
+    },
+    {
+        "type": "shell",
+        "script": "provisioners/clean.sh"
     }
   ]
 }
