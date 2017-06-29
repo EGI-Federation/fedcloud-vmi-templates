@@ -3,8 +3,8 @@
     "type": "virtualbox-iso",
     "guest_os_type": "Ubuntu_64",
     "disk_size": 8000,
-    "iso_url": "http://archive.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/mini.iso",
-    "iso_checksum": "bc09966b54f91f62c3c41fc14b76f2baa4cce48595ce22e8c9f24ab21ac8d965",
+    "iso_url": "http://archive.ubuntu.com/ubuntu/dists/xenial/main/installer-amd64/current/images/netboot/mini.iso",
+    "iso_checksum": "655d1ec0a7415b4d963e7f2c40e3d56bd135907dda2cedd0c75209ced3a63103",
     "iso_checksum_type": "sha256",
     "ssh_username": "root",
     "ssh_password": "rootpasswd",
@@ -14,23 +14,30 @@
     "http_port_min": 8500,
     "http_port_max": 8550,
     "boot_command": [
-        "<esc>",
-        " install auto=true priority=critical preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ubuntu.cfg",
-        "<enter>"
+      "<tab>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs>",
+      "linux ",
+      "auto=true priority=critical ",
+      "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu.cfg ",
+      "initrd=initrd.gz ---",
+      "<enter>"
     ],
     "format": "ova",
-    "vm_name": "FedCloud-Client-Ubuntu.14.04-2017.02.09"
+    "vm_name": "FedCloud-Client-Ubuntu.16.04-2017.06.29"
   }],
   "provisioners": [
     {
         "type": "file",
         "source": "provisioners/fedcloud.cfg",
         "destination": "/root/fedcloud.cfg"
-    },
-    {
-        "type": "file",
-        "source": "provisioners/cloud-init.patch",
-        "destination": "/root/cloud-init.patch"
     },
     {
         "type": "shell",
