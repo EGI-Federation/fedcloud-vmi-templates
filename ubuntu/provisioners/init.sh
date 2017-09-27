@@ -11,15 +11,14 @@ apt-get -q --assume-yes upgrade
 # shutdown ssh so reboot works (ubuntu 16.04)
 release=$(lsb_release -r -s)
 if [[ $release =~ ^16 ]]; then
-    nohup shutdown --reboot now </dev/null >/dev/null 2>&1 &
-    for dev in $(ifconfig -s | cut -f1  -d" " | grep -v Iface | grep -v lo); do
-        ifconfig $dev down
-        ifconfig $dev up
-    done
+    #nohup (sleep 10s && shutdown --reboot now < /dev/null > /dev/null 2>&1) &
+    #for dev in $(ifconfig -s | cut -f1  -d" " | grep -v Iface | grep -v lo); do
+    #    ifconfig $dev down
+    #    ifconfig $dev up
+    #done
 
+    (sleep 2s && shutdown --reboot now) &
     service ssh stop
 else
     reboot
 fi
-
-sleep 90s
