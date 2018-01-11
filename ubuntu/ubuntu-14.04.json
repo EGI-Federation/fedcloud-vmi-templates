@@ -19,7 +19,7 @@
         "<enter>"
     ],
     "format": "ova",
-    "vm_name": "Ubuntu.14.04-2017.06.12"
+    "vm_name": "Ubuntu.14.04-2018.01.11"
   }],
   "provisioners": [
     {
@@ -38,7 +38,8 @@
     },
     {
         "type": "shell",
-        "script": "provisioners/cloud-init.sh"
+        "script": "provisioners/cloud-init.sh",
+        "pause_before": "30s"
     },
     {
         "type": "shell",
