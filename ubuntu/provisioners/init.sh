@@ -20,5 +20,6 @@ if [[ $release =~ ^16 ]]; then
     (sleep 2s && shutdown --reboot now) &
     service ssh stop
 else
-    reboot
+    reboot &
+    sleep 10s
 fi
