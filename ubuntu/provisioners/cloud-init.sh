@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
+set -euxo pipefail
+
 if [ "x$(lsb_release -rs)" == "x12.04" ]; then
   apt-get --assume-yes install python-software-properties
   add-apt-repository -y ppa:iweb-openstack/cloud-init
 fi
 
 apt-get -q update
+
 apt-get -q --assume-yes install cloud-init curl
 
 if [ "x$(lsb_release -rs)" == "x12.04" ]; then
@@ -13,6 +16,7 @@ if [ "x$(lsb_release -rs)" == "x12.04" ]; then
 fi
 
 if [ "x$(lsb_release -rs)" == "x14.04" ]; then
+  apt-get -q --assume-yes install patch
   pushd /usr/lib/python2.7/dist-packages/cloudinit/distros/
   patch -p 1 <  /root/cloud-init.patch
   popd
