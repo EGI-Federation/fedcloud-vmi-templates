@@ -31,7 +31,7 @@
       "<enter>"
     ],
     "format": "ova",
-    "vm_name": "FedCloud-Client-Ubuntu.16.04-2017.06.29"
+    "vm_name": "FedCloud-Client-Ubuntu.16.04-2018.01.10"
   }],
   "provisioners": [
     {
