@@ -14,6 +14,13 @@ sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd
 # lock root password
 passwd -l root
 
+# clean apt cache
+apt-get clean && apt-get autoclean
+rm -rf /var/lib/apt/lists
+
+# dump packages installed
+dpkg -l
+
 # clean bash history and cloud init logs
 rm -f ~/.bash_history
 rm -f /var/log/cloud-init*
