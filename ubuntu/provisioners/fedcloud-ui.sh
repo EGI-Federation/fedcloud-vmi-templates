@@ -28,3 +28,10 @@ pushd /mnt
 popd
 umount /mnt
 rm -rf /tmp/vbox.iso
+
+# Create a ubuntu user and be sure that the password expires after login
+cat > /etc/cloud/cloud.cfg.d/02_fedcloud_expire_password.cfg << EOF
+# make ubuntu password expire
+runcmd:
+  - ["passwd", "-e", "ubuntu"]
+EOF
