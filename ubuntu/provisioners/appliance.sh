@@ -5,7 +5,7 @@ set -uexo pipefail
 APPLIANCE_DIR=/tmp/fedcloudappliance
 TAG=v0.1
 
-# Get git repo and popoulate default config
+# Get git repo to populate default config
 git clone --branch $TAG https://github.com/enolfc/fedcloudappliance.git $APPLIANCE_DIR
 
 mkdir -p /etc/cloudkeeper \
@@ -46,7 +46,11 @@ EOF
 # cloudkeeper core
 cp cloudkeeper/core/image-lists.conf /etc/cloudkeeper
 cp cloudkeeper/core/cloudkeeper.yml /etc/cloudkeeper
-cp cloudkeeper/core/cloudkeeper.cron /etc/cron.d/
+
+cat > /etc/cron.d/cloudkeeper << EOF
+# Run cloudkeeper every 4 hours
+26 */4 * * * root /usr/local/bin/cloudkeeper.sh >> /var/log/cloudkeeper.log 2>&1
+EOF
 
 cat > /usr/local/bin/cloudkeeper.sh << EOF
 #!/bin/sh
@@ -61,7 +65,11 @@ EOF
 # caso
 cp accounting/caso/voms.json /etc/caso
 cp accounting/caso/caso.conf /etc/caso
-cp accounting/caso/caso.cron /etc/cron.d/
+
+cat > /etc/cron.d/caso << EOF
+# Run cASO every hour
+14 * * * * root /usr/local/bin/caso-extract.sh >> /var/log/caso.log 2>&1
+EOF
 
 cat > /usr/local/bin/caso-extract.sh << EOF
 #!/bin/sh
@@ -77,7 +85,12 @@ EOF
 # ssm
 cp accounting/ssm/logging.cfg /etc/apel
 cp accounting/ssm/sender.cfg /etc/apel
-cp accounting/ssm/ssmsend.cron /etc/cron.d
+
+cat > /etc/cron.d/ssmsend << EOF
+# Send SSM records every 6 hours
+30 */6 * * * root /usr/local/bin/ssm-send.sh >> /var/log/ssm.log 2>&1
+EOF
+
 cat > /usr/local/bin/ssm-send.sh << EOF
 #!/bin/sh
 
