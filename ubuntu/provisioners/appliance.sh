@@ -3,7 +3,7 @@
 set -uexo pipefail
 
 APPLIANCE_DIR=/tmp/fedcloudappliance
-TAG=v0.2
+TAG=v0.3
 
 # Get git repo to populate default config
 git clone --branch $TAG https://github.com/enolfc/fedcloudappliance.git $APPLIANCE_DIR
