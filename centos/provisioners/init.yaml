@@ -1,0 +1,28 @@
+- hosts: all
+  gather_facts: False
+  tasks:
+  - name: install python 2
+    raw: test -e /usr/bin/python || (yum install -y python)
+
+- hosts: all
+  tasks:
+  - name: update packages
+    yum:
+      name: '*'
+      state: latest 
+  - name: get the rpm package facts
+    package_facts:
+      manager: "auto"
+  - name: Rebuilding initramfs for kernel 
+    command: |
+       dracut -f /boot/initramfs-{{ item['version'] }}-{{ item['release'] }}.{{ item['arch'] }}.img
+                {{ item['version'] }}-{{ item['release'] }}.{{ item['arch'] }} 
+    loop: "{{ ansible_facts.packages['kernel'] }}"
+
+- hosts: all
+  tasks:
+  - name: Reboot
+    shell: sleep 2 && reboot
+    async: 30
+    poll: 0
+    ignore_errors: true

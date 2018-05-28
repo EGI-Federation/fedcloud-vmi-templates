@@ -1,0 +1,32 @@
+---
+- name: Create /etc/sysconfig/network 
+  copy:
+    content: |
+      NETWORKING=yes
+      NOZEROCONF=yes
+    dest: /etc/sysconfig/network
+
+- name: Create /etc/sysconfig/network-scripts/ifcfg-eth0
+  copy:
+    content: |
+      DEVICE="eth0"
+      BOOTPROTO="dhcp"
+      ONBOOT="yes"
+      TYPE="Ethernet"
+      USERCTL="yes"
+      PEERDNS="yes"
+      IPV6INIT="no"
+      PERSISTENT_DHCLIENT="1"
+    dest: /etc/sysconfig/network-scripts/ifcfg-eth0
+
+- name: enable network service
+  service:
+    name: network
+    state: started
+    enabled: yes
+
+- name: disable network manager
+  service:
+    name: NetworkManager
+    state: stopped
+    enabled: no
