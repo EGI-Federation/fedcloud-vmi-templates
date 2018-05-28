@@ -24,25 +24,13 @@
   }],
   "provisioners": [
     {
-        "type": "file",
-        "source": "provisioners/cloud.cfg",
-        "destination": "/root/cloud.cfg"
+      "type": "ansible",
+      "playbook_file": "provisioners/init.yaml"
     },
     {
-        "type": "shell",
-        "script": "provisioners/init.sh"
-    },
-    {
-        "type": "shell",
-        "script": "provisioners/cloud-init.sh"
-    },
-    {
-        "type": "shell",
-        "script": "provisioners/network-centos7.sh"
-    },
-    {
-        "type": "shell",
-        "script": "provisioners/clean.sh"
+      "type": "ansible",
+      "playbook_file": "provisioners/config.yaml",
+      "pause_before": "30s"
     }
   ]
 }
