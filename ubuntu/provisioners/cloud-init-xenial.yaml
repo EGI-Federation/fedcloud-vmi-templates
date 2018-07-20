@@ -1,0 +1,29 @@
+---
+- name: install patch 
+  apt:
+    name: patch
+    state: latest 
+     
+- name: copy cloud-init patch
+  copy:
+    src: cloud-init-xenial.patch
+    dest: /tmp/cloud-init.patch
+
+- name: patch cloud-init
+  shell: |
+    set -uexo pipefail
+    pushd  /usr/lib/python3/dist-packages/cloudinit/net/ 
+    patch < /tmp/cloud-init.patch || exit 1
+    rm /tmp/cloud-init.patch
+    popd
+    python3 -c "import cloudinit.net.eni"
+  args:
+    executable: /bin/bash
+
+- name: remove network configuration
+  replace:
+    path: /etc/network/interfaces
+    regexp: "^[^#](.*{{ item }}.*)$"
+    replace: '# \1'
+  when: item != "lo"
+  loop: "{{ ansible_interfaces }}"

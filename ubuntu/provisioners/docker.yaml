@@ -1,0 +1,61 @@
+---
+- hosts: all
+  tasks:
+  - name: Include cloud-init recipe
+    include_tasks: cloud-init.yaml
+
+- hosts: all
+  vars:
+    docker_version: 17.03.2~ce-0~ubuntu-xenial
+    docker_compose_version: 1.21.2
+  tasks:
+  - name: install requirements 
+    apt:
+      name: 
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - "linux-image-extra-{{ ansible_kernel }}"
+        - apparmor
+        # this is to make the nfs-based volumes work
+        - nfs-common
+      state: latest 
+
+  - name: add Docker repo key
+    apt_key: url="https://download.docker.com/linux/debian/gpg"
+    ignore_errors: yes
+
+  - name: add docker repo
+    apt_repository: 
+      repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable'
+      state: present
+      update_cache: yes
+
+  - name: Install docker {{ docker_version }} 
+    apt: 
+      name: "docker-ce={{ docker_version }}"
+      state: installed
+      force: yes
+
+  - name: Get docker-compose {{ docker_compose_version }}
+    get_url:
+      url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_machine }}"
+      dest: /usr/local/bin/docker-compose
+      mode: 0755 
+
+  - name: Add repo key
+    apt_key:
+      url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+      state: present
+
+  - name: Add kubernetes repo
+    apt_repository: repo='deb http://apt.kubernetes.io/ kubernetes-xenial main' state=present update_cache=yes
+
+  - name: Install kubernetes packages
+    apt: name=kubelet,kubeadm,kubectl state=installed
+
+- hosts: all
+  tasks:
+  - name: Include clean-up recipe
+    include_tasks: clean.yaml

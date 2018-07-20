@@ -1,0 +1,57 @@
+---
+- name: remove udev rules 
+  file:
+    src: /etc/udev/rules.d/75-persistent-net-generator.rules
+    dest: /dev/null
+    state: link
+  with_fileglob:
+    - "/etc/ssh/ssh_host_*"
+
+- name: remote ssh keys 
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_fileglob:
+    - "/etc/ssh/ssh_host_*"
+
+- name: disable root login
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin.*'
+    line: 'PermitRootLogin no'
+
+- name: disable pasword authentication 
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#\?PasswordAuthentication.*'
+    line: 'PasswordAuthentication no'
+
+- name: lock root password
+  command: passwd -l root
+
+- name: remove unneeded files
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - /root/.bash_history
+    - /root/VBoxGuestAdditions.iso
+
+- name: clean apt-cache
+  apt:
+    autoclean: yes
+    autoremove: yes
+
+- name: keep cleaning apt
+  file:
+    path: 
+    state: absent
+  with_fileglob:
+    - /var/cache/apt/archives/*.deb
+    - /var/cache/apt/archives/partial/*.deb
+    - /var/cache/apt/*.bin 
+
+- name: fill disk with zeros
+  shell: |
+    dd if=/dev/zero of=/bigemptyfile bs=4096k || echo "full disk"
+    rm -rf /bigemptyfile
