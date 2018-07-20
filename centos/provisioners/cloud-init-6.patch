@@ -1,0 +1,12 @@
+--- DataSourceOpenNebula.py     2014-10-31 11:57:41.000000000 +0000
++++ DataSourceOpenNebula.py.orig        2015-06-17 11:02:47.134757659 +0000
+@@ -288,7 +288,7 @@
+ 
+ 
+ def switch_user_cmd(user):
+-    return ['runuser', '-u', user, '--']
++    return ['sudo', '-u', user]
+
+ def parse_shell_config(content, keylist=None, bash=None, asuser=None,
+                        switch_user_cb=None):
+

@@ -15,29 +15,19 @@
     state: latest 
   when: ansible_distribution_major_version == "6"
 
-# Is including the patch here a bit ugly? 
+- name: copy cloud-init patch
+  copy:
+    src: cloud-init-6.patch
+    dest: /tmp/cloud-init.patch
+
 - name: patch cloud-init
   shell: |
     pushd /usr/lib/python2.6/site-packages/cloudinit/sources
-    cat > /tmp/cloud-init.patch << EOF
-    --- DataSourceOpenNebula.py     2014-10-31 11:57:41.000000000 +0000
-    +++ DataSourceOpenNebula.py.orig        2015-06-17 11:02:47.134757659 +0000
-    @@ -288,7 +288,7 @@
-     
-     
-     def switch_user_cmd(user):
-    -    return ['runuser', '-u', user, '--']
-    +    return ['sudo', '-u', user]
-
-     def parse_shell_config(content, keylist=None, bash=None, asuser=None,
-                            switch_user_cb=None):
-    EOF
-    patch < /root/cloud-init.patch
-    rm /root/cloud-init.patch
+    patch < /tmp/cloud-init.patch
+    rm /tmp/cloud-init.patch
     popd
     python -c "import cloudinit.sources.DataSourceOpenNebula"
   when: ansible_distribution_major_version == "6"
-
 
 - name: Create fedcloud config
   copy:

@@ -18,11 +18,3 @@
        dracut -f /boot/initramfs-{{ item['version'] }}-{{ item['release'] }}.{{ item['arch'] }}.img
                 {{ item['version'] }}-{{ item['release'] }}.{{ item['arch'] }} 
     loop: "{{ ansible_facts.packages['kernel'] }}"
-
-- hosts: all
-  tasks:
-  - name: Reboot
-    shell: sleep 2 && reboot
-    async: 30
-    poll: 0
-    ignore_errors: true
