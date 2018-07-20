@@ -31,25 +31,27 @@
       "<enter>"
     ],
     "format": "ova",
-    "vm_name": "Ubuntu.16.04-2018.01.23"
+    "vm_name": "Ubuntu.16.04-2018.07.20"
   }],
   "provisioners": [
     {
-        "type": "file",
-        "source": "provisioners/fedcloud.cfg",
-        "destination": "/root/fedcloud.cfg"
+      "type": "ansible",
+      "playbook_file": "provisioners/init.yaml"
     },
     {
-        "type": "shell",
-        "script": "provisioners/init.sh"
+      "type": "shell",
+      "expect_disconnect": true,
+      "inline": [
+          "#!/usr/bin/env bash",
+          "set -uex",
+          "(sleep 2s; shutdown --reboot now) &",
+          "service ssh restart"
+      ]
     },
     {
-        "type": "shell",
-        "script": "provisioners/cloud-init.sh"
-    },
-    {
-        "type": "shell",
-        "script": "provisioners/clean.sh"
+      "type": "ansible",
+      "playbook_file": "provisioners/base.yaml",
+      "pause_before": "30s"
     }
   ]
 }

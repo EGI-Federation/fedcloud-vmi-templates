@@ -19,31 +19,22 @@
         "<enter>"
     ],
     "format": "ova",
-    "vm_name": "Ubuntu.14.04-2018.01.23"
+    "vm_name": "Ubuntu.14.04-2018.07.20"
   }],
   "provisioners": [
     {
-        "type": "file",
-        "source": "provisioners/fedcloud.cfg",
-        "destination": "/root/fedcloud.cfg"
+      "type": "ansible",
+      "playbook_file": "provisioners/init.yaml"
     },
     {
-        "type": "file",
-        "source": "provisioners/cloud-init.patch",
-        "destination": "/root/cloud-init.patch"
+      "type": "shell",
+      "expect_disconnect": true,
+      "inline": ["reboot &", "sleep 5s"] 
     },
     {
-        "type": "shell",
-        "script": "provisioners/init.sh"
-    },
-    {
-        "type": "shell",
-        "script": "provisioners/cloud-init.sh",
-        "pause_before": "30s"
-    },
-    {
-        "type": "shell",
-        "script": "provisioners/clean.sh"
+      "type": "ansible",
+      "playbook_file": "provisioners/base.yaml",
+      "pause_before": "30s"
     }
   ]
 }
