@@ -44,8 +44,7 @@
       "inline": [
           "#!/usr/bin/env bash",
           "set -uex",
-          "(sleep 2s; shutdown --reboot now) &",
-          "service ssh restart"
+          "nohup shutdown --reboot now </dev/null >/dev/null 2>&1 &"
       ]
     },
     {
