@@ -31,7 +31,7 @@
       "<enter>"
     ],
     "format": "ova",
-    "vm_name": "Small.Ubuntu.16.04-2018.06.04"
+    "vm_name": "Small.Ubuntu.16.04-2018.08.30"
   }],
   "provisioners": [
     {
