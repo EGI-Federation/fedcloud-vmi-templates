@@ -3,8 +3,8 @@
     "type": "virtualbox-iso",
     "guest_os_type": "RedHat_64",
     "disk_size": 8000,
-    "iso_url": "http://centos.cadt.com/6/isos/x86_64/CentOS-6.9-x86_64-netinstall.iso",
-    "iso_checksum": "6b2cbec908708476389b143841a8e73462506de0744bda8b4192d3655d5bb8d2",
+    "iso_url": "http://mirror.tedra.es/CentOS/6.10/isos/x86_64/CentOS-6.10-x86_64-netinstall.iso",
+    "iso_checksum": "56f7b078a3b443095ba006cdc85319c691251cda98c5d73d12ef6db7aff6b4c1",
     "iso_checksum_type": "sha256",
     "ssh_username": "root",
     "ssh_password": "rootpassword",
@@ -20,7 +20,7 @@
         "<enter>"
     ],
     "format": "ova",
-    "vm_name": "centos.6-2018.07.20"
+    "vm_name": "centos.6-2019.01.11"
   }],
   "provisioners": [
     {
