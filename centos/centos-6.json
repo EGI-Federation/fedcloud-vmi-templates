@@ -20,7 +20,7 @@
         "<enter>"
     ],
     "format": "ova",
-    "vm_name": "centos.6-2019.01.11"
+    "vm_name": "centos.6-2019.01.21"
   }],
   "provisioners": [
     {
