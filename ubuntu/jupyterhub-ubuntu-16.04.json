@@ -1,0 +1,57 @@
+{
+  "builders": [{
+    "type": "virtualbox-iso",
+    "guest_os_type": "Ubuntu_64",
+    "disk_size": 8000,
+    "iso_url": "http://archive.ubuntu.com/ubuntu/dists/xenial/main/installer-amd64/current/images/netboot/mini.iso",
+    "iso_checksum": "655d1ec0a7415b4d963e7f2c40e3d56bd135907dda2cedd0c75209ced3a63103",
+    "iso_checksum_type": "sha256",
+    "ssh_username": "root",
+    "ssh_password": "rootpasswd",
+    "ssh_wait_timeout": "90m",
+    "shutdown_command": "shutdown -h now",
+    "http_directory": "httpdir",
+    "http_port_min": 8500,
+    "http_port_max": 8550,
+    "boot_command": [
+      "<tab>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+      "<bs><bs><bs>",
+      "linux ",
+      "auto=true priority=critical ",
+      "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu.cfg ",
+      "initrd=initrd.gz ---",
+      "<enter>"
+    ],
+    "format": "ova",
+    "vm_name": "JupyterHub.Ubuntu.16.04-2019.02.12"
+  }],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "provisioners/init.yaml"
+    },
+    {
+      "type": "shell",
+      "expect_disconnect": true,
+      "inline": [
+          "#!/usr/bin/env bash",
+          "set -uex",
+          "(sleep 2s; shutdown --reboot now) &",
+          "service ssh restart"
+      ]
+    },
+    {
+      "type": "ansible",
+      "playbook_file": "provisioners/jupyterhub.yaml",
+      "pause_before": "30s"
+    }
+  ]
+}
