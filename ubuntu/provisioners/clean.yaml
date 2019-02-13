@@ -1,5 +1,5 @@
 ---
-- name: remove udev rules 
+- name: remove udev rules
   file:
     src: /etc/udev/rules.d/75-persistent-net-generator.rules
     dest: /dev/null
@@ -7,7 +7,7 @@
   with_fileglob:
     - "/etc/ssh/ssh_host_*"
 
-- name: remote ssh keys 
+- name: remote ssh keys
   file:
     path: "{{ item }}"
     state: absent
@@ -20,7 +20,7 @@
     regexp: '^PermitRootLogin.*'
     line: 'PermitRootLogin no'
 
-- name: disable pasword authentication 
+- name: disable pasword authentication
   lineinfile:
     path: /etc/ssh/sshd_config
     regexp: '^#\?PasswordAuthentication.*'
@@ -37,19 +37,24 @@
     - /root/.bash_history
     - /root/VBoxGuestAdditions.iso
 
-- name: clean apt-cache
+- name: apt-get clean
   apt:
-    autoclean: yes
     autoremove: yes
+    autoclean: yes
 
-- name: keep cleaning apt
+- name: further removing unneeded files
   file:
-    path: 
+    path: "{{ item }}"
     state: absent
-  with_fileglob:
-    - /var/cache/apt/archives/*.deb
-    - /var/cache/apt/archives/partial/*.deb
-    - /var/cache/apt/*.bin 
+  with_items:
+    - "/var/lib/apt/lists/"
+    - "/var/log/installer/"
+
+- name: remove locales
+  command: locale-gen --purge en_GB.utf8
+
+- name: clean log files
+  command:  find /var/log/ -type f -exec cp /dev/null {} \;
 
 - name: fill disk with zeros
   shell: |

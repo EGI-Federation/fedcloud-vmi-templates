@@ -2,7 +2,7 @@
   "builders": [{
     "type": "virtualbox-iso",
     "guest_os_type": "Ubuntu_64",
-    "disk_size": 1700,
+    "disk_size": 8000,
     "iso_url": "http://archive.ubuntu.com/ubuntu/dists/xenial/main/installer-amd64/current/images/netboot/mini.iso",
     "iso_checksum": "655d1ec0a7415b4d963e7f2c40e3d56bd135907dda2cedd0c75209ced3a63103",
     "iso_checksum_type": "sha256",
@@ -31,7 +31,7 @@
       "<enter>"
     ],
     "format": "ova",
-    "vm_name": "Small.Ubuntu.16.04-2018.08.30"
+    "vm_name": "JupyterHub.Ubuntu.16.04-2019.02.12"
   }],
   "provisioners": [
     {
@@ -44,12 +44,13 @@
       "inline": [
           "#!/usr/bin/env bash",
           "set -uex",
-          "nohup shutdown --reboot now </dev/null >/dev/null 2>&1 &"
+          "(sleep 2s; shutdown --reboot now) &",
+          "service ssh restart"
       ]
     },
     {
       "type": "ansible",
-      "playbook_file": "provisioners/base.yaml",
+      "playbook_file": "provisioners/jupyterhub.yaml",
       "pause_before": "30s"
     }
   ]
