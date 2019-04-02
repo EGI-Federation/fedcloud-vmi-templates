@@ -3,8 +3,8 @@
     "type": "virtualbox-iso",
     "guest_os_type": "Ubuntu_64",
     "disk_size": 8000,
-    "iso_url": "http://archive.ubuntu.com/ubuntu/dists/xenial/main/installer-amd64/current/images/netboot/mini.iso",
-    "iso_checksum": "655d1ec0a7415b4d963e7f2c40e3d56bd135907dda2cedd0c75209ced3a63103",
+    "iso_url": "http://archive.ubuntu.com/ubuntu/dists/xenial-updates/main/installer-amd64/current/images/netboot/mini.iso",
+    "iso_checksum": "271a268f92604732d638ec4529e0e843787b3a9407800e14663a47b28a697d96",
     "iso_checksum_type": "sha256",
     "ssh_username": "root",
     "ssh_password": "rootpasswd",
@@ -31,41 +31,26 @@
       "<enter>"
     ],
     "format": "ova",
-    "vm_name": "FedCloud-Client-Ubuntu.16.04-2018.03.12"
+    "vm_name": "FedCloud-Client-Ubuntu.16.04-2019.03.07"
   }],
   "provisioners": [
     {
-        "type": "file",
-        "source": "provisioners/fedcloud.cfg",
-        "destination": "/root/fedcloud.cfg"
+      "type": "ansible",
+      "playbook_file": "provisioners/init.yaml"
     },
     {
-        "type": "shell",
-        "script": "provisioners/removei386.sh"
+      "type": "shell",
+      "expect_disconnect": true,
+      "inline": [
+          "#!/usr/bin/env bash",
+          "set -uex",
+          "nohup shutdown --reboot now </dev/null >/dev/null 2>&1 &"
+      ]
     },
     {
-        "type": "shell",
-        "script": "provisioners/init.sh"
-    },
-    {
-        "type": "shell",
-        "script": "provisioners/cloud-init.sh"
-    },
-    {
-        "type": "shell",
-        "script": "provisioners/fedcloud-ui.sh"
-    },
-    {
-        "type": "shell",
-        "script": "provisioners/fedcloud-dev.sh"
-    },
-    {
-        "type": "shell",
-        "script": "provisioners/fetch-crl.sh"
-    },
-    {
-        "type": "shell",
-        "script": "provisioners/clean.sh"
+      "type": "ansible",
+      "playbook_file": "provisioners/ui.yaml",
+      "pause_before": "30s"
     }
   ]
 }

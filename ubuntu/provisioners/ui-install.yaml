@@ -1,0 +1,68 @@
+---
+- name: Remove i386 architecture 
+  command: dpkg --remove-architecture i386
+
+# TODO(enolfc): fix this!
+- name: Install UI with usual script
+  shell: |
+    curl -L https://raw.githubusercontent.com/EGI-FCTF/fedcloud-userinterface/master/fedcloud-ui.sh > /tmp/fedcloud.sh
+    cat /tmp/fedcloud.ui | bash -
+    rm -rf /tmp/fedcloud.ui
+
+- name: install extra packages
+  apt:
+    name: ["ntp", "dkms"]
+    state: present
+    update_cache: yes
+
+- name: enable ntp
+  service:
+    name: ntp
+    enabled: yes
+
+- name: install virtualbox additions
+  shell: |
+    vbox_latest=$(curl http://download.virtualbox.org/virtualbox/LATEST.TXT)
+    curl http://download.virtualbox.org/virtualbox/$vbox_latest/VBoxGuestAdditions_$vbox_latest.iso > /tmp/vbox.iso
+    mount -o loop,ro /tmp/vbox.iso /mnt
+    pushd /mnt
+    ./VBoxLinuxAdditions.run || true
+    popd
+    umount /mnt
+    rm -rf /tmp/vbox.iso
+
+- name: Make sure that ubuntu user password will expire when created with cloud-init
+  copy:
+    dest: /etc/cloud/cloud.cfg.d/02_fedcloud_expire_password.cfg
+    content: |
+      # make ubuntu password expire
+      runcmd:
+        - ["passwd", "-e", "ubuntu"]
+
+- name: install development environment
+  apt:
+    name: ["vim", "git", "openjdk-8-jre", "openjdk-8-jdk", "maven", "python-pip", "python-dev", "libffi-dev", "libssl-dev"]
+    state: present
+    update_cache: yes
+
+# TODO(enolfc) version-less tools, not nice
+- name: install python OpenStack tools
+  shell: |
+    pip install -U pip setuptools
+    pip install python-keystoneclient python-swiftclient \
+                python-openstackclient PyOpenSSL xmltodict \
+                openstack-voms-auth-type
+    # Add certificates to python requests
+    cat /etc/grid-security/certificates/*.pem >> $(python -m requests.certs)
+
+# TODO(enolfc): use systemd?
+- name: Add fetch-crl to rc.local 
+  copy:
+    dest: /etc/rc.local 
+    content: |
+      #!/bin/sh -e
+
+      [ -f /etc/default/fetch-crl ] && . /etc/default/fetch-crl
+      /usr/sbin/fetch-crl -q -p 2 &
+
+      exit 0
