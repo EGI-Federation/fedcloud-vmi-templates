@@ -1,48 +1,50 @@
 #!/usr/bin/env bash
 
-set -uexo pipefail
+#set -uexo pipefail
 
-APPLIANCE_DIR=/tmp/fedcloudappliance
-TAG=v0.3
+#APPLIANCE_DIR=/tmp/fedcloudappliance
+#TAG=v0.4
+
+#SSM_TAG="2.3.0-1"
 
 # Get git repo to populate default config
-git clone --branch $TAG https://github.com/enolfc/fedcloudappliance.git $APPLIANCE_DIR
+#git clone --branch $TAG https://github.com/enolfc/fedcloudappliance.git $APPLIANCE_DIR
 
-mkdir -p /etc/cloudkeeper \
-         /etc/cloudkeeper-os \
-         /etc/apel \
-         /etc/caso \
-         /etc/cloud-info-provider \
-         /etc/sitebdii \
-         /var/spool/caso \
-         /var/spool/apel \
-         /image_data
+#mkdir -p /etc/cloudkeeper \
+#         /etc/cloudkeeper-os \
+#         /etc/apel \
+#         /etc/caso \
+#         /etc/cloud-info-provider \
+#         /etc/sitebdii \
+         #/var/spool/caso \
+         #/var/spool/apel \
+         #/image_data
 
-pushd $APPLIANCE_DIR
+#pushd $APPLIANCE_DIR
 
 # cloudkeeper-os
-cp cloudkeeper/os/cloudkeeper-os.conf /etc/cloudkeeper-os/
-cp cloudkeeper/os/voms.json  /etc/cloudkeeper-os/
+#cp cloudkeeper/os/cloudkeeper-os.conf /etc/cloudkeeper-os/
+#cp cloudkeeper/os/voms.json  /etc/cloudkeeper-os/
 
-cat > /etc/systemd/system/cloudkeeper-os.service << EOF
+#cat > /etc/systemd/system/cloudkeeper-os.service << EOF
+##
+## This manages the cloudkeeper OS backend
+##
+#[Unit]
+#Description=CloudKeeper Service
+#After=docker.service
+#Requires=docker.service
 #
-# This manages the cloudkeeper OS backend
+#[Service]
+#ExecStartPre=-/usr/bin/docker stop cloudkeeper-os
+#ExecStartPre=-/usr/bin/docker rm -v cloudkeeper-os
+#ExecStart=/usr/bin/docker run --name cloudkeeper-os -v /etc/cloudkeeper-os/cloudkeeper-os.conf:/etc/cloudkeeper-os/cloudkeeper-os.conf -v /etc/cloudkeeper-os/voms.json:/etc/cloudkeeper-os/voms.json -v /image_data:/var/spool/cloudkeeper/images egifedcloud/cloudkeeper-os:$TAG
+#ExecStop=/usr/bin/docker stop cloudkeeper-os
 #
-[Unit]
-Description=CloudKeeper Service
-After=docker.service
-Requires=docker.service
-
-[Service]
-ExecStartPre=-/usr/bin/docker stop cloudkeeper-os
-ExecStartPre=-/usr/bin/docker rm -v cloudkeeper-os
-ExecStart=/usr/bin/docker run --name cloudkeeper-os -v /etc/cloudkeeper-os/cloudkeeper-os.conf:/etc/cloudkeeper-os/cloudkeeper-os.conf -v /etc/cloudkeeper-os/voms.json:/etc/cloudkeeper-os/voms.json -v /image_data:/var/spool/cloudkeeper/images egifedcloud/cloudkeeper-os:$TAG
-ExecStop=/usr/bin/docker stop cloudkeeper-os
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
+#[Install]
+#WantedBy=multi-user.target
+#EOF
+#
 # cloudkeeper core
 cp cloudkeeper/core/image-lists.conf /etc/cloudkeeper
 cp cloudkeeper/core/cloudkeeper.yml /etc/cloudkeeper
@@ -96,7 +98,7 @@ cat > /usr/local/bin/ssm-send.sh << EOF
 
 docker run -v /etc/grid-security:/etc/grid-security \
            -v /var/spool/apel:/var/spool/apel \
-           --rm egifedcloud/ssm:$TAG ssmsend
+           --rm stfc/ssm:$SSM_TAG ssmsend
 EOF
 
 # cloud-info
@@ -158,9 +160,12 @@ echo "deb http://repository.egi.eu/sw/production/cas/1/current egi-igtf core" >>
 apt-get update
 apt-get -qy install --fix-missing ca-policy-egi-core fetch-crl
 
-IMAGES="cloudkeeper cloudkeeper-os bdii sitebdii cloudbdii caso ssm"
+IMAGES="cloudkeeper cloudkeeper-os bdii sitebdii cloudbdii caso"
 for i in $IMAGES; do
     docker pull egifedcloud/$i:$TAG
 done
+
+docker pull stfc/ssm:$SSM_TAG
+
 
 fetch-crl -p 2 -T 30 || true
