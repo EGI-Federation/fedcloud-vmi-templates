@@ -1,5 +1,6 @@
-# VMI-endorsement
+# FedCloud VM Image templates
 
-Packer configuration for creating the VMI for EGI FedCloud
+This repository contains the packer templates used for creating the EGI 
+Virtual Machine Images that are available at [AppDB](https://appdb.egi.eu/browse/cloud)
 
-Lots of info taken from github.com/Misenko/comfy
+Initial work taken from [comfy](https://github.com/Misenko/comfy)
