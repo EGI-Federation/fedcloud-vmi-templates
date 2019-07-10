@@ -24,15 +24,12 @@
   "provisioners": [
     {
       "type": "ansible",
+      "user": "root",
       "playbook_file": "provisioners/init.yaml"
     },
     {
-      "type": "shell",
-      "expect_disconnect": true,
-      "inline": ["reboot &", "sleep 5s"] 
-    },
-    {
       "type": "ansible",
+      "user": "root",
       "playbook_file": "provisioners/base.yaml",
       "pause_before": "30s"
     }

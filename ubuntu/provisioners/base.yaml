@@ -1,6 +1,4 @@
 - hosts: all
-  tasks:
-  - name: Include cloud-init recipe
-    include_tasks: cloud-init.yaml
-  - name: Include clean-up recipe
-    include_tasks: clean.yaml
+  roles:
+  - cloud-init
+  - cleanup
