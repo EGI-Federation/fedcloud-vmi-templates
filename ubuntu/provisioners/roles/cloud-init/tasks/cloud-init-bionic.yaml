@@ -1,0 +1,8 @@
+---
+- name: remove network configuration
+  replace:
+    path: /etc/network/interfaces
+    regexp: "^[^#](.*{{ item }}.*)$"
+    replace: '# \1'
+  when: item != "lo"
+  loop: "{{ ansible_interfaces }}"

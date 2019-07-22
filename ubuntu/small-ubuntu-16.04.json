@@ -36,19 +36,12 @@
   "provisioners": [
     {
       "type": "ansible",
+      "user": "root",
       "playbook_file": "provisioners/init.yaml"
     },
     {
-      "type": "shell",
-      "expect_disconnect": true,
-      "inline": [
-          "#!/usr/bin/env bash",
-          "set -uex",
-          "nohup shutdown --reboot now </dev/null >/dev/null 2>&1 &"
-      ]
-    },
-    {
       "type": "ansible",
+      "user": "root",
       "playbook_file": "provisioners/base.yaml",
       "pause_before": "30s"
     }
