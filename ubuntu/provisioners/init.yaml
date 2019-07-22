@@ -8,6 +8,4 @@
   tasks:
   - name: update packages
     apt: upgrade=dist
-  - name: Unconditionally reboot the machine with all defaults
-    reboot:
 
