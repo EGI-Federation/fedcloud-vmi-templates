@@ -11,6 +11,7 @@
     - "/etc/sitebdii"
     - "/var/spool/caso"
     - "/var/spool/apel"
+    - "/var/lock/cloudkeeper"
     - "/image_data"
 
 - name: Appliance configuration files
@@ -115,6 +116,7 @@
 
       docker run -v /etc/grid-security:/etc/grid-security \
                  -v /etc/cloudkeeper:/etc/cloudkeeper \
+                 -v /var/lock/cloudkeeper:/var/lock/cloudkeeper \
                  -v /image_data:/var/spool/cloudkeeper/images \
                  --link cloudkeeper-os:backend \
                  --rm egifedcloud/cloudkeeper:{{ appliance_tag}} cloudkeeper sync --debug
