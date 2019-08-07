@@ -1,0 +1,8 @@
+#!/bin/sh
+
+docker run -v /etc/grid-security:/etc/grid-security \
+           -v /var/spool/apel:/var/spool/apel \
+           -v /etc/apel:/etc/apel \
+           --rm stfc/ssm:{{ ssm_tag }} ssmsend
+
+

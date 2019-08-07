@@ -31,10 +31,6 @@
       dest: "/etc/caso/voms.json"
     - src: "accounting/caso/caso.conf"
       dest: "/etc/caso/caso.conf"
-    - src: "accounting/ssm/logging.cfg"
-      dest: "/etc/apel/logging.cfg"
-    - src: "accounting/ssm/sender.cfg"
-      dest: "/etc/apel/sender.cfg"
     - src: "cloud-info/cloud/openstack.rc"
       dest: "/etc/cloud-info-provider/openstack.rc"
     - src: "cloud-info/cloud/openstack.yaml"
@@ -44,47 +40,15 @@
     - src: "cloud-info/site/glite-info-site-defaults.conf"
       dest: "/etc/sitebdii/glite-info-site-defaults.conf"
 
-
 - name: Cloudkeeper-os service file
-  copy:
+  template:
+    src: cloudkeeper-os.service.j2
     dest: /etc/systemd/system/cloudkeeper-os.service
-    content: |
-      #
-      # This manages the cloudkeeper OS backend
-      #
-      [Unit]
-      Description=CloudKeeper Service
-      After=docker.service
-      Requires=docker.service
-
-      [Service]
-      ExecStartPre=-/usr/bin/docker stop cloudkeeper-os
-      ExecStartPre=-/usr/bin/docker rm -v cloudkeeper-os
-      ExecStart=/usr/bin/docker run --name cloudkeeper-os -v /etc/cloudkeeper-os/cloudkeeper-os.conf:/etc/cloudkeeper-os/cloudkeeper-os.conf -v /etc/cloudkeeper-os/voms.json:/etc/cloudkeeper-os/voms.json -v /image_data:/var/spool/cloudkeeper/images egifedcloud/cloudkeeper-os:{{ appliance_tag }}
-      ExecStop=/usr/bin/docker stop cloudkeeper-os
-
-      [Install]
-      WantedBy=multi-user.target
 
 - name: BDII service file
   copy:
+    src: bdii.service
     dest: /etc/systemd/system/bdii.service
-    content: |
-      #
-      # This manages the docker-compose for BDII
-      #
-      [Unit]
-      Description=BDII Service
-      After=docker.service
-      Requires=docker.service
-
-      [Service]
-      ExecStartPre=/usr/local/bin/docker-compose -f /etc/sitebdii/docker-compose.yml rm -v -f -s
-      ExecStart=/usr/local/bin/docker-compose -f /etc/sitebdii/docker-compose.yml up
-      ExecStop=/usr/local/bin/docker-compose -f /etc/sitebdii/docker-compose.yml stop
-
-      [Install]
-      WantedBy=multi-user.target
 
 - name: cloudkeeper cron entry
   cron:
@@ -92,6 +56,17 @@
     hour: "*/4"
     minute: 26
     job: "/usr/local/bin/cloudkeeper.sh >> /var/log/cloudkeeper.log 2>&1"
+
+- name: SSM Send config file
+  copy:
+    src: sender.cfg
+    dest: /etc/apel/sender.cfg
+
+- name: SSM logging config file
+  copy:
+    src: logging.cfg
+    dest: /etc/apel/logging.cfg
+
 
 - name: SSM cron entry
   cron:
@@ -108,63 +83,27 @@
     job: "/usr/local/bin/caso-extract.sh >> /var/log/caso.log 2>&1"
 
 - name: Cloudkeeper helper script
-  copy:
+  template:
+    src: cloudkeeper.sh.j2
     dest: /usr/local/bin/cloudkeeper.sh
     mode: 0755
-    content: |
-      #!/bin/sh
-
-      docker run -v /etc/grid-security:/etc/grid-security \
-                 -v /etc/cloudkeeper:/etc/cloudkeeper \
-                 -v /var/lock/cloudkeeper:/var/lock/cloudkeeper \
-                 -v /image_data:/var/spool/cloudkeeper/images \
-                 --link cloudkeeper-os:backend \
-                 --rm egifedcloud/cloudkeeper:{{ appliance_tag}} cloudkeeper sync --debug
 
 - name: SSM helper script
-  copy:
+  template:
+    src: ssm-send.sh.j2
     dest: /usr/local/bin/ssm-send.sh
     mode: 0755
-    content: |
-      #!/bin/sh
-
-      docker run -v /etc/grid-security:/etc/grid-security \
-                 -v /var/spool/apel:/var/spool/apel \
-                 --rm stfc/ssm:{{ ssm_tag }} ssmsend
 
 - name: cASO helper script
-  copy:
+  template:
+    src: caso-extract.sh.j2
     dest: /usr/local/bin/caso-extract.sh
     mode: 0755
-    content: |
-      #!/bin/sh
-
-      docker run -v /etc/caso/voms.json:/etc/caso/voms.json \
-                 -v /etc/caso/caso.conf:/etc/caso/caso.conf \
-                 -v /var/spool/caso:/var/spool/caso \
-                 -v /var/spool/apel:/var/spool/apel \
-                 --rm egifedcloud/caso:{{ appliance_tag }}
 
 - name: BDII docker compose file
-  copy:
+  template:
+    src: bdii-docker-compose.yml.j2
     dest: /etc/sitebdii/docker-compose.yml
-    content: |
-      version: "2"
-      services:
-        cloudbdii:
-          image: egifedcloud/cloudbdii:{{ appliance_tag }}
-          volumes:
-           - /etc/cloud-info-provider/openstack.rc:/etc/cloud-info-provider/openstack.rc
-           - /etc/cloud-info-provider/openstack.yaml:/etc/cloud-info-provider/openstack.yaml
-        sitebdii:
-          image: egifedcloud/sitebdii:{{ appliance_tag }}
-          volumes:
-           - /etc/sitebdii/site.cfg:/etc/glite-info-static/site/site.cfg
-           - /etc/sitebdii/glite-info-site-defaults.conf:/etc/bdii/gip/glite-info-site-defaults.conf
-          links:
-           - cloudbdii
-          ports:
-           - "2170:2170"
 
 - name: Enable services
   systemd:
