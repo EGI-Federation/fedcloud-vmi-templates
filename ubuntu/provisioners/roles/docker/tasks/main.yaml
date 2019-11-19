@@ -46,5 +46,10 @@
   when: docker_install_kubeadm
 
 - name: Install kubernetes packages
-  apt: name=kubelet,kubeadm,kubectl state=installed
+  apt:
+    name:
+    - "kubelet={{ kube_version }}"
+    - "kubeadm={{ kube_version }}"
+    - "kubectl={{ kube_version }}"
+    state: installed
   when: docker_install_kubeadm

@@ -1,3 +1,4 @@
 docker_version: 18.06.2~ce~3-0~ubuntu
 docker_compose_version: 1.21.2
 docker_install_kubeadm: true
+kube_version: 1.15.6-00
