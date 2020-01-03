@@ -1,6 +1,6 @@
-- name: install requirements 
+- name: install requirements
   apt:
-    name: 
+    name:
     - apt-transport-https
     - ca-certificates
     - curl
@@ -8,38 +8,38 @@
     - apparmor
     # this is to make the nfs-based volumes work
     - nfs-common
-    state: latest 
+    state: latest
 
 - name: add Docker repo key
   apt_key: url="https://download.docker.com/linux/debian/gpg"
 
 - name: add docker repo
-  apt_repository: 
+  apt_repository:
     repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable'
     state: present
     update_cache: yes
 
-- name: Install docker {{ docker_version }} 
-  apt: 
+- name: Install docker {{ docker_version }}
+  apt:
     name: "docker-ce={{ docker_version }}"
-    state: installed
+    state: present
 
 - name: Configure overlay2
   copy:
     dest: /etc/docker/daemon.json
-    src: daemon.json 
+    src: daemon.json
 
 - name: Get docker-compose {{ docker_compose_version }}
   get_url:
     url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ ansible_system }}-{{ ansible_machine }}"
     dest: /usr/local/bin/docker-compose
-    mode: 0755 
+    mode: 0755
 
 - name: Add repo key
   apt_key:
     url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
     state: present
-  when: docker_install_kubeadm 
+  when: docker_install_kubeadm
 
 - name: Add kubernetes repo
   apt_repository: repo='deb http://apt.kubernetes.io/ kubernetes-xenial main' state=present update_cache=yes
@@ -51,5 +51,5 @@
     - "kubelet={{ kube_version }}"
     - "kubeadm={{ kube_version }}"
     - "kubectl={{ kube_version }}"
-    state: installed
+    state: present
   when: docker_install_kubeadm
