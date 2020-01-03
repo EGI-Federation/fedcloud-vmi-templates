@@ -31,7 +31,7 @@
       "<enter>"
     ],
     "format": "ova",
-    "vm_name": "Docker.Ubuntu.18.04-2019.11.19"
+    "vm_name": "Docker.Ubuntu.18.04-2020.01.03"
   }],
   "provisioners": [
     {
