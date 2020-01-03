@@ -3,8 +3,8 @@
     "type": "virtualbox-iso",
     "guest_os_type": "RedHat_64",
     "disk_size": 8000,
-    "iso_url": "http://ftp.cica.es/CentOS/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1810.iso",
-    "iso_checksum": "19d94274ef856c4dfcacb2e7cfe4be73e442a71dd65cc3fb6e46db826040b56e",
+    "iso_url": "http://ftp.cica.es/CentOS/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso",
+    "iso_checksum": "6ffa7ad44e8716e4cd6a5c3a85ba5675a935fc0448c260f43b12311356ba85ad",
     "iso_checksum_type": "sha256",
     "ssh_username": "root",
     "ssh_password": "rootpassword",
@@ -20,7 +20,7 @@
         "<enter>"
     ],
     "format": "ova",
-    "vm_name": "centos.7-2019.07.08"
+    "vm_name": "centos.7-2020.01.03"
   }],
   "provisioners": [
     {
