@@ -32,7 +32,7 @@
       "<enter>"
     ],
     "format": "ova",
-    "vm_name": "FedCloud-Appliance.Ubuntu.18.04-2019.09.09"
+    "vm_name": "FedCloud-Appliance.Ubuntu.18.04-2020.03.02"
   }],
   "provisioners": [
     {
