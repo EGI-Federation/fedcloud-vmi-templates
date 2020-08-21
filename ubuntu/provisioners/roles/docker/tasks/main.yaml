@@ -21,7 +21,10 @@
 
 - name: Install docker {{ docker_version }}
   apt:
-    name: "docker-ce={{ docker_version }}"
+    name:
+    - "docker-ce={{ docker_version }}"
+    - containerd.io=1.2.13-2
+    - "docker-ce-cli={{ docker_version }}"
     state: present
 
 - name: Configure overlay2

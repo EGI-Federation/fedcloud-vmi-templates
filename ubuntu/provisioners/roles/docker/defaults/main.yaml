@@ -1,4 +1,4 @@
-docker_version: 18.06.2~ce~3-0~ubuntu
+docker_version: 5:19.03.11~3-0~ubuntu-{{ ansible_distribution_release }}
 docker_compose_version: 1.21.2
 docker_install_kubeadm: true
-kube_version: 1.15.6-00
+kube_version: 1.18.5-00
