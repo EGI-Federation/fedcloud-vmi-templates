@@ -1,41 +1,53 @@
 {
-  "builders": [{
-    "type": "virtualbox-iso",
-    "guest_os_type": "RedHat_64",
-    "disk_size": 8000,
-    "iso_url": "http://ftp.cica.es/CentOS/7/isos/x86_64/CentOS-7-x86_64-NetInstall-1908.iso",
-    "iso_checksum": "6ffa7ad44e8716e4cd6a5c3a85ba5675a935fc0448c260f43b12311356ba85ad",
-    "iso_checksum_type": "sha256",
-    "ssh_username": "root",
-    "ssh_password": "rootpassword",
-    "ssh_wait_timeout": "90m",
-    "shutdown_command": "shutdown -h now",
-    "http_directory": "httpdir",
-    "http_port_min": 8500,
-    "http_port_max": 8550,
-    "vboxmanage": [ ["modifyvm", "{{.Name}}", "--memory", "1024"] ],
-    "boot_command": [
+  "builders": [
+    {
+      "boot_command": [
         "<esc>",
         " linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-7.cfg",
         "<enter>"
-    ],
-    "format": "ova",
-    "vm_name": "centos.7-2020.01.03"
-  }],
+      ],
+      "disk_size": 8000,
+      "format": "ova",
+      "guest_os_type": "RedHat_64",
+      "http_directory": "httpdir",
+      "http_port_max": 8550,
+      "http_port_min": 8500,
+      "iso_checksum": "sha256:101bc813d2af9ccf534d112cbe8670e6d900425b297d1a4d2529c5ad5f226372",
+      "iso_url": "https://ftp.cica.es/CentOS/7/isos/x86_64/CentOS-7-x86_64-NetInstall-2003.iso",
+      "shutdown_command": "shutdown -h now",
+      "ssh_password": "rootpassword",
+      "ssh_timeout": "90m",
+      "ssh_username": "root",
+      "type": "virtualbox-iso",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "1024"
+        ]
+      ],
+      "vm_name": "centos.7-2020.07.08"
+    }
+  ],
   "provisioners": [
     {
-      "type": "ansible",
-      "playbook_file": "provisioners/init.yaml"
+      "playbook_file": "provisioners/init.yaml",
+      "type": "ansible"
     },
     {
-      "type": "shell",
       "expect_disconnect": true,
-      "inline": ["reboot &", "sleep 5s"] 
+      "inline": [
+        "reboot \u0026",
+        "sleep 5s"
+      ],
+      "type": "shell"
     },
     {
-      "type": "ansible",
+      "pause_before": "30s",
       "playbook_file": "provisioners/config.yaml",
-      "pause_before": "30s"
+      "type": "ansible"
     }
   ]
 }
+
