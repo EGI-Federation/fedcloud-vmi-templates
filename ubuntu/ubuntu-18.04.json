@@ -1,49 +1,50 @@
 {
-  "builders": [{
-    "type": "virtualbox-iso",
-    "guest_os_type": "Ubuntu_64",
-    "disk_size": 8000,
-    "iso_url": "http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso",
-    "iso_checksum": "bed8a55ae2a657f8349fe3271097cff3a5b8c3d1048cf258568f1601976fa30d",
-    "iso_checksum_type": "sha256",
-    "ssh_username": "root",
-    "ssh_password": "rootpasswd",
-    "ssh_wait_timeout": "90m",
-    "shutdown_command": "shutdown -h now",
-    "http_directory": "httpdir",
-    "http_port_min": 8500,
-    "http_port_max": 8550,
-    "boot_command": [
-      "<tab>",
-      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-      "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-      "<bs><bs><bs>",
-      "linux ",
-      "auto=true priority=critical ",
-      "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu.cfg ",
-      "initrd=initrd.gz ---",
-      "<enter>"
-    ],
-    "format": "ova",
-    "vm_name": "Ubuntu.18.04-2020.01.03"
-  }],
+  "builders": [
+    {
+      "boot_command": [
+        "<tab>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs>",
+        "linux ",
+        "auto=true priority=critical ",
+        "preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/ubuntu.cfg ",
+        "initrd=initrd.gz ---",
+        "<enter>"
+      ],
+      "disk_size": 8000,
+      "format": "ova",
+      "guest_os_type": "Ubuntu_64",
+      "http_directory": "httpdir",
+      "http_port_max": 8550,
+      "http_port_min": 8500,
+      "iso_checksum": "sha256:bed8a55ae2a657f8349fe3271097cff3a5b8c3d1048cf258568f1601976fa30d",
+      "iso_url": "http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso",
+      "shutdown_command": "shutdown -h now",
+      "ssh_password": "rootpasswd",
+      "ssh_timeout": "90m",
+      "ssh_username": "root",
+      "type": "virtualbox-iso",
+      "vm_name": "Ubuntu.18.04-2020.07.07"
+    }
+  ],
   "provisioners": [
     {
+      "playbook_file": "provisioners/init.yaml",
       "type": "ansible",
-      "user": "root",
-      "playbook_file": "provisioners/init.yaml"
+      "user": "root"
     },
     {
-      "type": "ansible",
-      "user": "root",
+      "pause_before": "30s",
       "playbook_file": "provisioners/base.yaml",
-      "pause_before": "30s"
+      "type": "ansible",
+      "user": "root"
     }
   ]
 }

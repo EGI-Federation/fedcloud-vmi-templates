@@ -21,8 +21,8 @@
   with_items:
     - src: "cloudkeeper/os/cloudkeeper-os.conf"
       dest: "/etc/cloudkeeper-os/cloudkeeper-os.conf"
-    - src: "cloudkeeper/os/voms.json"
-      dest: "/etc/cloudkeeper-os/voms.json"
+    - src: "cloudkeeper/os/mapping.json"
+      dest: "/etc/cloudkeeper-os/mapping.json"
     - src: "cloudkeeper/core/image-lists.conf"
       dest: "/etc/cloudkeeper/image-lists.conf"
     - src: "cloudkeeper/core/cloudkeeper.yml"
