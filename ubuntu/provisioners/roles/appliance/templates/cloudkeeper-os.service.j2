@@ -9,7 +9,7 @@ Requires=docker.service
 [Service]
 ExecStartPre=-/usr/bin/docker stop cloudkeeper-os
 ExecStartPre=-/usr/bin/docker rm -v cloudkeeper-os
-ExecStart=/usr/bin/docker run --name cloudkeeper-os -v /etc/cloudkeeper-os/cloudkeeper-os.conf:/etc/cloudkeeper-os/cloudkeeper-os.conf -v /etc/cloudkeeper-os/voms.json:/etc/cloudkeeper-os/voms.json -v /image_data:/var/spool/cloudkeeper/images egifedcloud/cloudkeeper-os:{{ appliance_tag }}
+ExecStart=/usr/bin/docker run --name cloudkeeper-os -v /etc/cloudkeeper-os/cloudkeeper-os.conf:/etc/cloudkeeper-os/cloudkeeper-os.conf -v /etc/cloudkeeper-os/mapping.json:/etc/cloudkeeper-os/mapping.json -v /image_data:/var/spool/cloudkeeper/images egifedcloud/cloudkeeper-os:{{ appliance_tag }}
 ExecStop=/usr/bin/docker stop cloudkeeper-os
 
 [Install]
