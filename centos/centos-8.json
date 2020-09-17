@@ -1,0 +1,53 @@
+{
+  "builders": [
+    {
+      "boot_command": [
+        "<esc>",
+        " linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-8.cfg",
+        "<enter>"
+      ],
+      "disk_size": 8000,
+      "format": "ova",
+      "guest_os_type": "RedHat_64",
+      "http_directory": "httpdir",
+      "http_port_max": 8550,
+      "http_port_min": 8500,
+      "iso_checksum": "sha256:c67876a5602faa17f68b40ccf2628799b87454aa67700f0f57eec15c6ccdd98c",
+      "iso_url": "https://ftp.cica.es/CentOS/8.2.2004/isos/x86_64/CentOS-8.2.2004-x86_64-boot.iso",
+      "shutdown_command": "shutdown -h now",
+      "ssh_password": "rootpassword",
+      "ssh_timeout": "90m",
+      "ssh_username": "root",
+      "type": "virtualbox-iso",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "1024"
+        ]
+      ],
+      "vm_name": "centos.8-2020.09.17"
+    }
+  ],
+  "provisioners": [
+    {
+      "playbook_file": "provisioners/init.yaml",
+      "type": "ansible"
+    },
+    {
+      "expect_disconnect": true,
+      "inline": [
+        "reboot",
+        "sleep 5s"
+      ],
+      "type": "shell"
+    },
+    {
+      "pause_before": "30s",
+      "playbook_file": "provisioners/config.yaml",
+      "type": "ansible"
+    }
+  ]
+}
+

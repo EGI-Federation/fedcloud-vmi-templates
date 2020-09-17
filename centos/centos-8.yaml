@@ -1,0 +1,17 @@
+---
+appdb:
+  version: 2020.09.17 
+  expireson: 6
+  notes: First version on continuous delivery
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2020.09.17.ova
+  arch: x86_64
+  os:
+    family: Linux
+    name: CentOS 
+    version: '8'
+  format: OVA
+  hypervisor: VirtualBox 
+  cores:
+    minimum: 1
+  ram:
+    minimum: 1GB
