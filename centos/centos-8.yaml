@@ -11,7 +11,3 @@ appdb:
     version: '8'
   format: OVA
   hypervisor: VirtualBox 
-  cores:
-    minimum: 1
-  ram:
-    minimum: 1GB
