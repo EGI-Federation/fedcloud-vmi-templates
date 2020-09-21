@@ -1,9 +1,9 @@
 ---
 appdb:
-  version: 2020.09.17 
+  version: 2020.09. 21
   expireson: 6
-  notes: First version on continuous delivery
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2020.09.17.ova
+  notes: Rebuild initramfs
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2020.09.21.ova
   arch: x86_64
   os:
     family: Linux
