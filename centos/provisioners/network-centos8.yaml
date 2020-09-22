@@ -1,5 +1,5 @@
 ---
-- name: Create /etc/sysconfig/network 
+- name: Create /etc/sysconfig/network
   copy:
     content: |
       NETWORKING=yes
