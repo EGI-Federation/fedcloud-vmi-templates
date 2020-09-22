@@ -2,12 +2,12 @@
 appdb:
   version: 2020.09. 21
   expireson: 6
-  notes: Rebuild initramfs
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2020.09.21.ova
+  notes: CentOS 8 working version
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2020.09.22.ova
   arch: x86_64
   os:
     family: Linux
-    name: CentOS 
+    name: CentOS
     version: '8'
   format: OVA
-  hypervisor: VirtualBox 
+  hypervisor: VirtualBox
