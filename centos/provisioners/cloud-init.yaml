@@ -3,6 +3,7 @@
   yum:
     name: epel-release
     state: latest 
+  when: ansible_distribution_major_version != "8"
 
 - name: install cloud-init and extra packages 
   yum:

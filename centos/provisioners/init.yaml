@@ -1,8 +1,8 @@
 - hosts: all
   gather_facts: False
   tasks:
-  - name: install python 2
-    raw: test -e /usr/bin/python || (yum install -y python)
+  - name: install python
+    raw: test -e /usr/bin/python || test -e /usr/bin/python3 || (yum install -y python)
 
 - hosts: all
   tasks:
@@ -15,6 +15,6 @@
       manager: "auto"
   - name: Rebuilding initramfs for kernel 
     command: |
-       dracut -f /boot/initramfs-{{ item['version'] }}-{{ item['release'] }}.{{ item['arch'] }}.img
+       dracut -f --no-hostonly /boot/initramfs-{{ item['version'] }}-{{ item['release'] }}.{{ item['arch'] }}.img
                 {{ item['version'] }}-{{ item['release'] }}.{{ item['arch'] }} 
     loop: "{{ ansible_facts.packages['kernel'] }}"
