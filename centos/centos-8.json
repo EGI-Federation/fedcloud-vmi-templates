@@ -27,13 +27,14 @@
           "1024"
         ]
       ],
-      "vm_name": "centos.8-2020.09.21"
+      "vm_name": "centos.8-2020.09.22"
     }
   ],
   "provisioners": [
     {
       "playbook_file": "provisioners/init.yaml",
-      "type": "ansible"
+      "type": "ansible",
+      "user": "root"
     },
     {
       "expect_disconnect": true,
@@ -46,7 +47,8 @@
     {
       "pause_before": "30s",
       "playbook_file": "provisioners/config.yaml",
-      "type": "ansible"
+      "type": "ansible",
+      "user": "root"
     }
   ]
 }
