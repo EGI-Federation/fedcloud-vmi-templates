@@ -1,0 +1,32 @@
+#cloud-config
+autoinstall:
+  early-commands:
+  - systemctl stop ssh
+  version: 1
+  locale: en_US
+  keyboard:
+    layout: en
+    variant: us
+  identity:
+    hostname: egi
+    username: ubuntu
+    password: 'x'
+  ssh:
+    install-server: true
+  late-commands:
+    - 'echo "ubuntu ALL=(ALL) NOPASSWD: ALL" >> /target/etc/sudoers.d/99-egi-installation'
+    - |
+     umask 0077
+     for x in $(cat /proc/cmdline)
+     do
+       case $x in
+         PACKER_AUTHORIZED_KEY=*)
+           encoded=$(echo "${x#*=}" | tr '+' ' ')
+           PACKER_AUTHORIZED_KEY=$(echo -n "$encoded" | python3 -c "import sys; from urllib.parse import unquote; print(unquote(sys.stdin.read()));")
+           ;;
+       esac
+     done
+
+     mkdir -p /target/home/ubuntu/.ssh
+     [ -n "$PACKER_AUTHORIZED_KEY" ] && echo $PACKER_AUTHORIZED_KEY >> /target/home/ubuntu/.ssh/authorized_keys
+     chown -R 1000:1000 /target/home/ubuntu

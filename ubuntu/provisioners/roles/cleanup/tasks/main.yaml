@@ -55,6 +55,7 @@
   with_items:
     - "/var/lib/apt/lists/"
     - "/var/log/installer/"
+    - "/var/lib/cloud/"
 
 - name: remove locales
   command: locale-gen --purge en_GB.utf8

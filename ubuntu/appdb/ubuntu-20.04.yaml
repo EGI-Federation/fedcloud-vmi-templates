@@ -1,0 +1,16 @@
+---
+appdb:
+  version: 2020.10.16
+  expireson: 6
+  notes: Ubuntu 20.04 - first release on EGI
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2020.10.16.ova
+  sha512: "62c50172bbea1bb3d8968c8d59e2dbcd4847c81808db37ebf11f8744627985c20f7818fd721872968eb1948207de6ece703306a74ab2d253b19c2f7497b2a113"
+  arch: x86_64
+  os:
+    family: Linux
+    name: Ubuntu 
+    version: '20.04'
+  ram:
+    minimum: 1GB
+  format: OVA
+  hypervisor: VirtualBox
