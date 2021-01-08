@@ -1,0 +1,14 @@
+---
+appdb:
+  version: 2021.01.08
+  expireson: 6
+  notes: Ubuntu 18.04 - regular update 
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.18.04-2021.01.08.ova
+  sha512: "0419ce812c32bed1ada568af064921cf36cbcd83d905f53305e7a7fb807f7c80f15c6d14eec416c6d07b24dae261408c9dd0165e211fcdab25420fcbdc741248"
+  arch: x86_64
+  os:
+    family: Linux
+    name: Ubuntu 
+    version: '18.04'
+  format: OVA
+  hypervisor: VirtualBox
