@@ -1,0 +1,14 @@
+---
+appdb:
+  version: 2021.01.08
+  expireson: 6
+  notes: CentOS 7 regular update 
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2021.01.08.ova
+  sha512: "16f133deb110e533647db88ede68532fdd9343bab0358273ed55b7e6cb462ccf07f8366c574a135965a779e3bf2da9b537f65767ea961e1a8c79f45fe86a63b1"
+  arch: x86_64
+  os:
+    family: Linux
+    name: CentOS
+    version: '7'
+  format: OVA
+  hypervisor: VirtualBox
