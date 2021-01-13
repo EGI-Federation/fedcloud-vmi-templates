@@ -24,14 +24,14 @@
       "http_directory": "httpdir",
       "http_port_max": 8550,
       "http_port_min": 8500,
-      "iso_checksum": "sha256:271a268f92604732d638ec4529e0e843787b3a9407800e14663a47b28a697d96",
+      "iso_checksum": "sha256:f4fb98e81eab0361d23dccf051281756c327953f7fc20151349169412f2f5125",
       "iso_url": "http://archive.ubuntu.com/ubuntu/dists/xenial-updates/main/installer-amd64/current/images/netboot/mini.iso",
       "shutdown_command": "shutdown -h now",
       "ssh_password": "rootpasswd",
       "ssh_timeout": "90m",
       "ssh_username": "root",
       "type": "virtualbox-iso",
-      "vm_name": "Small.Ubuntu.16.04-2020.07.28"
+      "vm_name": "Small.Ubuntu.16.04-2021.01.13"
     }
   ],
   "provisioners": [
