@@ -1,0 +1,14 @@
+---
+appdb:
+  version: 2021.01.13
+  expireson: 3
+  notes: Small Ubuntu 16.04 - regular update 
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.16.04-2021.01.13.ova
+  sha512: "3c1711f58aef61f1a0ff008af35d478a0d27d4eae7a9cafda66270d04d52ec8981aa717f25f69bb75135ab2fbea5d39997a1dc8d30fc8293db9d9f27ff2f593fr"
+  arch: x86_64
+  os:
+    family: Linux
+    name: Ubuntu 
+    version: '16.04'
+  format: OVA
+  hypervisor: VirtualBox
