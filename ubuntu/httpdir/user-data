@@ -15,6 +15,8 @@ autoinstall:
     install-server: true
   late-commands:
     - 'echo "ubuntu ALL=(ALL) NOPASSWD: ALL" >> /target/etc/sudoers.d/99-egi-installation'
+    - sed -ie 's/GRUB_CMDLINE_LINUX_DEFAULT=.*autoinstall.*/GRUB_CMDLINE_LINUX_DEFAULT=""/' /target/etc/default/grub
+    - curtin in-target --target /target update-grub2
     - |
      umask 0077
      for x in $(cat /proc/cmdline)
