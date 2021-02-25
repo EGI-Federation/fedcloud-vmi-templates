@@ -1,14 +1,14 @@
 ---
 appdb:
-  version: 2021.01.08
+  version: 2021.02.25
   expireson: 6
-  notes: Docker Ubuntu 18.04 - regular update 
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.18.04-2021.01.08.ova
-  sha512: "fa706ab4936da886068c8156178d69654bca13824f8f60cb537f6d1f88ad82bf3582628987e331ffbf2b9a5a3fa38fc7e2ea5c0c32c8960aee85bd1822eda3fd"
+  notes: Fix apt-get configuration
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.18.04-2021.02.25.ova
+  sha512: "5ef352dd64cc712aed45a9fe5636e674d90f00c4ebabd2a0cdc992aa2cc8e874e78869c08f0cfd9e4595201d95bb737984f0d90267bbe02cb8c490fa04f899ff"
   arch: x86_64
   os:
     family: Linux
-    name: Ubuntu 
+    name: Ubuntu
     version: '18.04'
   format: OVA
   hypervisor: VirtualBox
