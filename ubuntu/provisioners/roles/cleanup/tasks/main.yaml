@@ -43,11 +43,6 @@
     - /root/.bash_history
     - /root/VBoxGuestAdditions.iso
 
-- name: apt-get clean
-  apt:
-    autoremove: yes
-    autoclean: yes
-
 - name: further removing unneeded files
   file:
     path: "{{ item }}"
@@ -56,6 +51,9 @@
     - "/var/lib/apt/lists/"
     - "/var/log/installer/"
     - "/var/lib/cloud/"
+
+- name: keep apt-get working
+  command: apt-get clean
 
 - name: remove locales
   command: locale-gen --purge en_GB.utf8

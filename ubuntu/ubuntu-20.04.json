@@ -17,15 +17,15 @@
       "http_directory": "httpdir",
       "http_port_max": 8550,
       "http_port_min": 8500,
-      "iso_url": "https://releases.ubuntu.com/20.04/ubuntu-20.04.1-live-server-amd64.iso",
-      "iso_checksum": "sha256:443511f6bf12402c12503733059269a2e10dec602916c0a75263e5d990f6bb93",
+      "iso_url": "https://releases.ubuntu.com/20.04/ubuntu-20.04.2-live-server-amd64.iso",
+      "iso_checksum": "sha256:d1f2bf834bbe9bb43faf16f9be992a6f3935e65be0edece1dee2aa6eb1767423",
       "ssh_timeout": "15m",
       "ssh_clear_authorized_keys": true,
       "shutdown_command": "sudo -- sh -c 'rm /etc/sudoers.d/99-egi-installation && shutdown -h now'",
       "ssh_username": "ubuntu",
       "type": "virtualbox-iso",
       "guest_additions_mode": "disable",
-      "vm_name": "Ubuntu.20.04-2020.10.16"
+      "vm_name": "Ubuntu.20.04-2021.02.25"
     }
   ],
   "provisioners": [

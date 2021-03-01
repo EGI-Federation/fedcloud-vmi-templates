@@ -1,14 +1,14 @@
 ---
 appdb:
-  version: 2020.10.16
+  version: 2020.02.25
   expireson: 6
-  notes: Ubuntu 20.04 - first release on EGI
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2020.10.16.ova
-  sha512: "62c50172bbea1bb3d8968c8d59e2dbcd4847c81808db37ebf11f8744627985c20f7818fd721872968eb1948207de6ece703306a74ab2d253b19c2f7497b2a113"
+  notes: Fixes contextualisation issues
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2021.02.25.ova
+  sha512: "72f2869a461b67bd031cd7214758c3648cede03bd79cfb716329a2e428c6c7e4264063b954511ad667ab15c8ab2e3811acc9e2d2f807f223e4322975a4e561a0"
   arch: x86_64
   os:
     family: Linux
-    name: Ubuntu 
+    name: Ubuntu
     version: '20.04'
   ram:
     minimum: 1GB
