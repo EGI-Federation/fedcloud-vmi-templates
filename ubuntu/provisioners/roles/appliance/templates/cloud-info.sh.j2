@@ -1,0 +1,6 @@
+#!/bin/sh
+
+docker run -v /etc/grid-security:/etc/grid-security \
+	   -v /etc/cloud-info-provider/:/etc/cloud-info-provider/
+           --rm egifedcloud/cloud-info:{{ appliance_tag}} 
+
