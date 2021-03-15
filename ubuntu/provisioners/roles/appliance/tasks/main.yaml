@@ -8,7 +8,6 @@
     - "/etc/apel"
     - "/etc/caso"
     - "/etc/cloud-info-provider"
-    - "/etc/sitebdii"
     - "/var/spool/caso"
     - "/var/spool/apel"
     - "/var/lock/cloudkeeper"
@@ -31,24 +30,15 @@
       dest: "/etc/caso/voms.json"
     - src: "accounting/caso/caso.conf"
       dest: "/etc/caso/caso.conf"
-    - src: "cloud-info/cloud/openstack.rc"
+    - src: "cloud-info/openstack.rc"
       dest: "/etc/cloud-info-provider/openstack.rc"
-    - src: "cloud-info/cloud/openstack.yaml"
+    - src: "cloud-info/openstack.yaml"
       dest: "/etc/cloud-info-provider/openstack.yaml"
-    - src: "cloud-info/site/site.cfg"
-      dest: "/etc/sitebdii/site.cfg"
-    - src: "cloud-info/site/glite-info-site-defaults.conf"
-      dest: "/etc/sitebdii/glite-info-site-defaults.conf"
 
 - name: Cloudkeeper-os service file
   template:
     src: cloudkeeper-os.service.j2
     dest: /etc/systemd/system/cloudkeeper-os.service
-
-- name: BDII service file
-  copy:
-    src: bdii.service
-    dest: /etc/systemd/system/bdii.service
 
 - name: cloudkeeper cron entry
   cron:
@@ -56,6 +46,14 @@
     hour: "*/4"
     minute: 26
     job: "/usr/local/bin/cloudkeeper.sh >> /var/log/cloudkeeper.log 2>&1"
+
+- name: cloud-info-provider cron entry
+  cron:
+    name: cloudinfo
+    hour: "*"
+    minute: "*/5"
+    job: "/usr/local/bin/cloud-info.sh >> /var/log/cloud-info.log 2>&1"
+
 
 - name: SSM Send config file
   copy:
@@ -66,7 +64,6 @@
   copy:
     src: logging.cfg
     dest: /etc/apel/logging.cfg
-
 
 - name: SSM cron entry
   cron:
@@ -81,6 +78,12 @@
     hour: "*/4"
     minute: 14
     job: "/usr/local/bin/caso-extract.sh >> /var/log/caso.log 2>&1"
+
+- name: cloud-info helper script
+  template:
+    src: cloud-info.sh.j2
+    dest: /usr/local/bin/cloud-info.sh
+    mode: 0755
 
 - name: Cloudkeeper helper script
   template:
@@ -100,17 +103,11 @@
     dest: /usr/local/bin/caso-extract.sh
     mode: 0755
 
-- name: BDII docker compose file
-  template:
-    src: bdii-docker-compose.yml.j2
-    dest: /etc/sitebdii/docker-compose.yml
-
 - name: Enable services
   systemd:
     name: "{{ item }}"
     enabled: yes
   with_items:
-    - bdii
     - cloudkeeper-os
 
 - name: add CAs repo key
@@ -132,8 +129,6 @@
 #    with_items:
 #      - "egifedcloud/cloudkeeper:{{ appliance_tag}}"
 #      - "egifedcloud/cloudkeeper-os:{{ appliance_tag}}"
-#      - "egifedcloud/bdii:{{ appliance_tag}}"
-#      - "egifedcloud/sitebdii:{{ appliance_tag}}"
-#      - "egifedcloud/cloudbdii:{{ appliance_tag}}"
+#      - "egifedcloud/cloud-info:{{ appliance_tag}}"
 #      - "egifedcloud/caso:{{ appliance_tag}}"
 #      - "stfc/ssm:{{ ssm_tag }}"
