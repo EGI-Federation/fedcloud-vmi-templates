@@ -30,9 +30,9 @@
       dest: "/etc/caso/voms.json"
     - src: "accounting/caso/caso.conf"
       dest: "/etc/caso/caso.conf"
-    - src: "cloud-info/cloud/openstack.rc"
+    - src: "cloud-info/openstack.rc"
       dest: "/etc/cloud-info-provider/openstack.rc"
-    - src: "cloud-info/cloud/openstack.yaml"
+    - src: "cloud-info/openstack.yaml"
       dest: "/etc/cloud-info-provider/openstack.yaml"
 
 - name: Cloudkeeper-os service file
