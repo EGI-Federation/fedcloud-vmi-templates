@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2021.01.13
+  version: 2021.03.30
   expireson: 3
   notes: Small Ubuntu 16.04 - regular update 
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.16.04-2021.01.13.ova
-  sha512: "3c1711f58aef61f1a0ff008af35d478a0d27d4eae7a9cafda66270d04d52ec8981aa717f25f69bb75135ab2fbea5d39997a1dc8d30fc8293db9d9f27ff2f593fr"
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.16.04-2021.03.30.ova
+  sha512: "4fd1b43c6b9de88bb50cdcbf4e195c02245bdc513e81c173deadea70b3e7046a47d44919119a12f5cdeb31ecd84e29bfc8676652152101cea128d853ed509d0a"
   arch: x86_64
   os:
     family: Linux
