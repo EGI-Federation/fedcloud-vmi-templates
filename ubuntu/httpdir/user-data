@@ -13,6 +13,9 @@ autoinstall:
     password: 'x'
   ssh:
     install-server: true
+  storage:
+    layout:
+      name: direct
   late-commands:
     - 'echo "ubuntu ALL=(ALL) NOPASSWD: ALL" >> /target/etc/sudoers.d/99-egi-installation'
     - sed -ie 's/GRUB_CMDLINE_LINUX_DEFAULT=.*autoinstall.*/GRUB_CMDLINE_LINUX_DEFAULT=""/' /target/etc/default/grub

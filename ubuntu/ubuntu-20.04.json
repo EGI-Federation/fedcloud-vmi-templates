@@ -25,7 +25,7 @@
       "ssh_username": "ubuntu",
       "type": "virtualbox-iso",
       "guest_additions_mode": "disable",
-      "vm_name": "Ubuntu.20.04-2021.02.25"
+      "vm_name": "Ubuntu.20.04-2021.04.12"
     }
   ],
   "provisioners": [
