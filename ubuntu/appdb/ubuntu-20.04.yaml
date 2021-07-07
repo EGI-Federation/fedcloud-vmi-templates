@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2021.04.12
+  version: 2021.07.07
   expireson: 6
   notes: Avoid LVM
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2021.04.12.ova
-  sha512: "4efb7512333f197f295d4b347d0438e12793c058f1214b111189575ef81417feb9cffbcd5c433bca9732375e48ae7c350065724a738d5759566994317fd715e3"
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2021.07.07.ova
+  sha512: "948b74aa21922be0b31b1a718bde70d19430d350d28c09c8444ca3c2c9408e71a943075d58657a2fcb3f1f0cd21d7f5074b0d65e231ebf38e7b7ed73a1d02eb2"
   arch: x86_64
   os:
     family: Linux

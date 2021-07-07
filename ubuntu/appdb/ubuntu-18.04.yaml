@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2021.01.08
+  version: 2021.07.05
   expireson: 6
   notes: Ubuntu 18.04 - regular update 
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.18.04-2021.01.08.ova
-  sha512: "0419ce812c32bed1ada568af064921cf36cbcd83d905f53305e7a7fb807f7c80f15c6d14eec416c6d07b24dae261408c9dd0165e211fcdab25420fcbdc741248"
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.18.04-2021.07.05.ova
+  sha512: "8ffcf77670d6b8a6b8e77517d80c11eea00089a22f828fb3862ee09cb249e4e6a05a1b6d6ab14b2769bc622a32c68043e4d22af2f0d0ad386f10a2ff24230bef"
   arch: x86_64
   os:
     family: Linux
