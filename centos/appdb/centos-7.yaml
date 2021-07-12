@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2021.01.08
+  version: 2021.07.08
   expireson: 6
   notes: CentOS 7 regular update 
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.7-2021.01.08.ova
-  sha512: "16f133deb110e533647db88ede68532fdd9343bab0358273ed55b7e6cb462ccf07f8366c574a135965a779e3bf2da9b537f65767ea961e1a8c79f45fe86a63b1"
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.7-2021.07.08.ova
+  sha512: "502dab44b2205de9aefb48b75c21c23c5dcaca26b810fc1eddf7d9b0faafd17872d15119900d4f396107aae5497e898f7ad7d35daa5509db1a761b687f057c8d"
   arch: x86_64
   os:
     family: Linux
