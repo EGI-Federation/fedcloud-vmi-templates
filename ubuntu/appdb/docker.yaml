@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2021.02.25
+  version: 2021.08.25
   expireson: 6
-  notes: Fix apt-get configuration
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.18.04-2021.02.25.ova
-  sha512: "5ef352dd64cc712aed45a9fe5636e674d90f00c4ebabd2a0cdc992aa2cc8e874e78869c08f0cfd9e4595201d95bb737984f0d90267bbe02cb8c490fa04f899ff"
+  notes: General update
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.18.04-2021.08.25.ova
+  sha512: ""
   arch: x86_64
   os:
     family: Linux
