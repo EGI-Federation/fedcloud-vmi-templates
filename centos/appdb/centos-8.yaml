@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2021.03.09
+  version: 2021.09.06
   expireson: 6
   notes: Regular update
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2021.03.09.ova
-  sha512: "be79f61c27ab8db09949bda1a7c6374123a0ec71b0783aaa11a0fa29f445c054e20ea260de60625817198fbbba1521968aeca436cd433c69f83a842794a0c15f"
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2021.09.06.ova
+  sha512: "79f0de85fecd9843baf4f78e5fbde033f5a15b2bc89cbacf8595b661ea5cb6b77a5e0627660b12c2f05e422f429951201ce1edb6405d40f2467674769b5b36a6"
   arch: x86_64
   os:
     family: Linux
