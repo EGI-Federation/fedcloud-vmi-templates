@@ -1,8 +1,10 @@
 - hosts: all
-  vars:
-    docker_install_kubeadm: false
   roles:
   - cloud-init
-  - docker
+  - role: grycap.docker
+    vars:
+      docker_version: "5:20.10.8~3-0~{{ansible_distribution | lower}}-{{ansible_distribution_release}}"
+      docker_compose_version: 1.29.2
+      docker_install_pip: false
   - appliance
   - cleanup

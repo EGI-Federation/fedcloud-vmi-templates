@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2021.03.12
+  version: 2021.09.13
   expireson: 6
   notes: FedCloud Appliance
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/FedCloud-Appliance.Ubuntu.18.04-2021.03.12.ova
-  sha512: "c950903dede1fea757a6b5aabb51cae9a0e0cd102c5016196becdf979116edd5fe45d6a27086b233f8bd0426dfbf32b27e14af13decb5d33f85ffe1e83c5b9ac"
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/FedCloud-Appliance.Ubuntu.18.04-2021.09.13.ova
+  sha512: "e3ae405ba98fbd3647d0624c2a0d6cebf273b24a01b0b572184388d6d05274932c353917a07932f2e5944d7273fff2c0db8e5c251fcba37d08cfea44d3573a9d"
   arch: x86_64
   os:
     family: Linux

@@ -39,7 +39,7 @@
           "1024"
         ]
       ],
-      "vm_name": "FedCloud-Appliance.Ubuntu.18.04-2021.03.12"
+      "vm_name": "FedCloud-Appliance.Ubuntu.18.04-2021.09.13"
     }
   ],
   "provisioners": [
