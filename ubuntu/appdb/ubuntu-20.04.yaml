@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2021.07.07
+  version: 2021.11.15
   expireson: 6
-  notes: Avoid LVM
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2021.07.07.ova
-  sha512: "948b74aa21922be0b31b1a718bde70d19430d350d28c09c8444ca3c2c9408e71a943075d58657a2fcb3f1f0cd21d7f5074b0d65e231ebf38e7b7ed73a1d02eb2"
+  notes: Keep apt configuration as it comes from ubuntu
+  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2021.11.15.ova
+  sha512: "dd03fddd61b9ef8b4a8d9ba5332e22f93ed38a136f32f756f1959dc48607a6eee2f1bcc790269ddbe8ad69aaa9330074e4bf8fc35a6e2fc2056d56cf75bd290d"
   arch: x86_64
   os:
     family: Linux
