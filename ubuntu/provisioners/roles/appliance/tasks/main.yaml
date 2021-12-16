@@ -47,22 +47,14 @@
     minute: 26
     job: "/usr/local/bin/cloudkeeper.sh >> /var/log/cloudkeeper.log 2>&1"
 
-- name: cloud-info-provider cron entry
-  cron:
-    name: cloudinfo
-    hour: "*"
-    minute: "*/5"
-    job: "/usr/local/bin/cloud-info.sh >> /var/log/cloud-info.log 2>&1"
-
-
 - name: SSM Send config file
   copy:
     src: sender.cfg
     dest: /etc/apel/sender.cfg
 
 - name: SSM logging config file
-  copy:
-    src: logging.cfg
+  get_url:
+    url: "https://github.com/apel/ssm/blob/{{ ssm_tag }}/conf/logging.cfg"
     dest: /etc/apel/logging.cfg
 
 - name: SSM cron entry
