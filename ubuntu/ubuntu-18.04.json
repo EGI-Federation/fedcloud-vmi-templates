@@ -31,7 +31,7 @@
       "ssh_timeout": "90m",
       "ssh_username": "root",
       "type": "virtualbox-iso",
-      "vm_name": "Ubuntu.18.04-2021.07.05"
+      "vm_name": "Ubuntu.18.04-2021.12.23"
     }
   ],
   "provisioners": [
