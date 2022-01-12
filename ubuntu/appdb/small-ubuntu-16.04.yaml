@@ -2,7 +2,7 @@
 appdb:
   version: 2021.09.24
   expireson: 6
-  notes: Small Ubuntu 16.04 - regular update 
+  notes: Small Ubuntu 16.04 - regular update
   url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.16.04-2021.09.24.ova
   sha512: "f401c5e063669ce1a5cae18c21522ef9210c102041110c23d3bac6f0c381719ce0c834fb4f8c7da2738d4d2042d177a49085fa2e33441871b150b00398458477"
   arch: x86_64
