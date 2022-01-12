@@ -1,7 +1,0 @@
-- hosts: all
-  vars:
-    docker_install_kubeadm: false
-  roles:
-  - cloud-init
-  - ui
-  - cleanup
