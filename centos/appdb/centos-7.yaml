@@ -3,7 +3,7 @@ appdb:
   version: 2022.01.10
   expireson: 6
   notes: CentOS 7 regular update 
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.7-2022.01.10.ova
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.7-2022.01.10.ova
   sha512: "839cb0896007854c07ebaf52849b1470f592ac3723d34825d0911fa757cea26e88c82bbace79164a306f241fba810dd7a89a0f09326ec8d02e50cc323341e9a4"
   arch: x86_64
   os:
