@@ -1,9 +1,9 @@
 ---
 appdb:
-  version: 2021.11.15
+  version: 2021.11.15-b
   expireson: 6
-  notes: Keep apt configuration as it comes from ubuntu
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2021.11.15.ova
+  notes: Update image URL
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2021.11.15.ova
   sha512: "dd03fddd61b9ef8b4a8d9ba5332e22f93ed38a136f32f756f1959dc48607a6eee2f1bcc790269ddbe8ad69aaa9330074e4bf8fc35a6e2fc2056d56cf75bd290d"
   arch: x86_64
   os:

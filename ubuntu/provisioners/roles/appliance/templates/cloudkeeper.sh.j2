@@ -5,5 +5,5 @@ docker run -v /etc/grid-security:/etc/grid-security \
            -v /var/lock/cloudkeeper:/var/lock/cloudkeeper \
            -v /image_data:/var/spool/cloudkeeper/images \
            --link cloudkeeper-os:backend \
-           --rm egifedcloud/cloudkeeper:{{ appliance_tag}} cloudkeeper sync --debug
+           --rm "egifedcloud/cloudkeeper:{{ appliance_tag}}" cloudkeeper sync --debug
 

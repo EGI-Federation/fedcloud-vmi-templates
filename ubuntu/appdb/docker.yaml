@@ -1,9 +1,9 @@
 ---
 appdb:
-  version: 2021.08.25
-  expireson: 6
-  notes: General update
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.18.04-2021.08.25.ova
+  version: 2021.08.25-b
+  expireson: 3
+  notes: Update of image URL
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.18.04-2021.08.25.ova
   sha512: "0013b48d669557a10259ab8265e337e27ef3da176dd804b3fa394551de7b73d9432c5377ebfd3190d22c39c08734176c3d16a3a3e9b9888a51a8a8dc7fea1b2d"
   arch: x86_64
   os:

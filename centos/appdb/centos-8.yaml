@@ -1,9 +1,9 @@
 ---
 appdb:
-  version: 2021.09.06
-  expireson: 6
+  version: 2021.09.06-b
+  expireson: 3
   notes: Regular update
-  url: https://cephrgw01.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2021.09.06.ova
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2021.09.06.ova
   sha512: "79f0de85fecd9843baf4f78e5fbde033f5a15b2bc89cbacf8595b661ea5cb6b77a5e0627660b12c2f05e422f429951201ce1edb6405d40f2467674769b5b36a6"
   arch: x86_64
   os:
