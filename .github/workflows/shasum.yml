@@ -1,7 +1,7 @@
 ---
 name: Check Shasums
 
-on: [pull_request, push]
+on: [pull_request]
 
 jobs:
   shasum:
@@ -29,9 +29,7 @@ jobs:
       # Runs the Super-Linter action
       - name: Calculate the sum for new images
         run: |
-          # for f in $(git diff --name-only ${{ github.event.before }}..${{ github.event.after }} | grep "appdb.*\.yaml")
-          set -x
-          for f in $(git ls-files | grep "appdb.*\.yaml")
+          for f in $(git diff --name-only ${{ github.event.before }}..${{ github.event.after }} | grep "appdb.*\.yaml")
           do
             url=$(yq eval .appdb.url "$f")
             curl -s -I "$url" || exit 1

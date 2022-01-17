@@ -1,6 +1,6 @@
 ---
 appdb:
-  version: 2022.01.10
+  version: 2022.01.10-b
   expireson: 6
   notes: CentOS 7 regular update test
   url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.7-2022.01.10.ova
