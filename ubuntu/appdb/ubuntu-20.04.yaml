@@ -1,6 +1,6 @@
 ---
 appdb:
-  version: 2021.11.15
+  version: 2021.11.15-b
   expireson: 6
   notes: Update image URL
   url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2021.11.15.ova
