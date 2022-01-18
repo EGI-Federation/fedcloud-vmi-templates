@@ -43,5 +43,3 @@ jobs:
               exit 1
             fi
           done
-          exit $code
-
