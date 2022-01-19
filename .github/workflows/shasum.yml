@@ -31,8 +31,9 @@ jobs:
         run: |
           for f in $(git diff --name-only ${{ github.event.pull_request.base.sha }} | grep "appdb.*\.yaml")
           do
+            echo "Testing $f"
             url=$(yq eval .appdb.url "$f")
-            curl -s -I "$url" || exit 1
+            curl -I "$url" || exit 1
             # now download and shasum
             sha_url=$(curl -s "$url" | sha512sum | cut -f1 -d"-" | tr -d "[:space:]")
             sha_appdb=$(yq eval .appdb.sha512 "$f")
