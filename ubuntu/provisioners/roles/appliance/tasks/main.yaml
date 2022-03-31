@@ -12,33 +12,60 @@
     - "/var/spool/apel"
     - "/var/lock/cloudkeeper"
     - "/image_data"
+    - "/etc/egi"
 
 - name: Appliance configuration files
   get_url:
     url: "{{ base_url }}/{{ item.src }}"
     dest: "{{ item.dest }}"
   with_items:
-    - src: "cloudkeeper/os/cloudkeeper-os.conf"
+    - src: "cloudkeeper-os/cloudkeeper-os.conf"
       dest: "/etc/cloudkeeper-os/cloudkeeper-os.conf"
-    - src: "cloudkeeper/os/mapping.json"
+    - src: "cloudkeeper-os/mapping.json"
       dest: "/etc/cloudkeeper-os/mapping.json"
-    - src: "cloudkeeper/core/image-lists.conf"
+    - src: "cloudkeeper-core/image-lists.conf"
       dest: "/etc/cloudkeeper/image-lists.conf"
-    - src: "cloudkeeper/core/cloudkeeper.yml"
+    - src: "cloudkeeper-core/cloudkeeper.yml"
       dest: "/etc/cloudkeeper"
-    - src: "accounting/caso/voms.json"
+    - src: "caso/voms.json"
       dest: "/etc/caso/voms.json"
-    - src: "accounting/caso/caso.conf"
+    - src: "caso/caso.conf"
       dest: "/etc/caso/caso.conf"
     - src: "cloud-info/openstack.rc"
       dest: "/etc/cloud-info-provider/openstack.rc"
     - src: "cloud-info/openstack.yaml"
       dest: "/etc/cloud-info-provider/openstack.yaml"
 
-- name: Cloudkeeper-os service file
+
+- name: Create defaults file
   template:
-    src: cloudkeeper-os.service.j2
-    dest: /etc/systemd/system/cloudkeeper-os.service
+    src: defaults.j2
+    dest: /etc/egi/defaults
+
+- name: Copy configuration files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - src: cloudkeeper-os.service
+      dest: /etc/systemd/system/cloudkeeper-os.service
+    - src: sender.cfg
+      dest: /etc/apel/sender.cfg
+
+- name: Copy scripts
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0755
+  with_items:
+    - src: cloud-info.sh
+      dest: /usr/local/bin/cloud-info.sh
+    - src: cloudkeeper.sh
+      dest: /usr/local/bin/cloudkeeper.sh
+    - src: ssm-send.sh
+      dest: /usr/local/bin/ssm-send.sh
+    - src: caso-extract.sh
+      dest: /usr/local/bin/caso-extract.sh
 
 - name: cloudkeeper cron entry
   cron:
@@ -46,11 +73,6 @@
     hour: "*/4"
     minute: 26
     job: "/usr/local/bin/cloudkeeper.sh >> /var/log/cloudkeeper.log 2>&1"
-
-- name: SSM Send config file
-  copy:
-    src: sender.cfg
-    dest: /etc/apel/sender.cfg
 
 - name: SSM logging config file
   get_url:
@@ -70,30 +92,6 @@
     hour: "*/4"
     minute: 14
     job: "/usr/local/bin/caso-extract.sh >> /var/log/caso.log 2>&1"
-
-- name: cloud-info helper script
-  template:
-    src: cloud-info.sh.j2
-    dest: /usr/local/bin/cloud-info.sh
-    mode: 0755
-
-- name: Cloudkeeper helper script
-  template:
-    src: cloudkeeper.sh.j2
-    dest: /usr/local/bin/cloudkeeper.sh
-    mode: 0755
-
-- name: SSM helper script
-  template:
-    src: ssm-send.sh.j2
-    dest: /usr/local/bin/ssm-send.sh
-    mode: 0755
-
-- name: cASO helper script
-  template:
-    src: caso-extract.sh.j2
-    dest: /usr/local/bin/caso-extract.sh
-    mode: 0755
 
 - name: Enable services
   systemd:
@@ -119,8 +117,8 @@
 #  - name: pull docker images
 #    command: docker pull "{{ item }}"
 #    with_items:
-#      - "egifedcloud/cloudkeeper:{{ appliance_tag}}"
-#      - "egifedcloud/cloudkeeper-os:{{ appliance_tag}}"
-#      - "egifedcloud/cloud-info:{{ appliance_tag}}"
-#      - "egifedcloud/caso:{{ appliance_tag}}"
+#      - "egifedcloud/ops-cloudkeeper-core:{{ appliance_tag}}"
+#      - "egifedcloud/ops-cloudkeeper-os:{{ appliance_tag}}"
+#      - "egifedcloud/ops-cloud-info:{{ appliance_tag}}"
+#      - "egifedcloud/ops-caso:{{ appliance_tag}}"
 #      - "stfc/ssm:{{ ssm_tag }}"

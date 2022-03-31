@@ -1,0 +1,17 @@
+#
+# This manages the cloudkeeper OS backend
+#
+[Unit]
+Description=CloudKeeper Service
+After=docker.service
+Requires=docker.service
+
+[Service]
+EnvironmentFile=/etc/egi/defaults
+ExecStartPre=-/usr/bin/docker stop cloudkeeper-os
+ExecStartPre=-/usr/bin/docker rm -v cloudkeeper-os
+ExecStart=/usr/bin/docker run --name cloudkeeper-os -v /etc/cloudkeeper-os/cloudkeeper-os.conf:/etc/cloudkeeper-os/cloudkeeper-os.conf -v /etc/cloudkeeper-os/mapping.json:/etc/cloudkeeper-os/mapping.json -v /image_data:/var/spool/cloudkeeper/images ${CLOUDKEEPER_OS_IMAGE}
+ExecStop=/usr/bin/docker stop cloudkeeper-os
+
+[Install]
+WantedBy=multi-user.target
