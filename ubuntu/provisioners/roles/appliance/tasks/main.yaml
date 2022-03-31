@@ -14,29 +14,6 @@
     - "/image_data"
     - "/etc/egi"
 
-- name: Appliance configuration files
-  get_url:
-    url: "{{ base_url }}/{{ item.src }}"
-    dest: "{{ item.dest }}"
-  with_items:
-    - src: "cloudkeeper-os/cloudkeeper-os.conf"
-      dest: "/etc/cloudkeeper-os/cloudkeeper-os.conf"
-    - src: "cloudkeeper-os/mapping.json"
-      dest: "/etc/cloudkeeper-os/mapping.json"
-    - src: "cloudkeeper-core/image-lists.conf"
-      dest: "/etc/cloudkeeper/image-lists.conf"
-    - src: "cloudkeeper-core/cloudkeeper.yml"
-      dest: "/etc/cloudkeeper"
-    - src: "caso/voms.json"
-      dest: "/etc/caso/voms.json"
-    - src: "caso/caso.conf"
-      dest: "/etc/caso/caso.conf"
-    - src: "cloud-info/openstack.rc"
-      dest: "/etc/cloud-info-provider/openstack.rc"
-    - src: "cloud-info/openstack.yaml"
-      dest: "/etc/cloud-info-provider/openstack.yaml"
-
-
 - name: Create defaults file
   template:
     src: defaults.j2
@@ -51,6 +28,23 @@
       dest: /etc/systemd/system/cloudkeeper-os.service
     - src: sender.cfg
       dest: /etc/apel/sender.cfg
+    - src: cloudkeeper-os.conf
+      dest: /etc/cloudkeeper-os/cloudkeeper-os.conf
+    - src: mapping.json
+      dest: /etc/cloudkeeper-os/mapping.json
+    - src: image-lists.conf
+      dest: /etc/cloudkeeper/image-lists.conf
+    - src: cloudkeeper.yml
+      dest: /etc/cloudkeeper
+    - src: voms.json
+      dest: /etc/caso/voms.json
+    - src: caso.conf
+      dest: /etc/caso/caso.conf
+    - src: openstack.rc
+      dest: /etc/cloud-info-provider/openstack.rc
+    - src: openstack.yaml
+      dest: /etc/cloud-info-provider/openstack.yaml
+
 
 - name: Copy scripts
   copy:

@@ -1,0 +1,8 @@
+{
+        "ops": {
+            "projects": ["ops"]
+        },
+        "fedcloud.egi.eu": {
+            "projects": ["foo", "bar"]
+        }
+}

@@ -1,0 +1,18 @@
+# Cloud info config
+CLOUD_INFO_CONFIG=/etc/cloud-info-provider/openstack.yaml
+
+# OpenStack AUTH variables
+OS_AUTH_URL=https://example.com:5000/v3
+OS_PROJECT_DOMAIN_ID=default
+OS_REGION_NAME=RegionOne
+OS_USER_DOMAIN_ID=default
+OS_PROJECT_NAME="<your project>"
+OS_IDENTITY_API_VERSION=3
+OS_USERNAME="<cloud-info user>"
+OS_PASSWORD="<secret>"
+OS_AUTH_TYPE=password
+
+# AMS configuration
+AMS_HOST=msg.argo.grnet.gr
+HOSTCERT=/etc/grid-security/hostcert.pem
+HOSTKEY=/etc/grid-security/hostkey.pem

@@ -1,0 +1,36 @@
+site:
+    name: SITE-NAME
+
+compute:
+    # Configure here the VOs supported at your installation
+    shares:
+        # Name of the VO
+        ops:
+            # Authentication for the VO into OpenStack
+            auth:
+                # the project id in OpenStack
+                project_id: xxxxx
+            # Default network type: none, public, public_only, private, private_only
+            default_network_type: public
+            # Public Network name
+            public_network_name: PUBLIC
+
+        # A second VO
+        # fedcloud.egi.eu:
+        #     auth:
+        #         project_id: xxxx
+        #     # Default network type: none, public, public_only, private, private_only
+        #     default_network_type: public
+        #     # Public Network name
+        #     public_network_name: PUBLIC
+
+        # Add as many VOs as needed
+
+    # Total number of cores available
+    total_cores: 0
+    # Total RAM available (GB)
+    total_ram: 0
+    # Hypervisor name
+    hypervisor: Foo Hypervisor
+    # Hypervisor version
+    hypervisor_version: 0.0.0

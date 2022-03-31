@@ -1,0 +1,34 @@
+cloudkeeper:
+  image-lists-file: /etc/cloudkeeper/image-lists.conf
+  ca-dir: /etc/grid-security/certificates/ # CA directory
+  authentication: false # core (client) <-> backend (server) authentication (certificate, key and backend-certificate options)
+  certificate: /etc/grid-security/hostcert.pem # Core's host certificate
+  key: /etc/grid-security/hostkey.pem # Core's host key
+  image-dir: /var/spool/cloudkeeper/images/ # Directory to store images to
+  external-tools:
+    binaries:
+      qemu-img: /usr/bin/qemu-img # qemu-img binary (image conversion) location
+      nginx: /usr/bin/nginx # nginx binary (HTTP server) location
+    execution-timeout: 600 # timeout for execution of external tools in seconds
+  remote-mode: false # Remote mode starts HTTP server (NGINX) and serves images to backend via HTTP
+  nginx:
+    runtime-dir: /var/run/cloudkeeper/ # Runtime directory for NGINX
+    error-log-file: /var/log/cloudkeeper/nginx-error.log # File for NGINX error log
+    access-log-file: /var/log/cloudkeeper/nginx-access.log # File for NGINX access log
+    pid-file: /var/run/cloudkeeper/nginx.pid # NGINX pid file
+    ip-address: 127.0.0.1 # IP address NGINX can listen on
+    port: 50505 # Port NGINX can listen on
+    proxy:
+      ip-address: # Proxy IP address
+      port: # Proxy port
+      ssl: false # Whether proxy will use SSL connection
+  backend:
+    endpoint: 127.0.0.1:50051 # Backend's gRPC endpoint
+    certificate: /etc/grid-security/backendcert.pem # Backend's certificate
+  formats: # List of acceptable formats images can be converted to
+    - qcow2
+  logging:
+    level: ERROR # Logging level
+    file: /var/log/cloudkeeper/cloudkeeper.log # File to write log to. To turn off file logging leave this field empty.
+  lock-file: /var/lock/cloudkeeper/cloudkeeper.lock # File used to ensure only one running instance of cloudkeeper
+  debug: false # Debug mode
