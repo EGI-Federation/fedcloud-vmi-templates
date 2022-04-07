@@ -3,8 +3,10 @@
   - cloud-init
   - role: grycap.docker
     vars:
-      docker_version: "5:20.10.8~3-0~{{ansible_distribution | lower}}-{{ansible_distribution_release}}"
+      docker_version: "5:20.10.12~3-0~{{ansible_distribution | lower}}-{{ansible_distribution_release}}"
       docker_compose_version: 1.29.2
       docker_install_pip: false
-  - appliance
+  - role: appliance
+    vars:
+      appliance_tag: "sha-4d12540"
   - cleanup
