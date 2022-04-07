@@ -1,0 +1,14 @@
+---
+appdb:
+  version: 2022.04.07
+  expireson: 6
+  notes: Update image URL
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.18.04-2022.04.07.ova
+  sha512: "dc8f10cebd42f4063f8f69940ee5c017d299aee624564a69a54cbda866946450624bde61ad86dc76881ed50f237f067336d64aa432442b6fc65834ddf4763833"
+  arch: x86_64
+  os:
+    family: Linux
+    name: Ubuntu 
+    version: '18.04'
+  format: OVA
+  hypervisor: VirtualBox
