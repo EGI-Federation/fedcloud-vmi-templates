@@ -31,6 +31,7 @@ jobs:
         run: |
           for f in $(git diff --name-only ${{ github.event.pull_request.base.sha }} | grep "appdb.*\.yaml")
           do
+            [ -e "$f" ] || continue
             echo "Testing $f"
             url=$(yq eval .appdb.url "$f")
             curl -I "$url" || exit 1

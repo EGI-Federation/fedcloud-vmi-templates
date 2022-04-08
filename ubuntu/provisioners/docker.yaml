@@ -3,7 +3,7 @@
   - cloud-init
   - role: grycap.docker
     vars:
-      docker_version: "5:20.10.8~3-0~{{ansible_distribution | lower}}-{{ansible_distribution_release}}"
+      docker_version: "5:20.10.12~3-0~{{ansible_distribution | lower}}-{{ansible_distribution_release}}"
       docker_compose_version: 1.29.2
       docker_install_pip: false
       docker_config_values:
@@ -15,5 +15,5 @@
         storage-driver: overlay2
   - role: k8s
     vars:
-      kube_version: 1.21.4-00
+      kube_version: 1.22.7-00
   - cleanup
