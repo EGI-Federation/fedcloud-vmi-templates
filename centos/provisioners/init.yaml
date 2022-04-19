@@ -2,7 +2,7 @@
   gather_facts: False
   tasks:
   - name: install python
-    raw: test -e /usr/bin/python || test -e /usr/bin/python3 || (yum install -y python)
+    raw: test -e /usr/bin/python || test -e /usr/bin/python3 || (yum install -y python39)
 
 - hosts: all
   tasks:

@@ -3,7 +3,7 @@
     {
       "boot_command": [
         "<esc>",
-        " linux ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-8.cfg",
+        " linux inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-8.cfg",
         "<enter>"
       ],
       "disk_size": 8000,
@@ -12,8 +12,8 @@
       "http_directory": "httpdir",
       "http_port_max": 8550,
       "http_port_min": 8500,
-      "iso_checksum": "sha256:c79921e24d472144d8f36a0d5f409b12bd016d9d7d022fd703563973ca9c375c",
-      "iso_url": "https://ftp.cica.es/CentOS/8/isos/x86_64/CentOS-8.4.2105-x86_64-boot.iso",
+      "iso_checksum": "sha256:92489962a511ae69d11276ece0156daf4d08b05220444cb3d9a07e6b98490d87",
+      "iso_url": "https://ftp.cica.es/CentOS/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso",
       "shutdown_command": "shutdown -h now",
       "ssh_password": "rootpassword",
       "ssh_timeout": "90m",
@@ -27,7 +27,7 @@
           "1024"
         ]
       ],
-      "vm_name": "centos.8-2021.09.06"
+      "vm_name": "centos.8-2022.04.19"
     }
   ],
   "provisioners": [
