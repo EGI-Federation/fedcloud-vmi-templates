@@ -1,8 +1,9 @@
+---
 - name: install requirements
   apt:
     name:
-    # this is to make the nfs-based volumes work
-    - nfs-common
+      # this is to make the nfs-based volumes work
+      - nfs-common
     state: latest
 
 - name: Add repo key
@@ -11,12 +12,14 @@
     state: present
 
 - name: Add kubernetes repo
-  apt_repository: repo='deb http://apt.kubernetes.io/ kubernetes-xenial main' state=present update_cache=yes
+  apt_repository: >
+    repo='deb http://apt.kubernetes.io/ kubernetes-xenial main'
+    state=present update_cache=yes
 
 - name: Install kubernetes packages
   apt:
     name:
-    - "kubelet={{ kube_version }}"
-    - "kubeadm={{ kube_version }}"
-    - "kubectl={{ kube_version }}"
+      - "kubelet={{ kube_version }}"
+      - "kubeadm={{ kube_version }}"
+      - "kubectl={{ kube_version }}"
     state: present
