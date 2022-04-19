@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# shellcheck source=/dev/null
 . /etc/egi/defaults
 
 docker run -v /etc/caso/voms.json:/etc/caso/voms.json \
