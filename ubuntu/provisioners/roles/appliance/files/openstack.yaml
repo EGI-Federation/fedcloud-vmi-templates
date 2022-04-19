@@ -1,3 +1,4 @@
+---
 site:
     name: SITE-NAME
 
@@ -10,7 +11,8 @@ compute:
             auth:
                 # the project id in OpenStack
                 project_id: xxxxx
-            # Default network type: none, public, public_only, private, private_only
+            # Default network type:
+            # none, public, public_only, private, private_only
             default_network_type: public
             # Public Network name
             public_network_name: PUBLIC
@@ -19,7 +21,8 @@ compute:
         # fedcloud.egi.eu:
         #     auth:
         #         project_id: xxxx
-        #     # Default network type: none, public, public_only, private, private_only
+        #     # Default network type:
+        #     # none, public, public_only, private, private_only
         #     default_network_type: public
         #     # Public Network name
         #     public_network_name: PUBLIC
