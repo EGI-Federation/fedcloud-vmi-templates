@@ -8,5 +8,6 @@
       docker_install_pip: false
   - role: appliance
     vars:
-      appliance_tag: "sha-4d12540"
+      appliance_tag: "sha-aa9ef01"
+      ssm_tag: "2.4.1-1"
   - cleanup
