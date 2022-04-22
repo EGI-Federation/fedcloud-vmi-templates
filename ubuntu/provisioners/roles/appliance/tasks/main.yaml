@@ -61,8 +61,6 @@
       dest: /usr/local/bin/ssm-send.sh
     - src: caso-extract.sh
       dest: /usr/local/bin/caso-extract.sh
-    - src: entrypoint.sh
-      dest: /etc/cloudkeeper/entrypoint.sh
 
 - name: cloudkeeper cron entry
   cron:
