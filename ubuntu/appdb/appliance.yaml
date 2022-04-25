@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2021.09.13-b
+  version: 2022.04.25
   expireson: 3
   notes: Update URL of the image
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/FedCloud-Appliance.Ubuntu.18.04-2021.09.13.ova
-  sha512: "e3ae405ba98fbd3647d0624c2a0d6cebf273b24a01b0b572184388d6d05274932c353917a07932f2e5944d7273fff2c0db8e5c251fcba37d08cfea44d3573a9d"
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/FedCloud-Appliance.Ubuntu.18.04-2022.04.25.ova
+  sha512: "ac150a63153f6257b39630ca888b213c34b4474b718cc95e434debe208b31c77386275feaef47ba7c680a06f9f52984695961f9f49425b139b223914cea43f2b"
   arch: x86_64
   os:
     family: Linux
