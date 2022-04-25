@@ -71,7 +71,7 @@
 
 - name: SSM logging config file
   get_url:
-    url: "https://github.com/apel/ssm/blob/{{ ssm_tag }}/conf/logging.cfg"
+    url: "https://raw.githubusercontent.com/apel/ssm/{{ ssm_tag }}/conf/logging.cfg"
     dest: /etc/apel/logging.cfg
 
 - name: SSM cron entry
