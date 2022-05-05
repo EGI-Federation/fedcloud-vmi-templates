@@ -1,0 +1,16 @@
+---
+appdb:
+  version: 2022.05.05
+  expireson: 6
+  notes: First release of Ubuntu 22.04 image
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.22.04-2022.05.25.ova
+  sha512: "3752e1a9b20643e7fab284449c2d2f7b92c89e582a3fe07918274a45f8e7ee6040b480533b177b062be175c62783b9ff22af32d7abaca429fddf25cae14cdfcd"
+  arch: x86_64
+  os:
+    family: Linux
+    name: Ubuntu
+    version: '22.04'
+  ram:
+    minimum: 1GB
+  format: OVA
+  hypervisor: VirtualBox
