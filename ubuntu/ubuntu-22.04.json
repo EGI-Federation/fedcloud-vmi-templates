@@ -29,7 +29,7 @@
       "ssh_username": "ubuntu",
       "type": "virtualbox-iso",
       "guest_additions_mode": "disable",
-      "vm_name": "Ubuntu.22.04-2022.05.04"
+      "vm_name": "Ubuntu.22.04-2022.05.05"
     }
   ],
   "provisioners": [

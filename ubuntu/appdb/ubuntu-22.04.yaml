@@ -4,7 +4,7 @@ appdb:
   expireson: 6
   notes: First release of Ubuntu 22.04 image
   url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.22.04-2022.05.25.ova
-  sha512: "3752e1a9b20643e7fab284449c2d2f7b92c89e582a3fe07918274a45f8e7ee6040b480533b177b062be175c62783b9ff22af32d7abaca429fddf25cae14cdfcd"
+  sha512: "6101cd4b9de57cb446cc2158ab188ae3137a7bc38489caa91d39dc8d9c7d46711ad79f8b38b384e32498e4b82d26333957ecf2bd6d594d1a5158dcd3974cbe1b"
   arch: x86_64
   os:
     family: Linux
