@@ -1,0 +1,16 @@
+---
+appdb:
+  version: 2022.06.02
+  expireson: 6
+  notes: First version of the appliance 
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.20.04-2022.06.02.ova
+  sha512: "6105c4a591ac89bcdf2681e15209aaf88c77c8ade78c7c618301f3238660c3acea5c97dcd4eda2020fc8cfba7438c8b3daced588fd67dc3338ec1c0579523cc5"
+  arch: x86_64
+  os:
+    family: Linux
+    name: Ubuntu
+    version: '20.04'
+  ram:
+    minimum: 1GB
+  format: OVA
+  hypervisor: VirtualBox
