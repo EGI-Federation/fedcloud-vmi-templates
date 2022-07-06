@@ -9,55 +9,18 @@
   tasks:
     - name: Install oneclient
       shell: |
-        # Install oneclient from the available script
         curl -sS http://get.onedata.org/oneclient.sh | bash
-    - name: Setup the datahub directory
-      ansible.builtin.file:
-        path: /mnt/datahub
-        state: directory
-        mode: '0777'
-        owner: 1000
     - name: Allow other for fuse
       ansible.builtin.lineinfile:
         path: /etc/fuse.conf
         regexp: '^user_allow_other'
         line: user_allow_other
-    - name: mount helper
-      copy:
-        dest: /home/ubuntu/mount.sh
-        mode: '0755'
-        owner: 1000
-        content: |
-          #!/bin/bash
-
-          # Personal token obtained from https://datahub.eu
-          ONECLIENT_ACCESS_TOKEN="<your DataHub token>"
-          # Closesr oneprovider supporting your spaces
-          ONECLIENT_PROVIDER_HOST="plg-cyfronet-01.datahub.egi.eu"
-
-          # mount with allow_other so jovyan can access
-          oneclient -H "$ONECLIENT_PROVIDER_HOST" -t "$ONECLIENT_ACCESS_TOKEN"  -o allow_other /mnt/datahub
-    - name: umount helper
-      copy:
-        dest: /home/ubuntu/umount.sh
-        mode: '0755'
-        owner: 1000
-        content: |
-          #!/bin/bash
-
-          oneclient -u /mnt/datahub
     - name: Add a jovyan user without sudo
-      user:
+      ansible.builtin.user:
         name: jovyan
         comment: Jupyter user
         shell: /bin/bash
         uid: 1002
-    - name: create datahub directory as link
-      ansible.builtin.file:
-        dest: /home/jovyan/datahub
-        src: /mnt/datahub
-        state: link
-        mode: '0755'
     - name: Install micromamba
       shell: |
         wget -qO- https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
@@ -83,12 +46,28 @@
     - name: Get micromamba env
       shell: |
         micromamba shell init --shell=bash --prefix=/home/jovyan/micromamba || true
+    - name: mount helper
+      ansible.builtin.copy:
+        dest: /home/jovyan/mount.sh
+        mode: '0755'
+        content: |
+          #!/bin/bash
+
+          # Personal token obtained from https://datahub.eu
+          ONECLIENT_ACCESS_TOKEN="<your DataHub token>"
+          # Closest oneprovider supporting your spaces
+          ONECLIENT_PROVIDER_HOST="plg-cyfronet-01.datahub.egi.eu"
+
+          mkdir -p /home/jovyan/datahub
+
+          # mount with allow_other so jovyan can access
+          oneclient -H "$ONECLIENT_PROVIDER_HOST" -t "$ONECLIENT_ACCESS_TOKEN"  /home/jovyan/datahub
 
 - hosts: all
   become: true
   tasks:
     - name: Create jupyter unit
-      copy:
+      ansible.builtin.copy:
         dest: /etc/systemd/system/jupyter.service
         content: |
           [Unit]
@@ -98,7 +77,7 @@
           Type=simple
           PIDFile=/run/jupyter.pid
           WorkingDirectory=/home/jovyan
-          ExecStart=/home/jovyan/micromamba/bin/jupyter-lab --no-browser --notebook-dir=/home/jovyan
+          ExecStart=/home/jovyan/micromamba/bin/jupyter-lab --no-browser --notebook-dir=/home/jovyan --ServerApp.allow_remote_access=True --NotebookApp.allow_origin="*"
           User=jovyan
           Group=jovyan
           Restart=always
@@ -113,9 +92,9 @@
         name: jupyter
         daemon_reload: yes
     - name: Reconfig nginx
-      copy:
+      ansible.builtin.copy:
         dest: /etc/nginx/sites-available/default
-        content:
+        content: |
           server {
             listen 80 default_server;
             listen [::]:80 default_server;

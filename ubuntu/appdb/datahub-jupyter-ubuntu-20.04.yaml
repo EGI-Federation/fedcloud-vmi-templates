@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2022.06.02
+  version: 2022.07.06
   expireson: 6
-  notes: First version of the appliance 
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.20.04-2022.06.02.ova
-  sha512: "6105c4a591ac89bcdf2681e15209aaf88c77c8ade78c7c618301f3238660c3acea5c97dcd4eda2020fc8cfba7438c8b3daced588fd67dc3338ec1c0579523cc5"
+  notes: First working version of the appliance
+  url: "https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.20.04-2022.07.06.ova"
+  sha512: "a0b4f3890564abf7a77b86c028282bf8f256461cd692cb8fbe13ebe5fb2aee7090227b67f27b7093888be50346d7c8726216209027206e3a32e54ae712a2a48e"
   arch: x86_64
   os:
     family: Linux
