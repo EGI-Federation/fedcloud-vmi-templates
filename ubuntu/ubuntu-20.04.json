@@ -19,7 +19,7 @@
       "http_port_min": 8500,
       "iso_url": "https://releases.ubuntu.com/20.04/ubuntu-20.04.4-live-server-amd64.iso",
       "iso_checksum": "sha256:28ccdb56450e643bad03bb7bcf7507ce3d8d90e8bf09e38f6bd9ac298a98eaad",
-      "ssh_timeout": "15m",
+      "ssh_timeout": "20m",
       "ssh_clear_authorized_keys": true,
       "shutdown_command": "sudo -- sh -c 'rm /etc/sudoers.d/99-egi-installation && shutdown -h now'",
       "ssh_username": "ubuntu",
