@@ -27,7 +27,7 @@
           "1024"
         ]
       ],
-      "vm_name": "centos.7-2022.01.10"
+      "vm_name": "centos.7-2022.07.06"
     }
   ],
   "provisioners": [
