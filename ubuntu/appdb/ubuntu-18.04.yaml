@@ -3,8 +3,8 @@ appdb:
   version: 2021.12.23-b
   expireson: 6
   notes: Update of image URL
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.18.04-2021.12.23.ova
-  sha512: "bc0074cfee55117b3c954173931c60b11d1ddbd40dd8feb4dea12d55e1db2abe79f1f4f81c41451ed9b73fca5b92e15ac6e36f75d5efd49e6697715e5fcdd780"
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.18.04-2022.07.06.ova
+  sha512: "d0c5b037dd91c2d30bab16d3b8d62d24e0f2cbcb788a5db60e8c23a9bd140336ed6306f05044fa82110eb723759365ae309dab9599d94499cfc8198755710b61"
   arch: x86_64
   os:
     family: Linux
