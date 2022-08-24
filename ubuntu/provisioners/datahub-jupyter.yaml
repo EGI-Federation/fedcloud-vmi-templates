@@ -1,0 +1,156 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - cloud-init
+
+- hosts: all
+  become: true
+  tasks:
+    - name: Install oneclient
+      shell: |
+        curl -sS http://get.onedata.org/oneclient.sh | bash
+    - name: Allow other for fuse
+      ansible.builtin.lineinfile:
+        path: /etc/fuse.conf
+        regexp: '^user_allow_other'
+        line: user_allow_other
+    - name: Add a jovyan user without sudo
+      ansible.builtin.user:
+        name: jovyan
+        comment: Jupyter user
+        shell: /bin/bash
+        uid: 1002
+    - name: Install micromamba
+      shell: |
+        wget -qO- https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
+        mv bin/micromamba /usr/local/bin/micromamba
+    - name: install packages
+      ansible.builtin.apt:
+        name: [nginx, acl]
+        state: present
+    - name: Install foo
+      community.general.snap:
+        channel: latest
+        classic: true
+        name:
+          - certbot
+    - name: Make certbot usable
+      file:
+        path: /usr/bin/certbot
+        src: /snap/bin/certbot
+        state: link
+
+# set things up as jovyan
+- hosts: all
+  become: true
+  become_user: jovyan
+  tasks:
+    - name: create micromamba directory
+      ansible.builtin.file:
+        path: /home/jovyan/micromamba
+        state: directory
+        mode: '0755'
+    - name: Install jupyterhub using conda
+      shell: |
+        micromamba install -y -c conda-forge -p /home/jovyan/micromamba jupyter jupyterlab jq
+    - name: Get micromamba env
+      shell: |
+        micromamba shell init --shell=bash --prefix=/home/jovyan/micromamba || true
+    - name: mount helper
+      ansible.builtin.copy:
+        dest: /home/jovyan/mount.sh
+        mode: '0755'
+        content: |
+          #!/bin/bash
+
+          # Personal token obtained from https://datahub.eu
+          ONECLIENT_ACCESS_TOKEN="<your DataHub token>"
+          # Closest oneprovider supporting your spaces
+          ONECLIENT_PROVIDER_HOST="plg-cyfronet-01.datahub.egi.eu"
+
+          mkdir -p /home/jovyan/datahub
+
+          # mount with allow_other so jovyan can access
+          oneclient -H "$ONECLIENT_PROVIDER_HOST" -t "$ONECLIENT_ACCESS_TOKEN"  /home/jovyan/datahub
+
+- hosts: all
+  become: true
+  tasks:
+    - name: Create jupyter unit
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/jupyter.service
+        content: |
+          [Unit]
+          Description=Jupyter Notebook
+
+          [Service]
+          Type=simple
+          PIDFile=/run/jupyter.pid
+          WorkingDirectory=/home/jovyan
+          ExecStart=/home/jovyan/micromamba/bin/jupyter-lab --no-browser --notebook-dir=/home/jovyan --ServerApp.allow_remote_access=True --NotebookApp.allow_origin="*"
+          User=jovyan
+          Group=jovyan
+          Restart=always
+          RestartSec=10
+
+          [Install]
+          WantedBy=multi-user.target
+    - name: Enable jupyter
+      ansible.builtin.systemd:
+        state: started
+        enabled: yes
+        name: jupyter
+        daemon_reload: yes
+    - name: Add 406 error page
+      ansible.builtin.copy:
+        dest: /var/www/html/custom_406.html
+        content: |
+          <html>
+          <head></head><title>No ssl?</title>
+          <body>
+              <h1>Welcome to your Jupyter + Datahub VM</h1>
+              <h2>Where's my Notebook?</h2>
+              <p>You seem not to be running this server using HTTPS. This is not recommended!</p>
+              <p>Check the <a href="https://docs.egi.eu/users/tutorials/jupyter-datahub-virtual-machine/">tutorial documentation</a>
+              to learn how to enable HTTPS on this host or (only if strictly necessary) remove this error message.</p>
+          </body>
+          </html>
+    - name: Reconfig nginx
+      ansible.builtin.copy:
+        dest: /etc/nginx/sites-available/default
+        content: |
+          server {
+            listen 80 default_server;
+            listen [::]:80 default_server;
+
+            root /var/www/html;
+
+            error_page 406 /custom_406.html;
+            index index.html index.htm index.nginx-debian.html;
+
+            server_name _;
+
+            location / {
+
+                if ( $https != 'on' ) {
+                    return 406;
+                }
+                proxy_pass http://127.0.0.1:8888/;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "Upgrade";
+                proxy_set_header Host $host;
+                proxy_read_timeout 86400;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            }
+            location = /custom_406.html {
+                root /var/www/html;
+                internal;
+            }
+          }
+
+- hosts: all
+  become: true
+  roles:
+    - cleanup
