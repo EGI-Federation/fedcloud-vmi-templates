@@ -1,19 +1,5 @@
 - hosts: all
   roles:
   - cloud-init
-  - role: grycap.docker
-    vars:
-      docker_version: "5:20.10.12~3-0~{{ansible_distribution | lower}}-{{ansible_distribution_release}}"
-      docker_compose_version: 1.29.2
-      docker_install_pip: false
-      docker_config_values:
-        exec-opts:
-        - native.cgroupdriver=systemd
-        log-driver: json-file
-        log-opts:
-          max-size: 100m
-        storage-driver: overlay2
-  - role: k8s
-    vars:
-      kube_version: 1.22.7-00
+  - docker
   - cleanup

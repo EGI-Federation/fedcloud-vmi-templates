@@ -1,10 +1,15 @@
 ---
 appdb:
-  version: 2022.04.07
+  version: 2022.09.29
   expireson: 6
-  notes: Update of image URL
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.18.04-2022.04.07.ova
-  sha512: "de3f7288aafba842d4d23eff8a5510f1beb39c6a7bc182bb2b127c6ef7a63249adcee414005fc72fbe67372d084d17a0e819b90b6de12282fd04d62a6a44c5c0"
+  notes: |
+    Update docker version (5:20.10.18~3-0)
+    Update docker-compose version (v2.10.2)
+    Update kubernentes version (1.21.4-00)
+    Added docker group to default user (ubuntu)
+    Configure default MTU to 1376
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.18.04-2022.09.29.ova
+  sha512: "6f644267dc82a9dca010bfd31b4e07b20d5639adc20bbd449b4d02d4b2638322cfda42f7990f48f8bd7c3ad48806c5e2c8168b167c442848e6537b23a0b81f2b"
   arch: x86_64
   os:
     family: Linux

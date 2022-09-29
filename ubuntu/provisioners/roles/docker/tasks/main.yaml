@@ -1,0 +1,54 @@
+- name: install requirements
+  apt:
+    name:
+    # this is to make the nfs-based volumes work
+    - nfs-common
+    state: latest
+
+- name: Configure docker
+  include_role:
+    name: grycap.docker
+  vars:
+    docker_version: "5:20.10.18~3-0~{{ansible_distribution | lower}}-{{ansible_distribution_release}}"
+    docker_compose_version: "v2.10.2"
+    docker_install_pip: false
+    docker_config_values:
+      exec-opts:
+      - native.cgroupdriver=systemd
+      log-driver: json-file
+      log-opts:
+        max-size: 100m
+      storage-driver: overlay2
+      mtu: 1376
+
+- name: Add docker group
+  group:
+    name: docker
+    state: present
+
+- name: Configure cloud-init to add docker group to ubuntu
+  copy:
+    content: |
+      # Add the docker group to default user
+      system_info:
+         default_user:
+           groups: [adm, audio, cdrom, dialout, dip, floppy, lxd, netdev, plugdev, sudo, video, docker]
+    dest: /etc/cloud/cloud.cfg.d/02_docker.cfg
+
+- name: Add repo key
+  apt_key:
+    url: "https://packages.cloud.google.com/apt/doc/apt-key.gpg"
+    state: present
+
+- name: Add kubernetes repo
+  apt_repository: repo='deb http://apt.kubernetes.io/ kubernetes-xenial main' state=present update_cache=yes
+
+- name: Install kubernetes packages
+  vars:
+    kube_version: 1.21.4-00
+  apt:
+    name:
+    - "kubelet={{ kube_version }}"
+    - "kubeadm={{ kube_version }}"
+    - "kubectl={{ kube_version }}"
+    state: present
