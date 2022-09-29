@@ -31,7 +31,7 @@
       "ssh_timeout": "90m",
       "ssh_username": "root",
       "type": "virtualbox-iso",
-      "vm_name": "Docker.Ubuntu.18.04-2022.04.07"
+      "vm_name": "Docker.Ubuntu.18.04-2022.28.09"
     }
   ],
   "provisioners": [
