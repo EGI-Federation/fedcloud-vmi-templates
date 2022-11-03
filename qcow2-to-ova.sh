@@ -2,9 +2,9 @@
 
 # Converts the qcow2 image into a OVA for consumption in AppDB
 NAME="$1"
-QCOW2_FILE="output-qemu/$1"
-VMDK_FILE="$1.vmdk"
-OVA_FILE="$1.ova"
+QCOW2_FILE="output-qemu/$NAME"
+VMDK_FILE="$NAME.vmdk"
+OVA_FILE="$NAME.ova"
 
 # First convert into vmdk
 qemu-img convert -f qcow2 -O vmdk "$QCOW2_FILE" "$VMDK_FILE"
