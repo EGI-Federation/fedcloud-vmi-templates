@@ -1,10 +1,14 @@
 {
+  "variables": {
+    "SSH_PUB_KEY": "",
+    "SSH_PRIVATE_KEY_FILE":  ""
+  },
   "builders": [
     {
       "boot_command": [
-  	"c<wait>",
+        "c<wait>",
     	"linux /casper/vmlinuz --- autoinstall ds=\"nocloud-net;seedfrom=http://{{.HTTPIP}}:{{.HTTPPort}}/\"",
-	" PACKER_USER=ubuntu PACKER_AUTHORIZED_KEY={{ .SSHPublicKey | urlquery }}",
+        " PACKER_USER=ubuntu PACKER_AUTHORIZED_KEY={{ user `SSH_PUB_KEY` | urlquery }}",
     	"<enter><wait>",
     	"initrd /casper/initrd",
     	"<enter><wait>",
@@ -12,37 +16,44 @@
     	"<enter>"
       ],
       "boot_wait": "5s",
-      "vboxmanage": [
-        [ "modifyvm", "{{.Name}}", "--memory", "1024" ]
-      ],
       "disk_size": 8000,
-      "format": "ova",
-      "guest_os_type": "Ubuntu_64",
+      "format": "qcow2",
+      "headless": true,
       "http_directory": "httpdir",
       "http_port_max": 8550,
       "http_port_min": 8500,
-      "iso_url": "https://releases.ubuntu.com/22.04/ubuntu-22.04-live-server-amd64.iso",
-      "iso_checksum": "sha256:84aeaf7823c8c61baa0ae862d0a06b03409394800000b3235854a6b38eb4856f",
-      "ssh_timeout": "15m",
+      "iso_url": "https://releases.ubuntu.com/22.04/ubuntu-22.04.1-live-server-amd64.iso",
+      "iso_checksum": "sha256:10f19c5b2b8d6db711582e0e27f5116296c34fe4b313ba45f9b201a5007056cb",
+      "memory": 1024,
+      "ssh_timeout": "20m",
       "ssh_clear_authorized_keys": true,
+      "ssh_private_key_file": "{{ user `SSH_PRIVATE_KEY_FILE` }}",
       "shutdown_command": "sudo -- sh -c 'rm /etc/sudoers.d/99-egi-installation && shutdown -h now'",
       "ssh_username": "ubuntu",
-      "type": "virtualbox-iso",
-      "guest_additions_mode": "disable",
-      "vm_name": "Ubuntu.22.04-2022.05.05"
-    }
+      "type": "qemu",
+      "qemuargs": [
+          [ "-cpu", "host" ]
+      ],
+      "vm_name": "Ubuntu.22.04-2022.11.03"
+     }
   ],
   "provisioners": [
     {
       "playbook_file": "provisioners/init.yaml",
       "type": "ansible",
+      "use_proxy": false,
       "user": "ubuntu"
     },
     {
       "pause_before": "30s",
       "playbook_file": "provisioners/base.yaml",
       "type": "ansible",
+      "use_proxy": false,
       "user": "ubuntu"
-    }
+    },
+    {
+      "type": "shell",
+      "script": "provisioners/cleanup.sh"
+     }
   ]
 }
