@@ -18,6 +18,6 @@ vboxmanage export "$NAME" --output="$OVA_FILE" --ovf20
 
 # we're done, remove them images
 vboxmanage unregistervm "$NAME" --delete
-rm $VMDK_FILE
+rm "$VMDK_FILE"
 
 echo "Converted image available at $OVA_FILE"
