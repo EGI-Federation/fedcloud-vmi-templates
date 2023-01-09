@@ -33,7 +33,7 @@
       "ssh_username": "root",
       "type": "qemu",
       "qemuargs": [
-          [ "-cpu", "host" ]
+        [ "-cpu", "host" ]
       ],
       "vm_name": "Ubuntu.18.04-2022.07.06"
     }
@@ -42,12 +42,14 @@
     {
       "playbook_file": "provisioners/init.yaml",
       "type": "ansible",
+      "use_proxy": false,
       "user": "root"
     },
     {
       "pause_before": "30s",
       "playbook_file": "provisioners/base.yaml",
       "type": "ansible",
+      "use_proxy": false,
       "user": "root"
     }
   ]
