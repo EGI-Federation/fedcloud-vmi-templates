@@ -1,4 +1,8 @@
 {
+  "variables": {
+    "SSH_PUB_KEY": "",
+    "SSH_PRIVATE_KEY_FILE":  ""
+  },
   "builders": [
     {
       "boot_command": [
@@ -28,14 +32,17 @@
       "iso_url": "http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso",
       "memory": 1024,
       "shutdown_command": "shutdown -h now",
-      "ssh_password": "rootpasswd",
+      "ssh_clear_authorized_keys": true,
+      "ssh_private_key_file": "{{ user `SSH_PRIVATE_KEY_FILE` }}",
       "ssh_timeout": "90m",
       "ssh_username": "root",
       "type": "qemu",
       "qemuargs": [
         [ "-cpu", "host" ]
       ],
-      "vm_name": "Ubuntu.18.04-2022.07.06"
+      "vnc_port_min": 5928,
+      "vnc_port_max": 5928,
+      "vm_name": "Ubuntu.18.04-2023.01.11"
     }
   ],
   "provisioners": [
@@ -51,6 +58,10 @@
       "type": "ansible",
       "use_proxy": false,
       "user": "root"
+    },
+    {
+      "type": "shell",
+      "script": "provisioners/cleanup.sh"
     }
   ]
 }
