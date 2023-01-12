@@ -9,7 +9,7 @@ ssh-keygen -f "$SSH_KEY_DIR/key" -N "" -t ed25519
 # substitute SSH_KEY in any template
 for tpl in httpdir/*.tpl; do
 	dst="${tpl%.*}"
-	sed "s#%SSH_KEY%#$(cat $SSH_KEY_DIR/key.pub)#" "$tpl" > "$dst"
+	sed "s#%SSH_KEY%#$(cat "$SSH_KEY_DIR/key.pub")#" "$tpl" > "$dst"
 done
 
 # build with this key
