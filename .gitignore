@@ -1,4 +1,5 @@
 packer_cache
+output-qemu
 output-virtualbox-iso
 # macos created files
 .DS_Store
