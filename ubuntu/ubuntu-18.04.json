@@ -40,8 +40,6 @@
       "qemuargs": [
         [ "-cpu", "host" ]
       ],
-      "vnc_port_min": 5928,
-      "vnc_port_max": 5928,
       "vm_name": "Ubuntu.18.04-2023.01.11"
     }
   ],
