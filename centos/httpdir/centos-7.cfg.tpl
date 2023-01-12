@@ -27,6 +27,6 @@ openssh-server
 sed -i "s/PermitRootLogin .*/PermitRootLogin yes/" /etc/ssh/sshd_config
 sed -i "s/^#[\s]*PermitRootLogin .*/PermitRootLogin yes/" /etc/ssh/sshd_config
 mkdir -p /root/.ssh
-/bin/sh -c "echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEhLROS7eoLPVWv4DF2AqLKmxZliBk4ZYLV8z+Fd66Nv root@builder' > /root/.ssh/authorized_keys"
+/bin/sh -c "echo '%SSH_KEY%' > /root/.ssh/authorized_keys"
 chmod 400 /root/.ssh/authorized_keys
 %end
