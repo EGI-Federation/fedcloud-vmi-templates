@@ -1,4 +1,8 @@
 {
+  "variables": {
+    "SSH_PUB_KEY": "",
+    "SSH_PRIVATE_KEY_FILE":  ""
+  },
   "builders": [
     {
       "boot_command": [
@@ -19,32 +23,43 @@
         "<enter>"
       ],
       "disk_size": 8000,
-      "format": "ova",
-      "guest_os_type": "Ubuntu_64",
+      "format": "qcow2",
+      "headless": true,
       "http_directory": "httpdir",
       "http_port_max": 8550,
       "http_port_min": 8500,
       "iso_checksum": "sha256:bed8a55ae2a657f8349fe3271097cff3a5b8c3d1048cf258568f1601976fa30d",
       "iso_url": "http://archive.ubuntu.com/ubuntu/dists/bionic/main/installer-amd64/current/images/netboot/mini.iso",
+      "memory": 1024,
       "shutdown_command": "shutdown -h now",
-      "ssh_password": "rootpasswd",
+      "ssh_clear_authorized_keys": true,
+      "ssh_private_key_file": "{{ user `SSH_PRIVATE_KEY_FILE` }}",
       "ssh_timeout": "90m",
       "ssh_username": "root",
-      "type": "virtualbox-iso",
-      "vm_name": "Ubuntu.18.04-2022.07.06"
+      "type": "qemu",
+      "qemuargs": [
+        [ "-cpu", "host" ]
+      ],
+      "vm_name": "Ubuntu.18.04-2023.01.11"
     }
   ],
   "provisioners": [
     {
       "playbook_file": "provisioners/init.yaml",
       "type": "ansible",
+      "use_proxy": false,
       "user": "root"
     },
     {
       "pause_before": "30s",
       "playbook_file": "provisioners/base.yaml",
       "type": "ansible",
+      "use_proxy": false,
       "user": "root"
+    },
+    {
+      "type": "shell",
+      "script": "provisioners/cleanup.sh"
     }
   ]
 }

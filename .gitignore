@@ -1,4 +1,7 @@
 packer_cache
+output-qemu
 output-virtualbox-iso
+# outputs of templates
+centos/httpdir/centos-7.cfg
 # macos created files
 .DS_Store

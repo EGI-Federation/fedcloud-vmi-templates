@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 # Converts the qcow2 image into a OVA for consumption in AppDB
 NAME="$1"
 QCOW2_FILE="output-qemu/$NAME"
@@ -18,6 +20,5 @@ vboxmanage export "$NAME" --output="$OVA_FILE" --ovf20
 
 # we're done, remove them images
 vboxmanage unregistervm "$NAME" --delete
-rm "$VMDK_FILE"
 
 echo "Converted image available at $OVA_FILE"
