@@ -24,8 +24,7 @@ openssh-server
 %end
 %post
 /usr/bin/yum -y install sudo
-sed -i "s/PermitRootLogin .*/PermitRootLogin yes/" /etc/ssh/sshd_config
-sed -i "s/^#[\s]*PermitRootLogin .*/PermitRootLogin yes/" /etc/ssh/sshd_config
+sed 's/^[#[:space:]]*PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
 mkdir -p /root/.ssh
 /bin/sh -c "echo '%SSH_KEY%' > /root/.ssh/authorized_keys"
 chmod 400 /root/.ssh/authorized_keys
