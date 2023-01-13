@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Takes as argument the json file describing the build for packer
+# e.g. build.sh centos-7.json
+
 set -e
 
 # Create a temp ssh key that will be used to login to the VMs
