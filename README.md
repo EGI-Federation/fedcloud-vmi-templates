@@ -8,7 +8,7 @@ Initial work taken from [comfy](https://github.com/Misenko/comfy)
 ## Building the images
 
 There is a `tools/build.sh` script that can be used to build image and convert
-to OVA in one go. The script will create a temporary ssh key that's used to
+to OVA in one go. The script will create a temporary ssh key that's used
 by packer to connect to the VM as root (or privileged user).
 
 The script takes as parameter the `.json` that describe the build for packer.
