@@ -1,44 +1,61 @@
 {
+  "variables": {
+    "SSH_PUB_KEY": "",
+    "SSH_PRIVATE_KEY_FILE":  ""
+  },
   "builders": [
     {
       "boot_command": [
-	"<esc><esc><f6><esc><wait>",
-        " autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
-	" PACKER_USER=ubuntu PACKER_AUTHORIZED_KEY={{ .SSHPublicKey | urlquery }}",
+        "<up><wait><esc><f6><esc>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs>",
+        "initrd=/casper/initrd --- autoinstall ",
+        "ds=nocloud-net;seedfrom=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
+        "PACKER_USER=ubuntu ",
+        "PACKER_AUTHORIZED_KEY={{ user `SSH_PUB_KEY` | urlquery }}",
         "<wait><enter>"
       ],
-      "boot_wait": "5s",
-      "vboxmanage": [
-        [ "modifyvm", "{{.Name}}", "--memory", "1024" ]
-      ],
+      "boot_wait": "3s",
       "disk_size": 8000,
-      "format": "ova",
-      "guest_os_type": "Ubuntu_64",
+      "format": "qcow2",
+      "headless": true,
       "http_directory": "httpdir",
       "http_port_max": 8550,
       "http_port_min": 8500,
-      "iso_url": "https://releases.ubuntu.com/20.04/ubuntu-20.04.4-live-server-amd64.iso",
-      "iso_checksum": "sha256:28ccdb56450e643bad03bb7bcf7507ce3d8d90e8bf09e38f6bd9ac298a98eaad",
+      "iso_url": "https://releases.ubuntu.com/20.04/ubuntu-20.04.5-live-server-amd64.iso",
+      "iso_checksum": "sha256:5035be37a7e9abbdc09f0d257f3e33416c1a0fb322ba860d42d74aa75c3468d4",
+      "memory": 1024,
       "ssh_timeout": "25m",
       "ssh_clear_authorized_keys": true,
+      "ssh_private_key_file": "{{ user `SSH_PRIVATE_KEY_FILE` }}",
       "shutdown_command": "sudo -- sh -c 'rm /etc/sudoers.d/99-egi-installation && shutdown -h now'",
       "ssh_username": "ubuntu",
-      "type": "virtualbox-iso",
-      "guest_additions_mode": "disable",
-      "vm_name": "DataHub-Jupyter-Ubuntu.20.04-2022.08.01"
+      "type": "qemu",
+      "qemuargs": [
+          [ "-cpu", "host" ]
+      ],
+      "vm_name": "DataHub-Jupyter-Ubuntu.20.04-2023.01.17"
     }
   ],
   "provisioners": [
     {
       "playbook_file": "provisioners/init.yaml",
       "type": "ansible",
+      "use_proxy": false,
       "user": "ubuntu"
     },
     {
       "pause_before": "30s",
       "playbook_file": "provisioners/datahub-jupyter.yaml",
       "type": "ansible",
+      "use_proxy": false,
       "user": "ubuntu"
-    }
+    },
+    {
+      "type": "shell",
+      "script": "provisioners/cleanup.sh"
+     }
   ]
 }
