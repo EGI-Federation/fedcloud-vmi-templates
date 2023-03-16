@@ -1,19 +1,15 @@
 ---
 appdb:
-  version: 2022.09.29
+  version: 2023.03.15
   expireson: 6
   notes: |
-    Update docker version (5:20.10.18~3-0)
-    Update docker-compose version (v2.10.2)
-    Update kubernentes version (1.21.4-00)
-    Added docker group to default user (ubuntu)
-    Configure default MTU to 1376
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.18.04-2022.09.29.ova
-  sha512: "6f644267dc82a9dca010bfd31b4e07b20d5639adc20bbd449b4d02d4b2638322cfda42f7990f48f8bd7c3ad48806c5e2c8168b167c442848e6537b23a0b81f2b"
+    Upgrade base image to Ubuntu 22.04
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.22.04-2023.03.15.ova
+  sha512: "22e97c49d6a1dde8f4d0cb4f697130fe7e52441a618bc3b5d2abbf6689f119669eaacbbf6685a30fc8accc00712947930dcb5d660ce43c212b1a6f0e320ef8a8"
   arch: x86_64
   os:
     family: Linux
     name: Ubuntu
-    version: '18.04'
+    version: '22.04'
   format: OVA
   hypervisor: VirtualBox
