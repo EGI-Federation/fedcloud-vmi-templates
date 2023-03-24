@@ -3,5 +3,6 @@ output-qemu
 output-virtualbox-iso
 # outputs of templates
 centos/httpdir/centos-7.cfg
+ubuntu/httpdir/ubuntu.cfg
 # macos created files
 .DS_Store
