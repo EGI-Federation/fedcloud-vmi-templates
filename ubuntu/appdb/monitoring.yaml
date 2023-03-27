@@ -1,0 +1,14 @@
+---
+appdb:
+  version: 2023.03.27
+  expireson: 6
+  notes: Move to Ubuntu 20.04
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.20.04-2023.03.27.ova
+  sha512: "a72a30d391b4eab9cd6a2919ac7f79a9d4ca2b8e7487ce1e9d5a7c381132bf2d4719057026110167eceffb4d2a4b977b13f25fc8179b19bb10c1e0ad655a42fb"
+  arch: x86_64
+  os:
+    family: Linux
+    name: Ubuntu
+    version: "20.04"
+  format: OVA
+  hypervisor: VirtualBox
