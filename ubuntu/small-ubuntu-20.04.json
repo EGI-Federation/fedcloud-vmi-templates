@@ -37,8 +37,6 @@
       "qemuargs": [
           [ "-cpu", "host" ]
       ],
-      "vnc_port_max": 5949,
-      "vnc_port_min": 5949,
       "vm_name": "Small.Ubuntu.20.04-2023.03.27"
     }
   ],
