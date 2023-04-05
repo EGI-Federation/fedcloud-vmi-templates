@@ -28,7 +28,13 @@ sudo
 kexec-tools
 %end
 
+%post
+/usr/bin/yum -y install sudo
+sed 's/^[#[:space:]]*PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
+mkdir -p /root/.ssh
+/bin/sh -c "echo '%SSH_KEY%' > /root/.ssh/authorized_keys"
+chmod 400 /root/.ssh/authorized_keys
+%end
 
 %addon com_redhat_kdump --enable --reserve-mb='auto'
-
 %end

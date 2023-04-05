@@ -31,5 +31,5 @@
 
 - name: fill disk with zeros
   shell: |
-    dd if=/dev/zero of=/bigemptyfile bs=4096k || echo "full disk"
+    dd if=/dev/zero of=/bigemptyfile bs=4096k count=2 || echo "full disk"
     rm -rf /bigemptyfile
