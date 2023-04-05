@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2022.10.09
+  version: 2023.03.29
   expireson: 6
   notes: Regular update
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2022.10.09.ova
-  sha512: "474e5e4e2a39a4d456818ee48f40338baf2cc0f4b15d5d0b80584baca528ed18acca739d372d318ebbd211e807d1c211dc7493bf658479fec82ff8eb15a25c8e"
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/centos.8-2023.03.29.ova
+  sha512: "479329c777d38bd987dda2581d37a8c546111c7ad5cf87a3907fe1eb7f8402d7cb17390aac6e5d3ee8ef3266bf11d320a992bcd2b52ca7c56e4ef5bacd13df19"
   arch: x86_64
   os:
     family: Linux

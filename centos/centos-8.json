@@ -1,40 +1,42 @@
 {
+  "variables": {
+    "SSH_PUB_KEY": "",
+    "SSH_PRIVATE_KEY_FILE":  ""
+  },
   "builders": [
     {
       "boot_command": [
         "<esc>",
-        " linux inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-8.cfg",
+        "linux inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-8.cfg",
         "<enter>"
       ],
+      "boot_wait": "3s",
       "disk_size": 8000,
-      "format": "ova",
-      "guest_os_type": "RedHat_64",
+      "format": "qcow2",
+      "headless": true,
       "http_directory": "httpdir",
       "http_port_max": 8550,
       "http_port_min": 8500,
-      "iso_checksum": "sha256:92489962a511ae69d11276ece0156daf4d08b05220444cb3d9a07e6b98490d87",
-      "iso_url": "https://ftp.cica.es/CentOS/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso",
+      "iso_checksum": "sha256:9bcb01a11abd8f0e4470b672dafec386073d8a948e2f402cac14c745772d50c3",
+      "iso_url": "http://ftp.wrz.de/pub/CentOS/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso",
+      "memory": 1024,
       "shutdown_command": "shutdown -h now",
-      "ssh_password": "rootpassword",
+      "ssh_clear_authorized_keys": true,
+      "ssh_private_key_file": "{{ user `SSH_PRIVATE_KEY_FILE` }}",
       "ssh_timeout": "90m",
       "ssh_username": "root",
-      "type": "virtualbox-iso",
-      "vboxmanage": [
-        [
-          "modifyvm",
-          "{{.Name}}",
-          "--memory",
-          "1024"
-        ]
-      ],
-      "vm_name": "centos.8-2022.10.09"
+      "type": "qemu",
+      "qemuargs": [
+        [ "-cpu", "host" ]
+       ],
+      "vm_name": "centos.8-2023.03.29"
     }
   ],
   "provisioners": [
     {
       "playbook_file": "provisioners/init.yaml",
-      "type": "ansible",
-      "user": "root"
+      "use_proxy": false,
+      "type": "ansible"
     },
     {
       "expect_disconnect": true,
@@ -47,8 +49,12 @@
     {
       "pause_before": "30s",
       "playbook_file": "provisioners/config.yaml",
-      "type": "ansible",
-      "user": "root"
+      "use_proxy": false,
+      "type": "ansible"
+    },
+    {
+      "type": "shell",
+      "script": "provisioners/cleanup.sh"
     }
   ]
 }
