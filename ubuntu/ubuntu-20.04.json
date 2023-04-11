@@ -1,44 +1,62 @@
 {
+  "variables": {
+    "SSH_PUB_KEY": "",
+    "SSH_PRIVATE_KEY_FILE":  ""
+  },
   "builders": [
     {
       "boot_command": [
-	"<esc><esc><f6><esc><wait>",
+        "<enter><enter><f6><esc><wait>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs>",
+        "<bs><bs><bs><bs><bs><bs><bs><bs>",
+	"/casper/vmlinuz ",
+        "initrd=/casper/initrd ",
         " autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
-	" PACKER_USER=ubuntu PACKER_AUTHORIZED_KEY={{ .SSHPublicKey | urlquery }}",
+        " PACKER_USER=ubuntu PACKER_AUTHORIZED_KEY={{ user `SSH_PUB_KEY` | urlquery }}",
         "<wait><enter>"
       ],
-      "boot_wait": "5s",
-      "vboxmanage": [
-        [ "modifyvm", "{{.Name}}", "--memory", "1024" ]
-      ],
+      "boot_wait": "3s",
       "disk_size": 8000,
-      "format": "ova",
-      "guest_os_type": "Ubuntu_64",
+      "format": "qcow2",
+      "headless": true,
       "http_directory": "httpdir",
       "http_port_max": 8550,
       "http_port_min": 8500,
-      "iso_url": "https://releases.ubuntu.com/20.04/ubuntu-20.04.5-live-server-amd64.iso",
-      "iso_checksum": "sha256:5035be37a7e9abbdc09f0d257f3e33416c1a0fb322ba860d42d74aa75c3468d4",
+      "iso_url": "https://releases.ubuntu.com/20.04/ubuntu-20.04.6-live-server-amd64.iso",
+      "iso_checksum": "sha256:b8f31413336b9393ad5d8ef0282717b2ab19f007df2e9ed5196c13d8f9153c8b",
+      "memory": 1024,
       "ssh_timeout": "20m",
       "ssh_clear_authorized_keys": true,
+      "ssh_private_key_file": "{{ user `SSH_PRIVATE_KEY_FILE` }}",
       "shutdown_command": "sudo -- sh -c 'rm /etc/sudoers.d/99-egi-installation && shutdown -h now'",
       "ssh_username": "ubuntu",
-      "type": "virtualbox-iso",
-      "guest_additions_mode": "disable",
-      "vm_name": "Ubuntu.20.04-2022.10.20"
+      "type": "qemu",
+      "qemuargs": [
+          [ "-cpu", "host" ]
+      ],
+      "vm_name": "Ubuntu.20.04-2023.04.05"
     }
   ],
   "provisioners": [
     {
       "playbook_file": "provisioners/init.yaml",
       "type": "ansible",
+      "use_proxy": false,
       "user": "ubuntu"
     },
     {
       "pause_before": "30s",
       "playbook_file": "provisioners/base.yaml",
       "type": "ansible",
+      "use_proxy": false,
       "user": "ubuntu"
+    },
+    {
+      "type": "shell",
+      "script": "provisioners/cleanup.sh"
     }
   ]
 }

@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2022.10.20
+  version: 2023.04.05
   expireson: 6
-  notes: Update to Ubuntu 20.04.5
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2022.10.20.ova
-  sha512: "8379ace2ea033053dfc16d5d9316c7ebe0c3cb299cca5475ecaebf69f538e2cb6a12cd5dec2158c6da40afa611914f9c02a8f6aaf38bf6d186e77ba4f6165611"
+  notes: Update to Ubuntu 20.04.6
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2023.04.05.ova
+  sha512: "0fbbbd28e89a25849b4dcbd0380d859e2c0311920a395c838a069d0ffe0d4e85126c8550b69be56a93db15f5f9da8849a8bbc46a26214b2e93f9f56080cdf8cb"
   arch: x86_64
   os:
     family: Linux
