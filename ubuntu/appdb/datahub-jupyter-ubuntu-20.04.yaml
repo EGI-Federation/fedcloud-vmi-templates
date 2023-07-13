@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2023.01.17
+  version: 2023.07.12
   expireson: 6
-  notes: Add --collaborative option to jupyter
-  url: "https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.20.04-2023.01.17.ova"
-  sha512: "bacf22c64a1838b5b086bfa42d3dddf577392469db79f03a4d3ac1f0b5f0d88a2df2c62a1eff85cfac16363be4e9a7403e6b72482e35e52ed943f611da587717"
+  notes: Regular update, move base image to Ubuntu 20.04.6
+  url: "https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.20.04-2023.07.12.ova"
+  sha512: "6de5e42c8fd7d691a2ab7a9e2498783f039ed91060394cac980988476943266e1c30c71f1d01a29a9b5782db90876bd3b63c0363f9c90893cbced2f228cd18f5"
   arch: x86_64
   os:
     family: Linux

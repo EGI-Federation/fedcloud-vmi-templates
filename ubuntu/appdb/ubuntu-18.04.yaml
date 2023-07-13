@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2023.01.11
+  version: 2023.07.13
   expireson: 6
-  notes: Update of image URL
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.18.04-2023.01.11.ova
-  sha512: "d16464a503da8c7b00dde2c75f22e7d8081a47421986d94bae7d17b6264268b19b258fb17df32803f5cbe37b7c89955732fa0006ffd76d4064a59752a5f6a45b"
+  notes: Ubuntu 18.04 is now EOL. This image will be removed once the current version expires
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.18.04-2023.07.13.ova
+  sha512: ""
   arch: x86_64
   os:
     family: Linux
