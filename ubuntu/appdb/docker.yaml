@@ -1,11 +1,12 @@
 ---
 appdb:
-  version: 2023.03.15
+  version: 2023.09.19
   expireson: 6
   notes: |
-    Upgrade base image to Ubuntu 22.04
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.22.04-2023.03.15.ova
-  sha512: "22e97c49d6a1dde8f4d0cb4f697130fe7e52441a618bc3b5d2abbf6689f119669eaacbbf6685a30fc8accc00712947930dcb5d660ce43c212b1a6f0e320ef8a8"
+    Upgrade to docker 24.0.6 and docker-compose 2.21.0
+    Upgrade base image to Ubuntu 22.04.3
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.22.04-2023.09.19.ova
+  sha512: "5e538ba0792e8e9d54da5645c018c87ef8bab26cb6ed4c864d735181ae52cdac1c9db5f088197434e6923f224f701ddb2f7c723388e02b032de4716d89390671"
   arch: x86_64
   os:
     family: Linux

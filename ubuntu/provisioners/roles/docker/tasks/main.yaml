@@ -9,8 +9,8 @@
   include_role:
     name: grycap.docker
   vars:
-    docker_version: "5:20.10.18~3-0~{{ansible_distribution | lower}}-{{ansible_distribution_release}}"
-    docker_compose_version: "v2.10.2"
+    docker_version: "5:24.0.6-1~ubuntu.22.04~jammy"
+    docker_compose_version: "v2.21.0"
     docker_install_pip: false
     docker_config_values:
       exec-opts:
