@@ -22,8 +22,8 @@
       "http_directory": "httpdir",
       "http_port_max": 8550,
       "http_port_min": 8500,
-      "iso_url": "https://releases.ubuntu.com/22.04/ubuntu-22.04.1-live-server-amd64.iso",
-      "iso_checksum": "sha256:10f19c5b2b8d6db711582e0e27f5116296c34fe4b313ba45f9b201a5007056cb",
+      "iso_url": "https://releases.ubuntu.com/22.04/ubuntu-22.04.3-live-server-amd64.iso",
+      "iso_checksum": "sha256:a4acfda10b18da50e2ec50ccaf860d7f20b389df8765611142305c0e911d16fd",
       "memory": 1024,
       "ssh_timeout": "20m",
       "ssh_clear_authorized_keys": true,
@@ -31,10 +31,12 @@
       "shutdown_command": "sudo -- sh -c 'rm /etc/sudoers.d/99-egi-installation && shutdown -h now'",
       "ssh_username": "ubuntu",
       "type": "qemu",
+      "vnc_port_min": 5934,
+      "vnc_port_max": 5934,
       "qemuargs": [
           [ "-cpu", "host" ]
       ],
-      "vm_name": "Docker.Ubuntu.22.04-2023.03.15"
+      "vm_name": "Docker.Ubuntu.22.04-2023.09.19"
      }
   ],
   "provisioners": [
