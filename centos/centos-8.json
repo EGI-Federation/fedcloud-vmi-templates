@@ -17,7 +17,7 @@
       "http_directory": "httpdir",
       "http_port_max": 8550,
       "http_port_min": 8500,
-      "iso_checksum": "sha256:9bcb01a11abd8f0e4470b672dafec386073d8a948e2f402cac14c745772d50c3",
+      "iso_checksum": "sha256:34177ca225bc1105be7df6b46fa3a16445ea2d5b869125611bbb7fc0ed7207ac",
       "iso_url": "http://ftp.wrz.de/pub/CentOS/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-latest-boot.iso",
       "memory": 1024,
       "shutdown_command": "shutdown -h now",
@@ -29,7 +29,7 @@
       "qemuargs": [
         [ "-cpu", "host" ]
        ],
-      "vm_name": "centos.8-2023.03.29"
+      "vm_name": "centos.8-2023.10.24"
     }
   ],
   "provisioners": [
