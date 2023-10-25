@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2022.11.03
+  version: 2023.10.24
   expireson: 6
-  notes: Update to Ubuntu 22.04.1
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.22.04-2022.11.03.ova
-  sha512: "518290cbf755dacdcdef40ff877d1d0c3c31b273e10232d301910a054b226afb2828528bad31180c637798e014eaa5d2178c67ddf62fff9166bd593b6f82bd4c"
+  notes: Update to Ubuntu 22.04.3
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.22.04-2023.10.24.ova
+  sha512: "7b9785170f756623850f93034050a2ce1044bbf8fead3180aafe329454ca6e05f7a68d5d116b123249ce26c68886631a6d23eb2c1b49b92d0d2ee409802a8b9c"
   arch: x86_64
   os:
     family: Linux
