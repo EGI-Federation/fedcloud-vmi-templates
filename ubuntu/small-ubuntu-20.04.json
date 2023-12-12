@@ -19,7 +19,7 @@
         "<wait><enter>"
       ],
       "boot_wait": "3s",
-      "disk_size": 3000,
+      "disk_size": 3500,
       "format": "qcow2",
       "headless": true,
       "http_directory": "httpdir",
@@ -37,7 +37,7 @@
       "qemuargs": [
           [ "-cpu", "host" ]
       ],
-      "vm_name": "Small.Ubuntu.20.04-2023.03.27"
+      "vm_name": "Small.Ubuntu.20.04-2023.12.12"
     }
   ],
   "provisioners": [
