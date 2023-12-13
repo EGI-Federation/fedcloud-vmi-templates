@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2023.03.27
+  version: 2023.12.12
   expireson: 6
-  notes: Move to Ubuntu 20.04
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.20.04-2023.03.27.ova
-  sha512: "a72a30d391b4eab9cd6a2919ac7f79a9d4ca2b8e7487ce1e9d5a7c381132bf2d4719057026110167eceffb4d2a4b977b13f25fc8179b19bb10c1e0ad655a42fb"
+  notes: Regular image update
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.20.04-2023.12.12.ova
+  sha512: "c05cac150398571f14de670fdce3c1f35899fec47768c6afda9408cd5c9139b594217a50fdb0087bbea82894b35bb3a62dbb42a413affe72925fd88c143a1811"
   arch: x86_64
   os:
     family: Linux
