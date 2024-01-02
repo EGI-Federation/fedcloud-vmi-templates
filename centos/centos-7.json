@@ -28,7 +28,7 @@
       "qemuargs": [
         [ "-cpu", "host" ]
        ],
-      "vm_name": "centos.7-2023.07.12"
+      "vm_name": "centos.7-2024.01.02"
     }
   ],
   "provisioners": [
