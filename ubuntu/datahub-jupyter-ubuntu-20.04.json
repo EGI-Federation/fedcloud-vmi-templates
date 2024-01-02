@@ -36,7 +36,7 @@
       "qemuargs": [
           [ "-cpu", "host" ]
       ],
-      "vm_name": "DataHub-Jupyter-Ubuntu.20.04-2023.07.12"
+      "vm_name": "DataHub-Jupyter-Ubuntu.20.04-2024.01.02"
     }
   ],
   "provisioners": [
