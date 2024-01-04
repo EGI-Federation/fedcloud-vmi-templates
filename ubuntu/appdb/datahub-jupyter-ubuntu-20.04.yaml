@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2023.07.12
+  version: 2024.01.02
   expireson: 6
-  notes: Regular update, move base image to Ubuntu 20.04.6
-  url: "https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.20.04-2023.07.12.ova"
-  sha512: "6de5e42c8fd7d691a2ab7a9e2498783f039ed91060394cac980988476943266e1c30c71f1d01a29a9b5782db90876bd3b63c0363f9c90893cbced2f228cd18f5"
+  notes: Regular update
+  url: "https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.20.04-2024.01.02.ova"
+  sha512: "086d6b80124a99c34ffb4769c398dad1daf3d5f41b68a8b5a0f3768c7608993c2c4d83b64e05f9cdd2e32cb10cd107aa4fbd8cc38cf7ce0d4535a1cae2d2d74f"
   arch: x86_64
   os:
     family: Linux
