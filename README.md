@@ -21,6 +21,9 @@ $ sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $
 $ sudo apt-get update && sudo apt-get install -y packer
 # Install other tools
 $ sudo apt-get install -y ansible qemu-system-x86 qemu-utils jq virtualbox
+# Install packer plugins
+$ packer plugins install github.com/hashicorp/qemu
+$ packer plugins install github.com/hashicorp/ansible
 ```
 
 ### Building
