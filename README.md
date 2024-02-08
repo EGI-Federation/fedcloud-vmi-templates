@@ -36,7 +36,7 @@ The script takes as parameter the `.json` that describe the build for packer.
 See sample build output:
 
 ```shell
-ubuntu@builder:~/fedcloud-vmi-templates/centos$ sudo ../tools/build.sh centos-7.json
+ubuntu@builder:~/fedcloud-vmi-templates/centos$ sudo --preserve-env ../tools/build.sh centos-7.json
 Generating public/private ed25519 key pair.
 Your identification has been saved in /tmp/tmp.isFiNAk2AM/key
 Your public key has been saved in /tmp/tmp.isFiNAk2AM/key.pub
