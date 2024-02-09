@@ -6,18 +6,3 @@
 
 - name: distro specific cloud-init mods
   include_tasks: cloud-init-{{ansible_distribution_release }}.yaml
-
-- name: Create fedcloud config
-  copy:
-    content: |
-      # EGI FedCloud configuration
-      
-      # Make sure to disable ssh password authentication
-      ssh_pwauth: 0
-
-      # In OpenNebula, use network based datasource,
-      # so that it can successfully resolve IPv4 based hostname
-      datasource:
-        OpenNebula:
-            dsmode: net
-    dest: /etc/cloud/cloud.cfg.d/01_fedcloud.cfg
