@@ -21,6 +21,9 @@ $ sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $
 $ sudo apt-get update && sudo apt-get install -y packer
 # Install other tools
 $ sudo apt-get install -y ansible qemu-system-x86 qemu-utils jq virtualbox
+# Install packer plugins
+$ packer plugins install github.com/hashicorp/qemu
+$ packer plugins install github.com/hashicorp/ansible
 ```
 
 ### Building
@@ -33,7 +36,7 @@ The script takes as parameter the `.json` that describe the build for packer.
 See sample build output:
 
 ```shell
-ubuntu@builder:~/fedcloud-vmi-templates/centos$ sudo ../tools/build.sh centos-7.json
+ubuntu@builder:~/fedcloud-vmi-templates/centos$ sudo --preserve-env ../tools/build.sh centos-7.json
 Generating public/private ed25519 key pair.
 Your identification has been saved in /tmp/tmp.isFiNAk2AM/key
 Your public key has been saved in /tmp/tmp.isFiNAk2AM/key.pub
