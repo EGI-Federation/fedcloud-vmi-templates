@@ -52,6 +52,18 @@
     - "/var/log/installer/"
     - "/var/lib/cloud/"
 
+# See https://systemd.io/BUILDING_IMAGES/
+- name: Resources to reset
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "/var/lib/systemd/random-seed"
+    - "/loader/random-seed"
+    - "/var/lib/systemd/credential.secret"
+    - "/etc/machine-info"
+
+
 - name: keep apt-get working
   command: apt-get clean
 
