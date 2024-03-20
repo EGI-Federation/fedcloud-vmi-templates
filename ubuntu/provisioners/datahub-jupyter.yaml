@@ -28,7 +28,7 @@
       ansible.builtin.apt:
         name: [nginx, acl]
         state: present
-    - name: Install foo
+    - name: Install certbot
       community.general.snap:
         channel: latest
         classic: true
