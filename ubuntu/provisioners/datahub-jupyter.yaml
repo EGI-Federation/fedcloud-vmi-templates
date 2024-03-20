@@ -20,7 +20,6 @@
         name: jovyan
         comment: Jupyter user
         shell: /bin/bash
-        uid: 1002
     - name: Install micromamba
       shell: |
         wget -qO- https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
