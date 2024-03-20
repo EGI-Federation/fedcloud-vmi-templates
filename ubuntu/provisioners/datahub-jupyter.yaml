@@ -53,7 +53,7 @@
         mode: '0755'
     - name: Install jupyterhub using conda
       shell: |
-        micromamba install -y -c conda-forge -p /home/jovyan/micromamba jupyter jupyterlab jq
+        micromamba install -y -c conda-forge -p /home/jovyan/micromamba jupyter jupyterlab jupyter-collaboration jq
     - name: Get micromamba env
       shell: |
         micromamba shell init --shell=bash --prefix=/home/jovyan/micromamba || true
