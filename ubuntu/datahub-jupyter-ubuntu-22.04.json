@@ -6,28 +6,26 @@
   "builders": [
     {
       "boot_command": [
-        "<up><wait><esc><f6><esc>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
-        "<bs><bs><bs><bs>",
-        "initrd=/casper/initrd --- autoinstall ",
-        "ds=nocloud-net;seedfrom=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
-        "PACKER_USER=ubuntu ",
-        "PACKER_AUTHORIZED_KEY={{ user `SSH_PUB_KEY` | urlquery }}",
-        "<wait><enter>"
+        "c<wait>",
+        "linux /casper/vmlinuz --- autoinstall ds=\"nocloud-net;seedfrom=http://{{.HTTPIP}}:{{.HTTPPort}}/\"",
+        " PACKER_USER=ubuntu PACKER_AUTHORIZED_KEY={{ user `SSH_PUB_KEY` | urlquery }}",
+        "<enter><wait>",
+        "initrd /casper/initrd",
+        "<enter><wait>",
+        "boot",
+        "<enter>"
       ],
-      "boot_wait": "3s",
+      "boot_wait": "5s",
       "disk_size": 8000,
       "format": "qcow2",
       "headless": true,
       "http_directory": "httpdir",
       "http_port_max": 8550,
       "http_port_min": 8500,
-      "iso_url": "https://releases.ubuntu.com/20.04/ubuntu-20.04.6-live-server-amd64.iso",
-      "iso_checksum": "sha256:b8f31413336b9393ad5d8ef0282717b2ab19f007df2e9ed5196c13d8f9153c8b",
+      "iso_url": "https://releases.ubuntu.com/jammy/ubuntu-22.04.4-live-server-amd64.iso",
+      "iso_checksum": "sha256:45f873de9f8cb637345d6e66a583762730bbea30277ef7b32c9c3bd6700a32b2",
       "memory": 1024,
-      "ssh_timeout": "25m",
+      "ssh_timeout": "20m",
       "ssh_clear_authorized_keys": true,
       "ssh_private_key_file": "{{ user `SSH_PRIVATE_KEY_FILE` }}",
       "shutdown_command": "sudo -- sh -c 'rm /etc/sudoers.d/99-egi-installation && shutdown -h now'",
@@ -36,7 +34,7 @@
       "qemuargs": [
           [ "-cpu", "host" ]
       ],
-      "vm_name": "DataHub-Jupyter-Ubuntu.20.04-2024.01.02"
+      "vm_name": "DataHub-Jupyter-Ubuntu.22.04-2024.03.21"
     }
   ],
   "provisioners": [

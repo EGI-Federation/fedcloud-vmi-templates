@@ -20,16 +20,17 @@
         name: jovyan
         comment: Jupyter user
         shell: /bin/bash
-        uid: 1002
-    - name: Install micromamba
-      shell: |
-        wget -qO- https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
-        mv bin/micromamba /usr/local/bin/micromamba
     - name: install packages
       ansible.builtin.apt:
-        name: [nginx, acl]
+        name: [nginx, acl, bzip2]
         state: present
-    - name: Install foo
+    - name: Install micromamba
+      shell: |
+        curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
+        mv bin/micromamba /usr/local/bin/micromamba
+      args:
+        creates: /usr/local/bin/micromamba
+    - name: Install certbot
       community.general.snap:
         channel: latest
         classic: true
@@ -53,7 +54,7 @@
         mode: '0755'
     - name: Install jupyterhub using conda
       shell: |
-        micromamba install -y -c conda-forge -p /home/jovyan/micromamba jupyter jupyterlab jq
+        micromamba install -y -c conda-forge -p /home/jovyan/micromamba jupyter jupyterlab jupyter-collaboration jq
     - name: Get micromamba env
       shell: |
         micromamba shell init --shell=bash --prefix=/home/jovyan/micromamba || true
@@ -76,6 +77,11 @@
 
 - hosts: all
   become: true
+  handlers:
+    - name: Restart nginx
+      service:
+        state: reloaded
+        name: nginx
   tasks:
     - name: Create jupyter unit
       ansible.builtin.copy:
@@ -149,6 +155,8 @@
                 internal;
             }
           }
+      notify:
+        - Restart nginx
 
 - hosts: all
   become: true

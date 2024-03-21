@@ -1,0 +1,16 @@
+---
+appdb:
+  version: 2024.03.21
+  expireson: 6
+  notes: Updated base OS to Ubuntu 22.04
+  url: "https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.22.04-2024.03.21.ova"
+  sha512: "f3ae1bfced91ea9e9b6813c82a2910457ea960718a0c3b6a35edc99627a1b0337cd2cb958da8fe107107745b9ebaf709c0357f88ec1427ff637dce6ff8b03060"
+  arch: x86_64
+  os:
+    family: Linux
+    name: Ubuntu
+    version: '22.04'
+  ram:
+    minimum: 1GB
+  format: OVA
+  hypervisor: VirtualBox
