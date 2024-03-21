@@ -10,26 +10,6 @@
     name: [cloud-init, cloud-utils-growpart]
     state: latest 
 
-- name: extra packages for centos 6
-  yum:
-    name: [dracut-modules-growroot, patch, parted]
-    state: latest 
-  when: ansible_distribution_major_version == "6"
-
-- name: copy cloud-init patch
-  copy:
-    src: cloud-init-6.patch
-    dest: /tmp/cloud-init.patch
-
-- name: patch cloud-init
-  shell: |
-    pushd /usr/lib/python2.6/site-packages/cloudinit/sources
-    patch < /tmp/cloud-init.patch
-    rm /tmp/cloud-init.patch
-    popd
-    python -c "import cloudinit.sources.DataSourceOpenNebula"
-  when: ansible_distribution_major_version == "6"
-
 - name: Create fedcloud config
   copy:
     content: |
@@ -40,12 +20,6 @@
       # Regenerate keys
       ssh_deletekeys: True
       ssh_genkeytypes: ['rsa', 'dsa']
-
-      # In OpenNebula, use network based datasource,
-      # so that it can successfully resolve IPv4 based hostname
-      datasource:
-        OpenNebula:
-            dsmode: net
     dest: /etc/cloud/cloud.cfg.d/01_fedcloud.cfg
 
 - name: enable service 
