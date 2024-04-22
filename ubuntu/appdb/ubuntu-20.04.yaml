@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2023.10.24
+  version: 2024.04.22
   expireson: 6
   notes: Regular update
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2023.10.24.ova
-  sha512: "17f4b3457deda989085e3f3d6a83785574f5c8e6b6ca7341e798490daa146b6570db5c95c91f1393741b2c8e8dd15af13087455d63a9246e51f846aa8e13d29a"
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2024.04.22.ova
+  sha512: "f00770bbc5e13dc0b30b84bcbb7b0bd4282c33e6871cf195cbdf3946370bf562264bcd6055f3cd1a19834428c9aed5f428fbb1befb4d34ed2a8a0a0299b84a2f"
   arch: x86_64
   os:
     family: Linux
