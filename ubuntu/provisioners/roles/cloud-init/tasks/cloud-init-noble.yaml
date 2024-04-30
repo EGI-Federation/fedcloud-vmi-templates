@@ -1,0 +1,3 @@
+---
+- name: cloud-init clean
+  command: cloud-init clean --logs --seed --machine-id -c all

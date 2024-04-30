@@ -1,0 +1,65 @@
+{
+  "variables": {
+    "SSH_PUB_KEY": "",
+    "SSH_PRIVATE_KEY_FILE":  ""
+  },
+  "builders": [
+    {
+      "boot_command": [
+        "c<wait>",
+    	"linux /casper/vmlinuz --- autoinstall ds=\"nocloud-net;seedfrom=http://{{.HTTPIP}}:{{.HTTPPort}}/\"",
+        " PACKER_USER=ubuntu PACKER_AUTHORIZED_KEY={{ user `SSH_PUB_KEY` | urlquery }}",
+    	"<enter><wait>",
+    	"initrd /casper/initrd",
+    	"<enter><wait>",
+    	"boot",
+    	"<enter>"
+      ],
+      "boot_wait": "5s",
+      "disk_size": 8000,
+      "format": "qcow2",
+      "headless": true,
+      "http_directory": "httpdir",
+      "http_port_max": 8550,
+      "http_port_min": 8500,
+      "iso_url": "https://releases.ubuntu.com/24.04/ubuntu-24.04-live-server-amd64.iso",
+      "iso_checksum": "sha256:8762f7e74e4d64d72fceb5f70682e6b069932deedb4949c6975d0f0fe0a91be3",
+      "memory": 1024,
+      "ssh_timeout": "20m",
+      "ssh_clear_authorized_keys": true,
+      "ssh_private_key_file": "{{ user `SSH_PRIVATE_KEY_FILE` }}",
+      "shutdown_command": "sudo -- sh -c 'rm /etc/sudoers.d/99-egi-installation && shutdown -h now'",
+      "ssh_username": "ubuntu",
+      "type": "qemu",
+      "qemuargs": [
+          [ "-cpu", "host" ]
+      ],
+      "vm_name": "Ubuntu.24.04-2024.04.30"
+     }
+  ],
+  "provisioners": [
+    {
+      "playbook_file": "provisioners/init.yaml",
+      "type": "ansible",
+      "extra_arguments": [
+          "--extra-vars", "ansible_python_interpreter=/usr/bin/python3"
+      ],
+      "use_proxy": false,
+      "user": "ubuntu"
+    },
+    {
+      "pause_before": "30s",
+      "playbook_file": "provisioners/base.yaml",
+      "type": "ansible",
+      "extra_arguments": [
+          "--extra-vars", "ansible_python_interpreter=/usr/bin/python3"
+      ],
+      "use_proxy": false,
+      "user": "ubuntu"
+    },
+    {
+      "type": "shell",
+      "script": "provisioners/cleanup.sh"
+     }
+  ]
+}
