@@ -1,9 +1,10 @@
 #!/bin/bash
-
 # Takes as argument the json file describing the build for packer
 # e.g. build.sh centos-7.json
-
 set -e
+
+template_dir="$(dirname "$1")"
+pushd "$template_dir"
 
 # Create a temp ssh key that will be used to login to the VMs
 SSH_KEY_DIR=$(mktemp -d)
@@ -18,7 +19,7 @@ done
 # build with this key
 packer build -var "SSH_PRIVATE_KEY_FILE=$SSH_KEY_DIR/key" \
     -var "SSH_PUB_KEY=$(cat "$SSH_KEY_DIR/key.pub")" \
-    "$1"
+    "$(basename "$1")"
 
 rm -rf "$SSH_KEY_DIR"
 

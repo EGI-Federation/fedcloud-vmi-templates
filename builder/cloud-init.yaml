@@ -1,0 +1,70 @@
+#cloud-config
+---
+users:
+  - name: egi
+    gecos: EGI
+    primary_group: egi
+    groups: users
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_import_id:
+      - gh:enolfc
+      - gh:gwarf
+      - gh:sebastian-luna-valero
+
+packages:
+  - git
+  - jq
+  - retry
+  - qemu-system-x86
+  - qemu-utils
+  - virtualbox
+  - python3-venv
+  - python3-dev
+  - ansible
+
+write_files:
+  - content: |
+      #!/bin/sh
+      set -e
+
+      mkdir -p /var/tmp/egi
+      cd /var/tmp/egi || exit
+
+      # Valid GitHub token to access the repo
+      OAUTH_TOKEN="%TOKEN%"
+      COMMIT_SHA="%REF%"
+      SHORT_COMMIT_SHA="%SHORT_REF%"
+      IMAGE="%IMAGE%"
+
+
+      # get the repo code and untar at cwd
+      curl -L -H "Accept: application/vnd.github.v3+raw" \
+              "https://api.github.com/repos/EGI-Federation/fedcloud-vmi-templates/tarball/$COMMIT_SHA" | \
+              tar xz --strip=1
+      builder/build-image.sh "$IMAGE"
+    path: /var/lib/cloud/scripts/per-boot/build.sh
+    permissions: '0755'
+  - content: |
+      #!/bin/sh
+      mkdir -p /var/tmp/egi
+      VM_ID="$(cloud-init query instance_id)"
+
+      cloud-init status --wait >"/var/tmp/egi/$VM_ID"
+      [ -f /var/log/image-build.log ] && \
+          cat /var/log/image-build.log >>"/var/tmp/egi/$VM_ID"
+      # try 10 times, otherwise just die
+      retry -t 25 -d 200 -- openstack --os-cloud backend object create \
+            --name "$VM_ID" fedcloud-vmi-templates "/var/tmp/egi/$VM_ID"
+    path: /usr/local/bin/notify.sh
+    permissions: '0755'
+  - content: |
+      [Unit]
+      Description=Notify the github action
+
+      [Service]
+      ExecStart=/usr/local/bin/notify.sh
+
+      [Install]
+      WantedBy=multi-user.target
+    path: /etc/systemd/system/notify.service

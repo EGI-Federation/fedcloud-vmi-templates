@@ -1,0 +1,217 @@
+---
+name: Build images that changed 
+
+on: 
+  - push
+
+jobs:
+  image-list:
+    name: build images
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.change-list.outputs.all_changed_files }}
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+        with:
+          # full git history needed to get proper list of changed files
+          fetch-depth: 0
+      - name: Get list of changes
+        id: change-list
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+             **/*.json
+
+  build-images:
+    name: Image builder
+    needs: image-list
+    runs-on: ubuntu-latest
+    strategy:
+      #matrix: ${{ fromJson(needs.image-list.outputs.matrix) }}
+      matrix: 
+        images: ["ubuntu/ubuntu-22.04.json"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Install environment
+        run: |
+          curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
+          chmod +x jq
+          pip install yq git+https://github.com/tdviet/fedcloudclient.git
+      - name: Configure providers access
+        env:
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+        run: |
+          # using parametric scopes to only have access to the right VO
+          SCOPE="openid%20email%20profile%20voperson_id"
+          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:cloud.egi.eu:role=vm_operator#aai.egi.eu"
+          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:cloud.egi.eu:role=member#aai.egi.eu"
+          CLOUD_OIDC_TOKEN=$(curl -X POST "https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/token" \
+                                  -d "grant_type=refresh_token&client_id=token-portal&scope=$SCOPE&refresh_token=$REFRESH_TOKEN" \
+                                | jq -r ".access_token")
+          echo "::add-mask::$CLOUD_OIDC_TOKEN"
+
+
+          cd builder
+          BACKEND_SITE="$(yq -r .clouds.backend.site clouds.yaml)"
+          BACKEND_VO="$(yq -r .clouds.backend.vo clouds.yaml)"
+          BACKEND_OS_TOKEN="$(fedcloud openstack token issue --oidc-access-token "$CLOUD_OIDC_TOKEN" \
+                                                             --site "$BACKEND_SITE" --vo "$BACKEND_VO" -j | jq -r '.[0].Result.id')"
+          echo "::add-mask::$BACKEND_OS_TOKEN"
+          sed -i -e "s/backend_secret/$BACKEND_OS_TOKEN/" clouds.yaml
+
+          SCOPE="openid%20email%20profile%20voperson_id"
+          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:vo.access.egi.eu:role=vm_operator#aai.egi.eu"
+          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:vo.access.egi.eu:role=member#aai.egi.eu"
+          ACCESS_OIDC_TOKEN=$(curl -X POST "https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/token" \
+                                  -d "grant_type=refresh_token&client_id=token-portal&scope=$SCOPE&refresh_token=$REFRESH_TOKEN" \
+                                | jq -r ".access_token")
+          echo "::add-mask::$ACCESS_OIDC_TOKEN"
+          DEPLOY_SITE="$(yq -r .clouds.deploy.site clouds.yaml)"
+          DEPLOY_VO="$(yq -r .clouds.deploy.vo clouds.yaml)"
+          echo "DEPLOY_SITE=$DEPLOY_SITE" >> "$GITHUB_ENV"
+          DEPLOY_OS_TOKEN="$(fedcloud openstack token issue --oidc-access-token "$ACCESS_OIDC_TOKEN" \
+                                                             --site "$DEPLOY_SITE" --vo "$DEPLOY_VO" -j | jq -r '.[0].Result.id')"
+          echo "::add-mask::$DEPLOY_OS_TOKEN"
+          sed -i -e "s/deploy_secret/$DEPLOY_OS_TOKEN/" clouds.yaml
+
+          # Another one for images
+          IMAGES_SITE="$(yq -r .clouds.deploy.site clouds.yaml)"
+          IMAGES_VO="$(yq -r .clouds.deploy.vo clouds.yaml)"
+          echo "IMAGES_SITE=$IMAGES_SITE" >> "$GITHUB_ENV"
+          IMAGES_OS_TOKEN="$(fedcloud openstack token issue --oidc-access-token "$ACCESS_OIDC_TOKEN" \
+                                                             --site "$IMAGES_SITE" --vo "$IMAGES_VO" -j | jq -r '.[0].Result.id')"
+          echo "::add-mask::$IMAGES_OS_TOKEN"
+          sed -i -e "s/images_secret/$IMAGES_OS_TOKEN/" clouds.yaml
+
+          mkdir -p ~/.config/openstack
+          touch ~/.config/openstack/secure.yaml
+          FEDCLOUD_LOCKER_TOKEN="$(fedcloud secret locker create \
+                                   --oidc-access-token "$CLOUD_OIDC_TOKEN" \
+                                   --ttl 1h --num-uses 2)"
+          echo "::add-mask::$FEDCLOUD_LOCKER_TOKEN"
+          fedcloud secret put --locker-token "$FEDCLOUD_LOCKER_TOKEN" deploy "data=@clouds.yaml"
+          echo "FEDCLOUD_LOCKER_TOKEN=$FEDCLOUD_LOCKER_TOKEN" >> "$GITHUB_ENV"
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.2.9
+      - name: Terraform Format
+        id: fmt
+        run: |
+          cd builder 
+          terraform fmt -check
+      - name: Terraform init
+        id: init
+        run: |
+          cd builder 
+          terraform init
+      - name: Build the thing 
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          cd builder 
+          sed -i -e "s#%IMAGE%#${{ matrix.image }}#" cloud-init.yaml
+          sed -i -e "s/%TOKEN%/${{ secrets.GITHUB_TOKEN }}/" cloud-init.yaml
+          sed -i -e "s/%REF%/${{ github.sha }}/" cloud-init.yaml
+          sed -i -e "s/%SHORT_REF%/$(git rev-parse --short HEAD)/" cloud-init.yaml
+          sed -i -e "s/%FEDCLOUD_LOCKER_TOKEN%/$FEDCLOUD_LOCKER_TOKEN/" cloud-init.yaml
+      - name: terraform plan
+        id: plan
+        if: github.event_name == 'pull_request'
+        run: |
+          cd builder 
+          terraform plan -no-color -var-file="$DEPLOY_SITE.tfvars"
+        continue-on-error: true
+      - name: Update Pull Request
+        uses: actions/github-script@v7
+        if: github.event_name == 'pull_request'
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+            #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+            #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+            <details><summary>Show Plan</summary>
+
+            \`\`\`
+            ${process.env.PLAN}
+            \`\`\`
+
+            </details>
+
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+      - name: Terraform Plan Status
+        if: steps.plan.outcome == 'failure'
+        run: exit 1
+      - name: Terraform Apply
+        id: terraform-apply
+#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          cd builder
+          terraform apply -auto-approve -var-file="$DEPLOY_SITE.tfvars"
+      - name: Get VM ID
+        id: terraform-vm-id
+#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          cd builder
+          terraform output -raw instance-id
+      - name: Re-configure providers access
+        env:
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+        run: |
+          # using parametric scopes to only have access to cloud.egi.eu VO
+          SCOPE="openid%20email%20profile%20voperson_id"
+          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:cloud.egi.eu:role=vm_operator#aai.egi.eu"
+          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:cloud.egi.eu:role=member#aai.egi.eu"
+          OIDC_TOKEN=$(curl -X POST "https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/token" \
+                            -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=token-portal&scope=$SCOPE" \
+                          | jq -r ".access_token")
+          echo "::add-mask::$OIDC_TOKEN"
+          cd builder
+          git checkout -- clouds.yaml
+          BACKEND_SITE="$(yq -r .clouds.backend.site clouds.yaml)"
+          BACKEND_VO="$(yq -r .clouds.backend.vo clouds.yaml)"
+          BACKEND_OS_TOKEN="$(fedcloud openstack token issue --oidc-access-token "$OIDC_TOKEN" \
+                                                             --site "$BACKEND_SITE" --vo "$BACKEND_VO" -j | jq -r '.[0].Result.id')"
+          echo "::add-mask::$BACKEND_OS_TOKEN"
+          echo "BACKEND_OS_TOKEN=$BACKEND_OS_TOKEN" >> "$GITHUB_ENV"
+          sed -i -e "s/backend_secret/$BACKEND_OS_TOKEN/" clouds.yaml
+          mkdir -p ~/.config/openstack
+          touch ~/.config/openstack/secure.yaml
+      - name: Get the status file from swift
+#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 20
+          retry_wait_seconds: 40
+          command: >
+            pushd builder &&
+            which openstack &&
+            openstack --version && 
+            openstack --help && 
+            openstack --os-cloud backend --os-token "$BACKEND_OS_TOKEN" object save fedcloud-catchall "${{ steps.terraform-vm-id.outputs.stdout }}" &&
+            openstack --os-cloud backend --os-token "$BACKEND_OS_TOKEN" object delete fedcloud-catchall "${{ steps.terraform-vm-id.outputs.stdout }}"
+      - name: Look for errors
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          cd builder
+          # show the status in the build log
+          cat "${{ steps.terraform-vm-id.outputs.stdout }}"
+          grep -v "error" "${{ steps.terraform-vm-id.outputs.stdout }}"

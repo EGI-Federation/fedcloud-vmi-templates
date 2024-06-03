@@ -34,7 +34,7 @@
       "qemuargs": [
           [ "-cpu", "host" ]
       ],
-      "vm_name": "Ubuntu.22.04-2023.10.24"
+      "vm_name": "Ubuntu.22.04-2024.07.31"
      }
   ],
   "provisioners": [
