@@ -37,7 +37,7 @@
       "qemuargs": [
           [ "-cpu", "host" ]
       ],
-      "vm_name": "Small.Ubuntu.20.04-2023.12.12"
+      "vm_name": "Small.Ubuntu.20.04-2024.06.03"
     }
   ],
   "provisioners": [
