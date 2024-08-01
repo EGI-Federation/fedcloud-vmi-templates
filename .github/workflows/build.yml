@@ -216,5 +216,6 @@ jobs:
       - name: Delete VM
         if: always()
         run: |
+          set -x
           cd builder
-          terraform destroy -auto-approve
+          terraform destroy 
