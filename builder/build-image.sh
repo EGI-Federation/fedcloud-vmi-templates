@@ -7,8 +7,8 @@ FEDCLOUD_SECRET_LOCKER="$2"
 
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
-PATH="$PWD/.venv/bin/pip:$PATH"
-"$PWD/.venv/bin/pip" install fedcloudclient
+export PATH="$PWD/.venv/bin/pip:$PATH"
+pip install fedcloudclient
 
 mkdir -p /etc/openstack/
 TMP_SECRETS="$(mktemp)"
@@ -26,8 +26,11 @@ apt-get update && apt-get install -y packer
 packer plugins install github.com/hashicorp/qemu
 packer plugins install github.com/hashicorp/ansible
 
+echo "HERHE"
+echo "$PWD"
+
 if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
-	VM_NAME="$(jq -r ".builders[].vm_name" < "$IMAGE").ova"
+	VM_NAME="$(jq -r ".builders[].vm_name" < "$IMAGE")"
 	cd $(dirname "$IMAGE/output-qemu")
 	openstack --os-cloud images \
 		object create egi_endorsed_vas \
