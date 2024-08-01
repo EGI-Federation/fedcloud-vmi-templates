@@ -7,7 +7,7 @@ FEDCLOUD_SECRET_LOCKER="$2"
 
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
-export PATH="$PWD/.venv/bin/pip:$PATH"
+export PATH="$PWD/.venv/bin:$PATH"
 pip install fedcloudclient
 
 mkdir -p /etc/openstack/
