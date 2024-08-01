@@ -36,13 +36,13 @@ write_files:
       COMMIT_SHA="%REF%"
       SHORT_COMMIT_SHA="%SHORT_REF%"
       IMAGE="%IMAGE%"
-
+      FEDCLOUD_LOCKER_TOKEN="%FEDCLOUD_LOCKER_TOKEN%"
 
       # get the repo code and untar at cwd
       curl -L -H "Accept: application/vnd.github.v3+raw" \
               "https://api.github.com/repos/EGI-Federation/fedcloud-vmi-templates/tarball/$COMMIT_SHA" | \
               tar xz --strip=1
-      builder/build-image.sh "$IMAGE"
+      builder/build-image.sh "$IMAGE" "$FEDCLOUD_LOCKER_TOKEN"
     path: /var/lib/cloud/scripts/per-boot/build.sh
     permissions: '0755'
   - content: |
