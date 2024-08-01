@@ -1,7 +1,7 @@
 ---
-name: Build images that changed 
+name: Build images that changed
 
-on: 
+on:
   - push
 
 jobs:
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       #matrix: ${{ fromJson(needs.image-list.outputs.matrix) }}
-      matrix: 
+      matrix:
         images: ["ubuntu/ubuntu-22.04.json"]
 
     steps:
@@ -106,18 +106,18 @@ jobs:
       - name: Terraform Format
         id: fmt
         run: |
-          cd builder 
+          cd builder
           terraform fmt -check
       - name: Terraform init
         id: init
         run: |
-          cd builder 
+          cd builder
           terraform init
-      - name: Build the thing 
+      - name: Build the thing
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
-          cd builder 
+          cd builder
           sed -i -e "s#%IMAGE%#${{ matrix.images }}#" cloud-init.yaml
           sed -i -e "s/%TOKEN%/${{ secrets.GITHUB_TOKEN }}/" cloud-init.yaml
           sed -i -e "s/%REF%/${{ github.sha }}/" cloud-init.yaml
@@ -127,7 +127,7 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: |
-          cd builder 
+          cd builder
           terraform plan -no-color -var-file="$DEPLOY_SITE.tfvars"
         continue-on-error: true
       - name: Update Pull Request
@@ -198,9 +198,10 @@ jobs:
 #        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: nick-fields/retry@v3
         with:
-          timeout_minutes: 10
-          max_attempts: 20
+          # this is about 40 minutes
+          max_attempts: 60
           retry_wait_seconds: 40
+          timeout_minutes: 5
           command: >
             pushd builder &&
             openstack --os-cloud backend --os-token "$BACKEND_OS_TOKEN" object save fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}" &&
@@ -211,4 +212,9 @@ jobs:
           cd builder
           # show the status in the build log
           cat "${{ steps.terraform-vm-id.outputs.stdout }}"
-          grep -v "error" "${{ steps.terraform-vm-id.outputs.stdout }}"
+          grep -q "error" "${{ steps.terraform-vm-id.outputs.stdout }}"
+      - name: Delete VM
+        if: always()
+        run: |
+          cd builder
+          terraform destroy -auto-approve
