@@ -7,8 +7,4 @@ terraform {
     }
   }
   required_version = ">= 0.13"
-  backend "swift" {
-    container = "terraform-image-sync"
-    cloud     = "backend"
-  }
 }
