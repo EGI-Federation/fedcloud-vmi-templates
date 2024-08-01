@@ -203,8 +203,8 @@ jobs:
           retry_wait_seconds: 40
           command: >
             pushd builder &&
-            openstack --os-cloud backend --os-token "$BACKEND_OS_TOKEN" object save fedcloud-catchall "${{ steps.terraform-vm-id.outputs.stdout }}" &&
-            openstack --os-cloud backend --os-token "$BACKEND_OS_TOKEN" object delete fedcloud-catchall "${{ steps.terraform-vm-id.outputs.stdout }}"
+            openstack --os-cloud backend --os-token "$BACKEND_OS_TOKEN" object save fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}" &&
+            openstack --os-cloud backend --os-token "$BACKEND_OS_TOKEN" object delete fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}"
       - name: Look for errors
         #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
