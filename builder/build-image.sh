@@ -28,11 +28,10 @@ packer plugins install github.com/hashicorp/ansible
 
 if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
 	VM_NAME="$(jq -r ".builders[].vm_name" < "$IMAGE").ova"
-	pushd $(dirname "$IMAGE/output-qemu")
+	cd $(dirname "$IMAGE/output-qemu")
 	openstack --os-cloud images \
 		object create egi_endorsed_vas \
 		"$VM_NAME" >>/var/log/image-build.log
-	popd
 	echo "SUCCESSFUL BUILD - uploaded $VM_NAME" >>/var/log/image-build.log
 fi
 
