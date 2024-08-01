@@ -83,8 +83,8 @@ jobs:
           sed -i -e "s/deploy_secret/$DEPLOY_OS_TOKEN/" clouds.yaml
 
           # Another one for images
-          IMAGES_SITE="$(yq -r .clouds.deploy.site clouds.yaml)"
-          IMAGES_VO="$(yq -r .clouds.deploy.vo clouds.yaml)"
+          IMAGES_SITE="$(yq -r .clouds.images.site clouds.yaml)"
+          IMAGES_VO="$(yq -r .clouds.images.vo clouds.yaml)"
           echo "IMAGES_SITE=$IMAGES_SITE" >> "$GITHUB_ENV"
           IMAGES_OS_TOKEN="$(fedcloud openstack token issue --oidc-access-token "$ACCESS_OIDC_TOKEN" \
                                                              --site "$IMAGES_SITE" --vo "$IMAGES_VO" -j | jq -r '.[0].Result.id')"

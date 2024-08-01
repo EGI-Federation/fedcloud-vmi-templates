@@ -3,8 +3,10 @@
 # e.g. build.sh centos-7.json
 set -e
 
-template_dir="$(dirname "$1")"
-pushd "$template_dir"
+TEMPLATE_DIR="$(dirname "$1")"
+pushd "$TEMPLATE_DIR"
+
+TEMPLATE="$(basename "$1")"
 
 # Create a temp ssh key that will be used to login to the VMs
 SSH_KEY_DIR=$(mktemp -d)
@@ -19,12 +21,6 @@ done
 # build with this key
 packer build -var "SSH_PRIVATE_KEY_FILE=$SSH_KEY_DIR/key" \
     -var "SSH_PUB_KEY=$(cat "$SSH_KEY_DIR/key.pub")" \
-    "$(basename "$1")"
+    "$TEMPLATE"
 
 rm -rf "$SSH_KEY_DIR"
-
-# convert to OVA
-VM_NAME=$(jq -r ".builders[].vm_name" < "$1")
-
-# Assume we are in the right location for the scripts to work
-../tools/qcow2-to-ova.sh "$VM_NAME"
