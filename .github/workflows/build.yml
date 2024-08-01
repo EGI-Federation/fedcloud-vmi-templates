@@ -118,7 +118,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           cd builder 
-          sed -i -e "s#%IMAGE%#${{ matrix.image }}#" cloud-init.yaml
+          sed -i -e "s#%IMAGE%#${{ matrix.images }}#" cloud-init.yaml
           sed -i -e "s/%TOKEN%/${{ secrets.GITHUB_TOKEN }}/" cloud-init.yaml
           sed -i -e "s/%REF%/${{ github.sha }}/" cloud-init.yaml
           sed -i -e "s/%SHORT_REF%/$(git rev-parse --short HEAD)/" cloud-init.yaml
