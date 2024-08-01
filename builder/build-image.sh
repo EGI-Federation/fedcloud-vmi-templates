@@ -16,6 +16,8 @@ TMP_SECRETS="$(mktemp)"
 
 systemctl start notify
 
+export PACKER_CONFIG_DIR="$PWD"
+
 # get packer
 curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
 apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
