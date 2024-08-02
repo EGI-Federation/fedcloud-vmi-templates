@@ -49,6 +49,7 @@ jobs:
         env:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
         run: |
+          set -x
           cd builder
           mkdir -p ~/.config/openstack
           touch ~/.config/openstack/secure.yaml
