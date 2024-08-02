@@ -7,11 +7,12 @@
 #
 # Will throw the OIDC TOKEN to output!
 
-set -e
+set -ex
 
 VO="$1"
+shift
 REFRESH_TOKEN="$2"
-CLOUDS="$3"
+shift
 
 # using parametric scopes to only have access to the right VO
 SCOPE="openid%20email%20profile%20voperson_id"
@@ -21,8 +22,9 @@ OIDC_TOKEN=$(curl -X POST "https://aai.egi.eu/auth/realms/egi/protocol/openid-co
                   -d "grant_type=refresh_token&client_id=token-portal&scope=$SCOPE&refresh_token=$REFRESH_TOKEN" \
                   | jq -r ".access_token")
 echo "::add-mask::$OIDC_TOKEN"
-echo $CLOUDS
-for cloud in $CLOUDS; do
+echo $@
+for cloud in "$@" ; do
+	echo $cloud
 	SITE="$(yq -r ".clouds.$cloud.site" clouds.yaml)"
 	VO="$(yq -r ".clouds.$cloud.vo" clouds.yaml)"
 	OS_TOKEN="$(fedcloud openstack token issue --oidc-access-token "$OIDC_TOKEN" \
