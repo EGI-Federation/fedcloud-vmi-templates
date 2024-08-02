@@ -10,11 +10,9 @@ python3 -m venv "$PWD/.venv"
 export PATH="$PWD/.venv/bin:$PATH"
 pip install fedcloudclient simplejson
 
-mkdir -p /etc/openstack/
 TMP_SECRETS="$(mktemp)"
 fedcloud secret get --locker-token "$FEDCLOUD_SECRET_LOCKER" \
-        deploy data >"$TMP_SECRETS" && mv "$TMP_SECRETS"  /etc/openstack/clouds.yaml
-
+        deploy data >"$TMP_SECRETS" && mv "$TMP_SECRETS"  .refresh_token
 systemctl start notify
 
 export PACKER_CONFIG_DIR="$PWD"
@@ -26,10 +24,8 @@ apt-get update && apt-get install -y packer
 packer plugins install github.com/hashicorp/qemu
 packer plugins install github.com/hashicorp/ansible
 
-echo "HERHE"
-echo "$PWD"
-
 if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
+	builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/refresh_token)" images
 	VM_NAME="$(jq -r ".builders[].vm_name" < "$IMAGE")"
 	cd "$(dirname "$IMAGE")/output-qemu"
 	openstack --os-cloud images \

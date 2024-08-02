@@ -73,7 +73,7 @@ jobs:
                                    --oidc-access-token "$(cat .oidc_token)" \
                                    --ttl 1h --num-uses 2)"
           echo "::add-mask::$FEDCLOUD_LOCKER_TOKEN"
-          fedcloud secret put --locker-token "$FEDCLOUD_LOCKER_TOKEN" deploy "data=@clouds.yaml"
+          fedcloud secret put --locker-token "$FEDCLOUD_LOCKER_TOKEN" deploy "data=$REFRESH_TOKEN"
           DEPLOY_SITE="$(yq -r .clouds.deploy.site clouds.yaml)"
           echo "DEPLOY_SITE=$DEPLOY_SITE" >> "$GITHUB_ENV"
           sed -i -e "s#%IMAGE%#${{ matrix.images }}#" cloud-init.yaml
