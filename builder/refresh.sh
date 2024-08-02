@@ -31,4 +31,5 @@ for cloud in "$@" ; do
 	yq -y -i '.clouds.'"$cloud"'.auth.token="'"$OS_TOKEN"'"'  clouds.yaml
 done
 
-echo "$OIDC_TOKEN"
+# make the OIDC TOKEN available for consumption for others
+echo -n "$OIDC_TOKEN" >.oidc_token
