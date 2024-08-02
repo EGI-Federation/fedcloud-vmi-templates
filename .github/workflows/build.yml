@@ -45,11 +45,24 @@ jobs:
           curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
           chmod +x jq
           pip install yq simplejson fedcloudclient
-      - name: Get ready for deploy
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.2.9
+      - name: Terraform Format
+        id: fmt
+        run: |
+          cd builder
+          terraform fmt -check
+      - name: Terraform init
+        id: init
+        run: |
+          cd builder
+          terraform init
+      - name: Deploy
         env:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
         run: |
-          set -x
           cd builder
           mkdir -p ~/.config/openstack
           touch ~/.config/openstack/secure.yaml
@@ -68,28 +81,7 @@ jobs:
           sed -i -e "s/%REF%/${{ github.sha }}/" cloud-init.yaml
           sed -i -e "s/%SHORT_REF%/$(git rev-parse --short HEAD)/" cloud-init.yaml
           sed -i -e "s/%FEDCLOUD_LOCKER_TOKEN%/$FEDCLOUD_LOCKER_TOKEN/" cloud-init.yaml
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.2.9
-      - name: Terraform Format
-        id: fmt
-        run: |
-          cd builder
-          terraform fmt -check
-      - name: Terraform init
-        id: init
-        run: |
-          cd builder
-          terraform init
-      - name: Build the thing
-        run: |
-          cd builder
-      - name: Terraform Apply
-        id: terraform-apply
-#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: |
-          cd builder
+          # terraform!
           terraform apply -auto-approve -var-file="$DEPLOY_SITE.tfvars"
       - name: Get VM ID
         id: terraform-vm-id
@@ -123,14 +115,13 @@ jobs:
           cat "${{ steps.terraform-vm-id.outputs.stdout }}"
           grep -q "error" "${{ steps.terraform-vm-id.outputs.stdout }}"
       - name: Refresh deploy token
+        run: |
+          cd builder
+      - name: Delete VM
+        if: always()
         env:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
         run: |
           cd builder
-          OIDC_TOKEN="$(./refresh.sh vo.access.egi.eu "$REFRESH_TOKEN" deploy)"
-          echo "::add-mask::$OIDC_TOKEN"
-      - name: Delete VM
-        if: always()
-        run: |
-          cd builder
+          ./refresh.sh vo.access.egi.eu "$REFRESH_TOKEN" deploy
           terraform destroy -auto-approve -var-file="$DEPLOY_SITE.tfvars"
