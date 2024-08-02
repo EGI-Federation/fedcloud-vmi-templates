@@ -171,10 +171,12 @@ jobs:
         run: |
           cd builder
           terraform output -raw instance-id
-      - name: Re-configure providers access
+      - name: Refresh backend access
         env:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
         run: |
+          cd builder
+          git checkout -- clouds.yaml
           # using parametric scopes to only have access to cloud.egi.eu VO
           SCOPE="openid%20email%20profile%20voperson_id"
           SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:cloud.egi.eu:role=vm_operator#aai.egi.eu"
@@ -183,8 +185,6 @@ jobs:
                             -d "grant_type=refresh_token&refresh_token=$REFRESH_TOKEN&client_id=token-portal&scope=$SCOPE" \
                           | jq -r ".access_token")
           echo "::add-mask::$OIDC_TOKEN"
-          cd builder
-          git checkout -- clouds.yaml
           BACKEND_SITE="$(yq -r .clouds.backend.site clouds.yaml)"
           BACKEND_VO="$(yq -r .clouds.backend.vo clouds.yaml)"
           BACKEND_OS_TOKEN="$(fedcloud openstack token issue --oidc-access-token "$OIDC_TOKEN" \
@@ -192,8 +192,6 @@ jobs:
           echo "::add-mask::$BACKEND_OS_TOKEN"
           echo "BACKEND_OS_TOKEN=$BACKEND_OS_TOKEN" >> "$GITHUB_ENV"
           sed -i -e "s/backend_secret/$BACKEND_OS_TOKEN/" clouds.yaml
-          mkdir -p ~/.config/openstack
-          touch ~/.config/openstack/secure.yaml
       - name: Get the status file from swift
 #        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: nick-fields/retry@v3
@@ -213,6 +211,27 @@ jobs:
           # show the status in the build log
           cat "${{ steps.terraform-vm-id.outputs.stdout }}"
           grep -q "error" "${{ steps.terraform-vm-id.outputs.stdout }}"
+      - name: Refresh deploy access
+        env:
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+        run: |
+          cd builder
+          git checkout -- clouds.yaml
+
+          SCOPE="openid%20email%20profile%20voperson_id"
+          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:vo.access.egi.eu:role=vm_operator#aai.egi.eu"
+          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:vo.access.egi.eu:role=member#aai.egi.eu"
+          ACCESS_OIDC_TOKEN=$(curl -X POST "https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/token" \
+                                  -d "grant_type=refresh_token&client_id=token-portal&scope=$SCOPE&refresh_token=$REFRESH_TOKEN" \
+                                | jq -r ".access_token")
+          echo "::add-mask::$ACCESS_OIDC_TOKEN"
+          DEPLOY_SITE="$(yq -r .clouds.deploy.site clouds.yaml)"
+          DEPLOY_VO="$(yq -r .clouds.deploy.vo clouds.yaml)"
+          echo "DEPLOY_SITE=$DEPLOY_SITE" >> "$GITHUB_ENV"
+          DEPLOY_OS_TOKEN="$(fedcloud openstack token issue --oidc-access-token "$ACCESS_OIDC_TOKEN" \
+                                                             --site "$DEPLOY_SITE" --vo "$DEPLOY_VO" -j | jq -r '.[0].Result.id')"
+          echo "::add-mask::$DEPLOY_OS_TOKEN"
+          sed -i -e "s/deploy_secret/$DEPLOY_OS_TOKEN/" clouds.yaml
       - name: Delete VM
         if: always()
         run: |
