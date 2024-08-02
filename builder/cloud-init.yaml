@@ -56,7 +56,7 @@ write_files:
       [ -f /var/log/image-build.log ] && \
           cat /var/log/image-build.log >>"/var/tmp/egi/$VM_ID"
       # try 10 times, otherwise just die
-	    builder/refresh.sh vo.access.egi.eu "$(cat .refresh_token)" images
+      builder/refresh.sh vo.access.egi.eu "$(cat .refresh_token)" images
       retry -t 25 -d 200 -- openstack --os-cloud backend object create \
             --name "$VM_ID" fedcloud-vmi "/var/tmp/egi/$VM_ID"
     path: /usr/local/bin/notify.sh
