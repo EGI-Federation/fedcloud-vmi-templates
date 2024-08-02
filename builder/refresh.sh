@@ -22,13 +22,12 @@ OIDC_TOKEN=$(curl -X POST "https://aai.egi.eu/auth/realms/egi/protocol/openid-co
                   -d "grant_type=refresh_token&client_id=token-portal&scope=$SCOPE&refresh_token=$REFRESH_TOKEN" \
                   | jq -r ".access_token")
 echo "::add-mask::$OIDC_TOKEN"
-echo $@
 for cloud in "$@" ; do
-	echo $cloud
 	SITE="$(yq -r ".clouds.$cloud.site" clouds.yaml)"
 	VO="$(yq -r ".clouds.$cloud.vo" clouds.yaml)"
 	OS_TOKEN="$(fedcloud openstack token issue --oidc-access-token "$OIDC_TOKEN" \
         			--site "$SITE" --vo "$VO" -j | jq -r '.[0].Result.id')"
+	echo "::add-mask::$OS_TOKEN"
 	yq -y -i '.clouds.'"$cloud"'.auth.token="'"$OS_TOKEN"'"'  clouds.yaml
 done
 

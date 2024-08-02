@@ -56,7 +56,6 @@ jobs:
 
           ./refresh.sh vo.access.egi.eu "$REFRESH_TOKEN" deploy images
           OIDC_TOKEN="$(./refresh.sh cloud.egi.eu "$REFRESH_TOKEN" backend)"
-          echo "::add-mask::$OIDC_TOKEN"
           FEDCLOUD_LOCKER_TOKEN="$(fedcloud secret locker create \
                                    --oidc-access-token "$OIDC_TOKEN" \
                                    --ttl 1h --num-uses 2)"
