@@ -45,44 +45,22 @@ jobs:
           curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
           chmod +x jq
           pip install yq simplejson fedcloudclient
-      - name: Get backend token
-          uses: ./.github/workflows/refresh.yml
-          with:
-            vo: "cloud.egi.eu"
-            os-clouds:
-              - backend
-          secrets:
-            refresh_token: ${{ secrets.REFRESH_TOKEN }}
-      - name: Get deploy token
-          uses: ./.github/workflows/refresh.yml
-          with:
-            vo: "vo.access.egi.eu"
-            os-clouds:
-              - deploy
-              - images
-          secrets:
-            refresh_token: ${{ secrets.REFRESH_TOKEN }}
       - name: Get ready for deploy
         run: |
           cd builder
           mkdir -p ~/.config/openstack
           touch ~/.config/openstack/secure.yaml
-          DEPLOY_SITE="$(yq -r .clouds.deploy.site clouds.yaml)"
-          echo "DEPLOY_SITE=$DEPLOY_SITE" >> "$GITHUB_ENV"
 
-          # refreshing token here again to simplify my life :(
-          SCOPE="openid%20email%20profile%20voperson_id"
-          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:cloud.egi.eu:role=vm_operator#aai.egi.eu"
-          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:cloud.egi.eu:role=member#aai.egi.eu"
-          OIDC_TOKEN=$(curl -X POST "https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/token" \
-                                  -d "grant_type=refresh_token&client_id=token-portal&scope=$SCOPE&refresh_token=${{ secrets.refresh_token }}" \
-                                | jq -r ".access_token")
+          ./refresh.sh vo.access.egi.eu ${{ secrets.REFRESH_TOKEN }} deploy images
+          OIDC_TOKEN=$(./refresh.sh cloud.egi.eu ${{ secrets.REFRESH_TOKEN }} backend)
           echo "::add-mask::$OIDC_TOKEN"
           FEDCLOUD_LOCKER_TOKEN="$(fedcloud secret locker create \
                                    --oidc-access-token "$OIDC_TOKEN" \
                                    --ttl 1h --num-uses 2)"
           echo "::add-mask::$FEDCLOUD_LOCKER_TOKEN"
           fedcloud secret put --locker-token "$FEDCLOUD_LOCKER_TOKEN" deploy "data=@clouds.yaml"
+          DEPLOY_SITE="$(yq -r .clouds.deploy.site clouds.yaml)"
+          echo "DEPLOY_SITE=$DEPLOY_SITE" >> "$GITHUB_ENV"
           sed -i -e "s#%IMAGE%#${{ matrix.images }}#" cloud-init.yaml
           sed -i -e "s/%TOKEN%/${{ secrets.GITHUB_TOKEN }}/" cloud-init.yaml
           sed -i -e "s/%REF%/${{ github.sha }}/" cloud-init.yaml
@@ -118,13 +96,10 @@ jobs:
           cd builder
           terraform output -raw instance-id
       - name: Refresh backend token
-          uses: ./.github/workflows/refresh.yml
-          with:
-            vo: "cloud.egi.eu"
-            os-clouds:
-              - backend
-          secrets:
-            refresh_token: ${{ secrets.REFRESH_TOKEN }}
+        run: |
+          cd builder
+          OIDC_TOKEN=$(./refresh.sh cloud.egi.eu ${{ secrets.REFRESH_TOKEN }} backend)
+          echo "::add-mask::$OIDC_TOKEN"
       - name: Get the status file from swift
 #        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: nick-fields/retry@v3
@@ -145,13 +120,10 @@ jobs:
           cat "${{ steps.terraform-vm-id.outputs.stdout }}"
           grep -q "error" "${{ steps.terraform-vm-id.outputs.stdout }}"
       - name: Refresh deploy token
-          uses: ./.github/workflows/refresh.yml
-          with:
-            vo: "vo.access.egi.eu"
-            os-clouds:
-              - deploy
-          secrets:
-            refresh_token: ${{ secrets.REFRESH_TOKEN }}
+        run: |
+          cd builder
+          OIDC_TOKEN=$(./refresh.sh vo.access.egi.eu ${{ secrets.REFRESH_TOKEN }} deploy)
+          echo "::add-mask::$OIDC_TOKEN"
       - name: Delete VM
         if: always()
         run: |
