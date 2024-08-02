@@ -105,8 +105,10 @@ jobs:
           timeout_minutes: 5
           command: >
             pushd builder &&
-            openstack --os-cloud backend object save fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}" &&
-            openstack --os-cloud backend object delete fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}"
+            openstack --os-cloud backend --os-token "$(yq -r .clouds.backend.auth.token clouds.yaml)"
+                object save fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}" &&
+            openstack --os-cloud backend --os-token "$(yq -r .clouds.backend.auth.token clouds.yaml)"
+                object delete fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}"
       - name: Look for errors
         #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
