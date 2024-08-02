@@ -124,4 +124,4 @@ jobs:
         run: |
           cd builder
           ./refresh.sh vo.access.egi.eu "$REFRESH_TOKEN" deploy
-          terraform destroy -auto-approve -var-file="$DEPLOY_SITE.tfvars"
+          #terraform destroy -auto-approve -var-file="$DEPLOY_SITE.tfvars"
