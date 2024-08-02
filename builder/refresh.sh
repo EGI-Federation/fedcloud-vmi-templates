@@ -11,7 +11,7 @@ set -ex
 
 VO="$1"
 shift
-REFRESH_TOKEN="$2"
+REFRESH_TOKEN="$1"
 shift
 
 # using parametric scopes to only have access to the right VO
