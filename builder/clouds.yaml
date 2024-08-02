@@ -1,8 +1,4 @@
 ---
-backend_token: &bt "backend_secret"
-deploy_token: &dt "deploy_secret"
-image_token: &it "images_secret"
-
 clouds:
   backend:
     site: NCG-INGRID-PT
@@ -10,21 +6,21 @@ clouds:
     auth_type: token
     auth:
       auth_url: https://stratus.ncg.ingrid.pt:5000/v3
-      token: *bt
+      token:
       project_id: 6b042927bcfa466cb9eb56d3ea679987
   deploy:
-    site: SCAI 
-    vo: vo.access.egi.eu 
+    site: SCAI
+    vo: vo.access.egi.eu
     auth_type: token
     auth:
       auth_url: https://cloud.scai.fraunhofer.de:5000/v3
-      token: *dt
-      project_id: d12c055894f245b28c75c95e4ca78407 
+      token:
+      project_id: d12c055894f245b28c75c95e4ca78407
   images:
-    site: IFCA-LCG2 
-    vo: vo.access.egi.eu 
+    site: IFCA-LCG2
+    vo: vo.access.egi.eu
     auth_type: token
     auth:
       auth_url: https://api.cloud.ifca.es:5000/v3
-      token: *it
-      project_id: 999f045cb1ff4684a15ebb338af69460 
+      token:
+      project_id: 999f045cb1ff4684a15ebb338af69460

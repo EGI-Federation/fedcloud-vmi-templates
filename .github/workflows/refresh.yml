@@ -1,0 +1,42 @@
+---
+name: Build images that changed
+
+on:
+  workflow_call:
+    inputs:
+      vo:
+        required: true
+        type: string
+      os-clouds:
+        required: true
+        type: list 
+    secrets:
+      refresh_token:
+        required: true
+        type: string
+
+jobs:
+  refresh-token:
+    name: Token refresher 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Refresh token
+        run: |
+          set -x
+          cd builder
+          # using parametric scopes to only have access to the right VO
+          SCOPE="openid%20email%20profile%20voperson_id"
+          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:${{ inputs.vo }}:role=vm_operator#aai.egi.eu"
+          SCOPE="$SCOPE%20eduperson_entitlement:urn:mace:egi.eu:group:${{ inputs.vo }}:role=member#aai.egi.eu"
+          OIDC_TOKEN=$(curl -X POST "https://aai.egi.eu/auth/realms/egi/protocol/openid-connect/token" \
+                                  -d "grant_type=refresh_token&client_id=token-portal&scope=$SCOPE&refresh_token=${{ secrets.refresh_token }}" \
+                                | jq -r ".access_token")
+          echo "::add-mask::$OIDC_TOKEN"
+          for cloud in ${{join( inputs.os-clouds, " ") }} ; do
+              SITE="$(yq -r ".clouds.$cloud.site" clouds.yaml)"
+              VO="$(yq -r ".clouds.$cloud.vo" clouds.yaml)"
+              OS_TOKEN="$(fedcloud openstack token issue --oidc-access-token "$OIDC_TOKEN" \
+                                                         --site "$SITE" --vo "$VO" -j | jq -r '.[0].Result.id')"
+              yq -y -i '.clouds.'"$CLOUD"'.auth.token="'"$OS_TOKEN"'"'  clouds.yaml
+          end
