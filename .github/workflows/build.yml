@@ -102,8 +102,7 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
         run: |
           cd builder
-          OIDC_TOKEN="$(./refresh.sh cloud.egi.eu "$REFRESH_TOKEN" backend)"
-          echo "::add-mask::$OIDC_TOKEN"
+          ./refresh.sh cloud.egi.eu "$REFRESH_TOKEN" backend
       - name: Get the status file from swift
 #        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: nick-fields/retry@v3
