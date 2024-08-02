@@ -46,13 +46,15 @@ jobs:
           chmod +x jq
           pip install yq simplejson fedcloudclient
       - name: Get ready for deploy
+        env:
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
         run: |
           cd builder
           mkdir -p ~/.config/openstack
           touch ~/.config/openstack/secure.yaml
 
-          ./refresh.sh vo.access.egi.eu ${{ secrets.REFRESH_TOKEN }} deploy images
-          OIDC_TOKEN=$(./refresh.sh cloud.egi.eu ${{ secrets.REFRESH_TOKEN }} backend)
+          ./refresh.sh vo.access.egi.eu $REFRESH_TOKEN deploy images
+          OIDC_TOKEN=$(./refresh.sh cloud.egi.eu $REFRESH_TOKEN backend)
           echo "::add-mask::$OIDC_TOKEN"
           FEDCLOUD_LOCKER_TOKEN="$(fedcloud secret locker create \
                                    --oidc-access-token "$OIDC_TOKEN" \
@@ -96,9 +98,11 @@ jobs:
           cd builder
           terraform output -raw instance-id
       - name: Refresh backend token
+        env:
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
         run: |
           cd builder
-          OIDC_TOKEN=$(./refresh.sh cloud.egi.eu ${{ secrets.REFRESH_TOKEN }} backend)
+          OIDC_TOKEN=$(./refresh.sh cloud.egi.eu $REFRESH_TOKEN backend)
           echo "::add-mask::$OIDC_TOKEN"
       - name: Get the status file from swift
 #        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -120,9 +124,11 @@ jobs:
           cat "${{ steps.terraform-vm-id.outputs.stdout }}"
           grep -q "error" "${{ steps.terraform-vm-id.outputs.stdout }}"
       - name: Refresh deploy token
+        env:
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
         run: |
           cd builder
-          OIDC_TOKEN=$(./refresh.sh vo.access.egi.eu ${{ secrets.REFRESH_TOKEN }} deploy)
+          OIDC_TOKEN=$(./refresh.sh vo.access.egi.eu $REFRESH_TOKEN deploy)
           echo "::add-mask::$OIDC_TOKEN"
       - name: Delete VM
         if: always()
