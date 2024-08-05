@@ -7,9 +7,9 @@ Initial work taken from [comfy](https://github.com/Misenko/comfy)
 
 ## Building the images
 
-The repo has a GitHub action workflow that will try to build images from changes
-detected in the `*.json` files. This starts a VM at an EGI site (SCAI) that
-will:
+The repository has a GitHub action workflow that will try to build images from
+changes detected in the `*.json` files. This starts a VM at an EGI site (SCAI)
+that will:
 
 1. get the repo files at the current commit
 1. install packer
