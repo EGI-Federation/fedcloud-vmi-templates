@@ -37,7 +37,7 @@ packer plugins install github.com/hashicorp/ansible
 #	openstack --os-cloud images --os-token $OS_TOKEN \
 #		object create egi_endorsed_vas \
 #		"$VM_NAME" >>/var/log/image-build.log
-	echo "SUCCESSFUL BUILD # $VM_NAME # $SHA # " >>/var/log/image-build.log
+#	echo "SUCCESSFUL BUILD # $VM_NAME # $SHA # " >>/var/log/image-build.log
 #fi
 
 echo "BUILD ENDED" >>/var/log/image-build.log
