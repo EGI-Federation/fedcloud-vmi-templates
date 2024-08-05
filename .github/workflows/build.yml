@@ -141,8 +141,17 @@ jobs:
             \`\`\`
             </details>
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+            if (context.issue.number) {
+              issue = context.issue.number;
+            } else {
+              issue = (await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                commit_sha: context.sha,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              })).data[0].number;
+            }
             github.rest.issues.createComment({
-              issue_number: context.issue.number,
+              issue_number: issue,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: output
