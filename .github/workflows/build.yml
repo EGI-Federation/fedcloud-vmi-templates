@@ -23,15 +23,21 @@ jobs:
         with:
           files: |
              **/*.json
+      - name: Debug
+        run: |
+          echo "HOLA"
+          echo "${{ steps.change-list.outputs.all_changed_files }}"
 
   build-images:
     name: Image builder
     needs: image-list
     runs-on: ubuntu-latest
     strategy:
-      #matrix: ${{ fromJson(needs.image-list.outputs.matrix) }}
-      matrix:
-        images: ["ubuntu/ubuntu-22.04.json"]
+      # just run one build at a time
+      max-parallel: 1
+      matrix: ${{ fromJson(needs.image-list.outputs.matrix) }}
+      #matrix:
+      #  images: ["ubuntu/ubuntu-22.04.json"]
 
     steps:
       - name: Checkout
