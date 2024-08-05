@@ -55,6 +55,7 @@ write_files:
       cloud-init status >"/var/tmp/egi/$VM_ID"
       [ -f /var/log/image-build.log ] && \
           cat /var/log/image-build.log >>"/var/tmp/egi/$VM_ID"
+      export PATH="/var/tmp/egi/.venv/bin:$PATH"
       # try 10 times, otherwise just die
       builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
       retry -t 25 -d 200 -- openstack --os-cloud backend object create \

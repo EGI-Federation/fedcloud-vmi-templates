@@ -1,6 +1,5 @@
 #!/bin/sh
 set -e
-set -x
 
 IMAGE="$1"
 FEDCLOUD_SECRET_LOCKER="$2"
@@ -8,7 +7,7 @@ FEDCLOUD_SECRET_LOCKER="$2"
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
 export PATH="$PWD/.venv/bin:$PATH"
-pip install fedcloudclient simplejson
+pip install fedcloudclient simplejson yq
 
 TMP_SECRETS="$(mktemp)"
 fedcloud secret get --locker-token "$FEDCLOUD_SECRET_LOCKER" \
