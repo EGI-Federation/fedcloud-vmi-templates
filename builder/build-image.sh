@@ -30,9 +30,10 @@ packer plugins install github.com/hashicorp/ansible
 # do the build
 if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
 	builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
+	OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
 	VM_NAME="$(jq -r ".builders[].vm_name" < "$IMAGE")"
 	cd "$(dirname "$IMAGE")/output-qemu"
-	openstack --os-cloud images \
+	openstack --os-cloud images --os-token $OS_TOKEN \
 		object create egi_endorsed_vas \
 		"$VM_NAME" >>/var/log/image-build.log
 	echo "SUCCESSFUL BUILD - uploaded $VM_NAME" >>/var/log/image-build.log
