@@ -36,9 +36,6 @@ jobs:
         images: ${{ fromJson(needs.image-list.outputs.matrix) }}
 
     steps:
-      - name: Fail
-        run: |
-          false
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup python
