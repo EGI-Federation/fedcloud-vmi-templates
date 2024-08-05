@@ -118,11 +118,13 @@ jobs:
         #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           cd builder
+          cat "${{ steps.terraform-vm-id.outputs.stdout }}"
           # show the status in the build log
+          set -x
           {
             echo 'build-log<<BUILDEOF'
             cat "${{ steps.terraform-vm-id.outputs.stdout }}"
-            echo BUILDEOF
+            echo "BUILDEOF"
           } >> "$GITHUB_ENV"
           if grep "SUCCESSFUL BUILD" "${{ steps.terraform-vm-id.outputs.stdout }}"; then
             echo "outcome=success" >> "$GITHUB_OUTPUT"
