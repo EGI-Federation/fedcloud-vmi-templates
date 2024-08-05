@@ -20,6 +20,9 @@ jobs:
       - name: Get list of changes
         id: change-list
         uses: tj-actions/changed-files@v44
+        with:
+           files: |
+              **/*.json
       - name: Debug
         run: |
           echo "HOLA"
