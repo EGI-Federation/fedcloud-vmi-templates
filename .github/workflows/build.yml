@@ -118,9 +118,10 @@ jobs:
           # show the status in the build log
           set -x
           {
-            echo 'build-log<<BUILDEOF'
+            echo 'log<<BUILDLOG'
+            echo "VM is ${{ steps.terraform-vm-id.outputs.stdout }}"
             cat "${{ steps.terraform-vm-id.outputs.stdout }}"
-            echo "BUILDEOF"
+            echo "BUILDLOG"
           } >> "$GITHUB_ENV"
           if grep "SUCCESSFUL BUILD" "${{ steps.terraform-vm-id.outputs.stdout }}"; then
             echo "outcome=success" >> "$GITHUB_OUTPUT"
@@ -136,7 +137,7 @@ jobs:
             <details><summary>Build log</summary>
 
             \`\`\`
-            ${{ steps.process-output.outputs.build-log}}
+            ${{ steps.process-output.outputs.log }}
             \`\`\`
             </details>
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
