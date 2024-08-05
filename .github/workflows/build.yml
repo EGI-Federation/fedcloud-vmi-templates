@@ -21,12 +21,9 @@ jobs:
         id: change-list
         uses: tj-actions/changed-files@v44
         with:
-           files: |
-              **/*.json
-      - name: Debug
-        run: |
-          echo "HOLA"
-          echo "${{ steps.change-list.outputs.all_changed_files }}"
+          matrix: true
+          files: |
+             **/*.json
 
   build-images:
     name: Image builder
@@ -35,9 +32,8 @@ jobs:
     strategy:
       # just run one build at a time
       max-parallel: 1
-      matrix: ${{ fromJson(needs.image-list.outputs.matrix) }}
-      #matrix:
-      #  images: ["ubuntu/ubuntu-22.04.json"]
+      matrix:
+        images: ${{ fromJson(needs.image-list.outputs.matrix) }}
 
     steps:
       - name: Fail
@@ -141,7 +137,7 @@ jobs:
           script: |
             const output = `#### Build status: \`${{ steps.process-output.outcome }}\`
             <details><summary>Build log</summary>
-            
+
             \`\`\`
             ${{ steps.process-output.build-log }}
             \`\`\`
