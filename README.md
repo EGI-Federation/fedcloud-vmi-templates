@@ -1,16 +1,29 @@
 # FedCloud VM Image templates
 
-This repository contains the packer templates used for creating the EGI
-Virtual Machine Images that are available at [AppDB](https://appdb.egi.eu/browse/cloud)
+This repository contains the packer templates used for creating the EGI Virtual
+Machine Images that are available at [AppDB](https://appdb.egi.eu/browse/cloud)
 
 Initial work taken from [comfy](https://github.com/Misenko/comfy)
 
 ## Building the images
 
-### Requirements
+The repository has a GitHub action workflow that will try to build images from
+changes detected in the `*.json` files. This starts a VM at an EGI site (SCAI)
+that will:
 
-From a base Ubuntu 22.04, you can get a working building environment by installing
-`packer`, `ansible`, `qemu`, `jq` and `virtualbox`, e.g.:
+1. get the repo files at the current commit
+1. install packer
+1. build the image described in the json
+1. upload to another site (IFCA-LCG2)
+
+AppDB can then be updated with that information.
+
+### Building manually
+
+#### Requirements
+
+From a base Ubuntu 22.04, you can get a working building environment by
+installing `packer`, `ansible`, `qemu`, `jq` and `virtualbox`, e.g.:
 
 ```shell
 # get up to date system
@@ -26,11 +39,11 @@ $ packer plugins install github.com/hashicorp/qemu
 $ packer plugins install github.com/hashicorp/ansible
 ```
 
-### Building
+#### Building
 
 There is a `tools/build.sh` script that can be used to build image and convert
-to OVA in one go. The script will create a temporary ssh key that's used
-by packer to connect to the VM as root (or privileged user).
+to OVA in one go. The script will create a temporary ssh key that's used by
+packer to connect to the VM as root (or privileged user).
 
 The script takes as parameter the `.json` that describe the build for packer.
 See sample build output:
@@ -210,11 +223,11 @@ Successfully exported 1 machine(s).
 Converted image available at centos.7-2023.01.12.ova
 ```
 
-## Acknowledgement
+## Acknowledgements
 
-The work was supported by [EGI-ACE](https://www.egi.eu/project/egi-ace/)
-project with funding from the European Union’s Horizon 2020 research and
-innovation programme under grant agreement No. 101017567.
+The work was supported by [EGI-ACE](https://www.egi.eu/project/egi-ace/) project
+with funding from the European Union’s Horizon 2020 research and innovation
+programme under grant agreement No. 101017567.
 
 This work is co-funded by the [EOSC-hub project](http://eosc-hub.eu/)
 (Horizon 2020) under Grant number 777536.

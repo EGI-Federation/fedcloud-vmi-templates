@@ -1,0 +1,167 @@
+---
+name: Build images that changed
+
+on:
+  - push
+
+jobs:
+  image-list:
+    name: build images
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.change-list.outputs.all_changed_files }}
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+        with:
+          # full git history needed to get proper list of changed files
+          fetch-depth: 0
+      - name: Get list of changes
+        id: change-list
+        uses: tj-actions/changed-files@v44
+        with:
+          matrix: true
+          files: |
+             **/*.json
+
+  build-images:
+    name: Image builder
+    needs: image-list
+    runs-on: ubuntu-latest
+    strategy:
+      # just run one build at a time
+      max-parallel: 1
+      matrix:
+        images: ${{ fromJson(needs.image-list.outputs.matrix) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - name: Install environment
+        run: |
+          curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
+          chmod +x jq
+          pip install yq simplejson fedcloudclient
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.2.9
+      - name: Terraform Format
+        id: fmt
+        run: |
+          cd builder
+          terraform fmt -check
+      - name: Terraform init
+        id: init
+        run: |
+          cd builder
+          terraform init
+      - name: Deploy
+        env:
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+        run: |
+          cd builder
+          mkdir -p ~/.config/openstack
+          touch ~/.config/openstack/secure.yaml
+
+          ./refresh.sh vo.access.egi.eu "$REFRESH_TOKEN" deploy images
+          ./refresh.sh cloud.egi.eu "$REFRESH_TOKEN" backend
+          FEDCLOUD_LOCKER_TOKEN="$(fedcloud secret locker create \
+                                   --oidc-access-token "$(cat .oidc_token)" \
+                                   --ttl 1h --num-uses 2)"
+          echo "::add-mask::$FEDCLOUD_LOCKER_TOKEN"
+          fedcloud secret put --locker-token "$FEDCLOUD_LOCKER_TOKEN" deploy "data=$REFRESH_TOKEN"
+          DEPLOY_SITE="$(yq -r .clouds.deploy.site clouds.yaml)"
+          echo "DEPLOY_SITE=$DEPLOY_SITE" >> "$GITHUB_ENV"
+          sed -i -e "s#%IMAGE%#${{ matrix.images }}#" cloud-init.yaml
+          sed -i -e "s/%TOKEN%/${{ secrets.GITHUB_TOKEN }}/" cloud-init.yaml
+          sed -i -e "s/%REF%/${{ github.sha }}/" cloud-init.yaml
+          sed -i -e "s/%SHORT_REF%/$(git rev-parse --short HEAD)/" cloud-init.yaml
+          sed -i -e "s/%FEDCLOUD_LOCKER_TOKEN%/$FEDCLOUD_LOCKER_TOKEN/" cloud-init.yaml
+          # terraform!
+          terraform apply -auto-approve -var-file="$DEPLOY_SITE.tfvars"
+      - name: Get VM ID
+        id: terraform-vm-id
+#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          cd builder
+          terraform output -raw instance-id
+      - name: Refresh backend token
+        env:
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+        run: |
+          cd builder
+          ./refresh.sh cloud.egi.eu "$REFRESH_TOKEN" backend
+      - name: Get the status file from swift
+#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: nick-fields/retry@v3
+        with:
+          # this is about 40 minutes
+          max_attempts: 60
+          retry_wait_seconds: 40
+          timeout_minutes: 5
+          command: >
+            pushd builder &&
+            openstack --os-cloud backend --os-token "$(yq -r .clouds.backend.auth.token clouds.yaml)" object save fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}" &&
+            openstack --os-cloud backend --os-token "$(yq -r .clouds.backend.auth.token clouds.yaml)" object delete fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}"
+      - name: Process output
+        id: process-output
+        #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          cd builder
+          cat "${{ steps.terraform-vm-id.outputs.stdout }}"
+          # show the status in the build log
+          set -x
+          {
+            echo 'build-log<<BUILDEOF'
+            echo "VM is ${{ steps.terraform-vm-id.outputs.stdout }}"
+            cat "${{ steps.terraform-vm-id.outputs.stdout }}"
+            echo "BUILDEOF"
+          } >> "$GITHUB_OUTPUT"
+          if grep "SUCCESSFUL BUILD" "${{ steps.terraform-vm-id.outputs.stdout }}"; then
+            echo "outcome=success" >> "$GITHUB_OUTPUT"
+          else
+            echo "outcome=failure" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Update PR with build status
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const output = `#### Build status: \`${{ steps.process-output.outputs.outcome }}\`
+            <details><summary>Build log</summary>
+
+            \`\`\`
+            ${{ steps.process-output.outputs.build-log }}
+            \`\`\`
+            </details>
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+            if (context.issue.number) {
+              issue = context.issue.number;
+            } else {
+              issue = (await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                commit_sha: context.sha,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              })).data[0].number;
+            }
+            github.rest.issues.createComment({
+              issue_number: issue,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
+      # Now create the new files and commit them? or PR them?
+      - name: Delete VM
+        if: always()
+        env:
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+        run: |
+          cd builder
+          ./refresh.sh vo.access.egi.eu "$REFRESH_TOKEN" deploy
+          terraform destroy -auto-approve -var-file="$DEPLOY_SITE.tfvars"
