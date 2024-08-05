@@ -118,7 +118,7 @@ jobs:
           # show the status in the build log
           set -x
           {
-            echo 'build-log<<BUILDEOF'
+            echo 'BUILD_LOG<<BUILDEOF'
             cat "${{ steps.terraform-vm-id.outputs.stdout }}"
             echo "BUILDEOF"
           } >> "$GITHUB_ENV"
@@ -136,7 +136,7 @@ jobs:
             <details><summary>Build log</summary>
 
             \`\`\`
-            ${{ steps.process-output.build-log }}
+            ${{ steps.process-output.BUILD_LOG }}
             \`\`\`
             </details>
             *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
