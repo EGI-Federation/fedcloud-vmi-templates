@@ -107,16 +107,45 @@ jobs:
             pushd builder &&
             openstack --os-cloud backend --os-token "$(yq -r .clouds.backend.auth.token clouds.yaml)" object save fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}" &&
             openstack --os-cloud backend --os-token "$(yq -r .clouds.backend.auth.token clouds.yaml)" object delete fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}"
-      - name: Look for errors
+      - name: Process output
+        id: process-output
         #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           cd builder
           # show the status in the build log
-          cat "${{ steps.terraform-vm-id.outputs.stdout }}"
-          grep -q "error" "${{ steps.terraform-vm-id.outputs.stdout }}"
-      - name: Refresh deploy token
-        run: |
-          cd builder
+          {
+            echo 'build-log<<BUILDEOF'
+            cat "${{ steps.terraform-vm-id.outputs.stdout }}"
+            echo BUILDEOF
+          } >> "$GITHUB_ENV"
+          if grep "SUCCESSFUL BUILD" "${{ steps.terraform-vm-id.outputs.stdout }}"; then
+            echo "outcome=success" >> "$GITHUB_OUTPUT"
+            SHA="$(grep "SUCCESSFUL BUILD" "${{ steps.terraform-vm-id.outputs.stdout }}" | cut -f2 -d"#")"
+            echo "sha512=$SHA" >> "$GITHUB_OUTPUT"
+          else
+            echo "outcome=failure" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Update PR with build status
+        env:
+          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const output = `#### Build status: \`${{ steps.process-output.outcome }}\`
+          <details><summary>Build log</summary>
+
+          \`\`\`
+          ${{ steps.process-output.build-log }}
+          \`\`\`
+          </details>
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
+      # Now create the new files and commit them? or PR them?
       - name: Delete VM
         if: always()
         env:
@@ -124,4 +153,4 @@ jobs:
         run: |
           cd builder
           ./refresh.sh vo.access.egi.eu "$REFRESH_TOKEN" deploy
-          #terraform destroy -auto-approve -var-file="$DEPLOY_SITE.tfvars"
+          terraform destroy -auto-approve -var-file="$DEPLOY_SITE.tfvars"
