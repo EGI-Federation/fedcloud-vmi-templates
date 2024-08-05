@@ -129,21 +129,21 @@ jobs:
         uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const output = `#### Build status: \`${{ steps.process-output.outcome }}\`
-          <details><summary>Build log</summary>
-
-          \`\`\`
-          ${{ steps.process-output.build-log }}
-          \`\`\`
-          </details>
-          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-          github.rest.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: output
-          })
+          script: |
+            const output = `#### Build status: \`${{ steps.process-output.outcome }}\`
+            <details><summary>Build log</summary>
+            
+            \`\`\`
+            ${{ steps.process-output.build-log }}
+            \`\`\`
+            </details>
+            *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
       # Now create the new files and commit them? or PR them?
       - name: Delete VM
         if: always()
