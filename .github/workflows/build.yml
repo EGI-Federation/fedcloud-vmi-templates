@@ -126,8 +126,7 @@ jobs:
             echo "outcome=failure" >> "$GITHUB_OUTPUT"
           fi
       - name: Update PR with build status
-        env:
-          PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
