@@ -58,8 +58,9 @@ write_files:
       export PATH="/var/tmp/egi/.venv/bin:$PATH"
       # try 10 times, otherwise just die
       builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
-      retry -t 25 -d 200 -- openstack --os-cloud backend object create \
-            --name "$VM_ID" fedcloud-vmi "/var/tmp/egi/$VM_ID"
+      OS_TOKEN="$(yq -r '.clouds.backend.auth.token' /etc/openstack/clouds.yaml)"
+      retry -t 25 -d 200 -- openstack --os-cloud backend --os-token $OS_TOKEN \
+            object create --name "$VM_ID" fedcloud-vmi "/var/tmp/egi/$VM_ID"
     path: /usr/local/bin/notify.sh
     permissions: '0755'
   - content: |
