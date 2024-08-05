@@ -33,8 +33,8 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
 	OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
 	VM_NAME="$(jq -r ".builders[].vm_name" < "$IMAGE")"
 	cd "$(dirname "$IMAGE")/output-qemu"
-	SHA="$(sha512sum -z $VM_NAME | cut -f1 -d" ")"
-	openstack --os-cloud images --os-token $OS_TOKEN \
+	SHA="$(sha512sum -z "$VM_NAME" | cut -f1 -d" ")"
+	openstack --os-cloud images --os-token "$OS_TOKEN" \
 		object create egi_endorsed_vas \
 		"$VM_NAME" >>/var/log/image-build.log
 	echo "SUCCESSFUL BUILD - $VM_NAME - $SHA" >>/var/log/image-build.log
