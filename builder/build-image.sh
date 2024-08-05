@@ -25,7 +25,7 @@ packer plugins install github.com/hashicorp/qemu
 packer plugins install github.com/hashicorp/ansible
 
 if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
-	builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/refresh_token)" images
+	builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
 	VM_NAME="$(jq -r ".builders[].vm_name" < "$IMAGE")"
 	cd "$(dirname "$IMAGE")/output-qemu"
 	openstack --os-cloud images \
