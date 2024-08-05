@@ -20,9 +20,6 @@ jobs:
       - name: Get list of changes
         id: change-list
         uses: tj-actions/changed-files@v44
-        with:
-          files: |
-             **/*.json
       - name: Debug
         run: |
           echo "HOLA"
@@ -40,6 +37,9 @@ jobs:
       #  images: ["ubuntu/ubuntu-22.04.json"]
 
     steps:
+      - name: Fail
+        run: |
+          false
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup python
