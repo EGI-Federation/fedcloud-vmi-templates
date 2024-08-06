@@ -29,15 +29,19 @@ packer plugins install github.com/hashicorp/ansible
 
 # do the build
 if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
-	builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
-	OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
+	# compress the resulting image
 	VM_NAME="$(jq -r ".builders[].vm_name" < "$IMAGE")"
 	cd "$(dirname "$IMAGE")/output-qemu"
-	SHA="$(sha512sum -z "$VM_NAME" | cut -f1 -d" ")"
+	QCOW_FILE="$VM_NAME.qcow2"
+	qemu-img convert -O qcow2 -c "$VM_NAME" "$QCOW_FILE"
+	builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
+	OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
+	SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
+	ls -lh $QCOW_FILE >>/var/log/image-build.log
 	openstack --os-cloud images --os-token "$OS_TOKEN" \
 		object create egi_endorsed_vas \
-		"$VM_NAME" >>/var/log/image-build.log
-	echo "SUCCESSFUL BUILD - $VM_NAME - $SHA" >>/var/log/image-build.log
+		"$QCOW_FILE" >>/var/log/image-build.log
+	echo "SUCCESSFUL BUILD - $QCOW_FILE - $SHA" >>/var/log/image-build.log
 fi
 
 echo "BUILD ENDED" >>/var/log/image-build.log
