@@ -1,8 +1,9 @@
+---
 - name: install requirements
   apt:
     name:
-    # this is to make the nfs-based volumes work
-    - nfs-common
+      # this is to make the nfs-based volumes work
+      - nfs-common
     state: latest
 
 - name: Configure docker
@@ -14,7 +15,7 @@
     docker_install_pip: false
     docker_config_values:
       exec-opts:
-      - native.cgroupdriver=systemd
+        - native.cgroupdriver=systemd
       log-driver: json-file
       log-opts:
         max-size: 100m
@@ -51,7 +52,7 @@
     kube_version: 1.28.7-1.1
   apt:
     name:
-    - "kubelet={{ kube_version }}"
-    - "kubeadm={{ kube_version }}"
-    - "kubectl={{ kube_version }}"
+      - "kubelet={{ kube_version }}"
+      - "kubeadm={{ kube_version }}"
+      - "kubectl={{ kube_version }}"
     state: present

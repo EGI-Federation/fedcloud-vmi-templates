@@ -33,9 +33,7 @@ write_files:
       cd /var/tmp/egi || exit
 
       # Valid GitHub token to access the repo
-      OAUTH_TOKEN="%TOKEN%"
       COMMIT_SHA="%REF%"
-      SHORT_COMMIT_SHA="%SHORT_REF%"
       IMAGE="%IMAGE%"
       FEDCLOUD_LOCKER_TOKEN="%FEDCLOUD_LOCKER_TOKEN%"
 
@@ -57,10 +55,22 @@ write_files:
           cat /var/log/image-build.log >>"/var/tmp/egi/$VM_ID"
       export PATH="/var/tmp/egi/.venv/bin:$PATH"
       # try 10 times, otherwise just die
+<<<<<<< HEAD
       /var/tmp/egi/builder/refresh.sh cloud.egi.eu "$(cat /var/tmp/egi/.refresh_token)" backend
       OS_TOKEN="$(yq -r '.clouds.backend.auth.token' /etc/openstack/clouds.yaml)"
       retry -t 25 -d 200 -- openstack --os-cloud backend --os-token "$OS_TOKEN" \
             object create --name "$VM_ID" fedcloud-vmi "/var/tmp/egi/$VM_ID"
+=======
+      /var/tmp/egi/builder/refresh.sh cloud.egi.eu \
+                                      "$(cat /var/tmp/egi/.refresh_token)" \
+                                      backend
+      OS_TOKEN="$(yq -r '.clouds.backend.auth.token' \
+                  /etc/openstack/clouds.yaml)"
+      retry -t 25 -d 200 -- openstack --os-cloud backend \
+                                      --os-token "$OS_TOKEN" \
+                                      object create --name "$VM_ID" \
+                                      fedcloud-vmi "/var/tmp/egi/$VM_ID"
+>>>>>>> 88f47f9 (Mess)
     path: /usr/local/bin/notify.sh
     permissions: '0755'
   - content: |

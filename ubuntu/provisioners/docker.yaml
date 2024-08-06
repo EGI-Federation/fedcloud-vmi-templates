@@ -1,6 +1,7 @@
+---
 - hosts: all
   become: true
   roles:
-  - cloud-init
-  - docker
-  - cleanup
+    - cloud-init
+    - docker
+    - cleanup
