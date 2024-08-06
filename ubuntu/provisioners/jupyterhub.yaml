@@ -18,19 +18,19 @@
           - "linux-image-extra-{{ ansible_kernel }}"
           - apparmor
         state: latest
-  - name: add Docker repo key
-    apt_key: url="https://download.docker.com/linux/debian/gpg"
-    ignore_errors: yes
-  - name: add docker repo
-    apt_repository:
-      repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable'
-      state: present
-      update_cache: yes
-  - name: Install docker {{ docker_version }}
-    apt:
-      name: "docker-ce={{ docker_version }}"
-      state: present
-      force: yes
+    - name: add Docker repo key
+      apt_key: url="https://download.docker.com/linux/debian/gpg"
+      ignore_errors: yes
+    - name: add docker repo
+      apt_repository:
+        repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable'
+        state: present
+        update_cache: yes
+    - name: Install docker {{ docker_version }}
+      apt:
+        name: "docker-ce={{ docker_version }}"
+        state: present
+        force: yes
 
 # notebooks
 - hosts: all
