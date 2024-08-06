@@ -11,7 +11,7 @@ The repository has a GitHub action workflow that will try to build images from
 changes detected in the `*.json` files. This starts a VM at an EGI site (SCAI)
 that will:
 
-1. get the repo files at the current commit
+1. get the repository files at the current commit
 1. install packer
 1. build the image described in the json
 1. upload to another site (IFCA-LCG2)

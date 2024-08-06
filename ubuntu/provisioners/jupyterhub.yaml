@@ -1,164 +1,156 @@
 ---
 - hosts: all
   tasks:
-  - name: Include cloud-init recipe
-    include_tasks: cloud-init.yaml
+    - name: Include cloud-init recipe
+      include_tasks: cloud-init.yaml
 
 - hosts: all
   vars:
     docker_version: 17.03.2~ce-0~ubuntu-xenial
   tasks:
-  - name: install requirements
-    apt:
-      name:
-        - apt-transport-https
-        - ca-certificates
-        - curl
-        - software-properties-common
-        - "linux-image-extra-{{ ansible_kernel }}"
-        - apparmor
-      state: latest
-
-  - name: add Docker repo key
-    apt_key: url="https://download.docker.com/linux/debian/gpg"
-    ignore_errors: yes
-
-  - name: add docker repo
-    apt_repository:
-      repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable'
-      state: present
-      update_cache: yes
-
-  - name: Install docker {{ docker_version }}
-    apt:
-      name: "docker-ce={{ docker_version }}"
-      state: present 
-      force: yes
+    - name: install requirements
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - "linux-image-extra-{{ ansible_kernel }}"
+          - apparmor
+        state: latest
+    - name: add Docker repo key
+      apt_key: url="https://download.docker.com/linux/debian/gpg"
+      ignore_errors: yes
+    - name: add docker repo
+      apt_repository:
+        repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_distribution_release}} stable'
+        state: present
+        update_cache: yes
+    - name: Install docker {{ docker_version }}
+      apt:
+        name: "docker-ce={{ docker_version }}"
+        state: present
+        force: yes
 
 # notebooks
 - hosts: all
   tasks:
-  - name: add node repo key
-    apt_key: url="https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
-    ignore_errors: yes
-  - name: add node repo
-    apt_repository:
-      repo: 'deb [arch=amd64] https://deb.nodesource.com/node_11.x xenial main'
-      state: present
-      update_cache: yes
-  - name: install packages
-    apt:
-      name:
-        - nginx
-        - python3-pip
-        - nodejs
-      state: present
-  - name: install python packages
-    pip:
-      executable: pip3
-      name: "jupyterhub dockerspawner jupyter_client git+https://github.com/enolfc/egispawner.git git+https://github.com/enolfc/oauthenticator.git@checkin"
-  - name: Install "configurable-http-proxy" node.js package globally.
-    npm:
-      name: configurable-http-proxy
-      global: yes
-  - name: Create dirs
-    file:
-      path: "{{ item }}"
-      state: directory
-    with_items: [/etc/jupyterhub, /var/lib/jupyterhub]
-  - name: Create jupyterhub_config.py file
-    copy:
-      dest: /etc/jupyterhub/jupyterhub_config.py
-      content: |
-        from jupyter_client.localinterfaces import public_ips
-        c.JupyterHub.hub_ip = public_ips()[0]
+    - name: add node repo key
+      apt_key: url="https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+      ignore_errors: yes
+    - name: add node repo
+      apt_repository:
+        repo: 'deb [arch=amd64] https://deb.nodesource.com/node_11.x xenial main'
+        state: present
+        update_cache: yes
+    - name: install packages
+      apt:
+        name:
+          - nginx
+          - python3-pip
+          - nodejs
+        state: present
+    - name: install python packages
+      pip:
+        executable: pip3
+        name: "jupyterhub dockerspawner jupyter_client git+https://github.com/enolfc/egispawner.git git+https://github.com/enolfc/oauthenticator.git@checkin"
+    - name: Install "configurable-http-proxy" node.js package globally.
+      npm:
+        name: configurable-http-proxy
+        global: yes
+    - name: Create dirs
+      file:
+        path: "{{ item }}"
+        state: directory
+      with_items: [/etc/jupyterhub, /var/lib/jupyterhub]
+    - name: Create jupyterhub_config.py file
+      copy:
+        dest: /etc/jupyterhub/jupyterhub_config.py
+        content: |
+          from jupyter_client.localinterfaces import public_ips
+          c.JupyterHub.hub_ip = public_ips()[0]
 
-        c.JupyterHub.cookie_secret_file = '/var/lib/jupyterhub/jupyterhub_cookie_secret'
-        c.JupyterHub.db_url = 'sqlite:////var/lib/jupyterhub/jupyterhub.sqlite'
+          c.JupyterHub.cookie_secret_file = '/var/lib/jupyterhub/jupyterhub_cookie_secret'
+          c.JupyterHub.db_url = 'sqlite:////var/lib/jupyterhub/jupyterhub.sqlite'
 
-        import os
-        os.environ['EGICHECKIN_HOST'] = 'aai-dev.egi.eu'
-        c.JupyterHub.authenticator_class = 'oauthenticator.egicheckin.EGICheckinAuthenticator'
-        c.EGICheckinAuthenticator.client_id = '<your client id>'
-        c.EGICheckinAuthenticator.client_secret = '<your client secret>'
-        c.EGICheckinAuthenticator.oauth_callback_url = 'https://<url of jupyterhub>/hub/oauth_callback'
-        c.EGICheckinAuthenticator.scope = ['openid', 'profile', 'email', 'offline_access',
-                                           'eduperson_scoped_affiliation', 'eduperson_entitlement']
-        c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
-        notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
-        c.DockerSpawner.notebook_dir = notebook_dir
-        c.DockerSpawner.image = 'jupyter/scipy-notebook:latest'
-        c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
-        c.DockerSpawner.remove_containers = True
-        c.Spawner.default_url = '/lab'
-
-  - name: Create nginx connection.conf file
-    copy:
-      dest: /etc/nginx/conf.d/connection.conf
-      content: |
-        map $http_upgrade $connection_upgrade {
-          default upgrade;
-          '' close;
-        }
-
-  - name: remove default nginx site
-    file:
-      path: /etc/nginx/sites-enabled/default
-      state: absent
-
-  - name: Proxy jupyterhub in nginx conf
-    copy:
-      dest: /etc/nginx/sites-enabled/jupyterhub
-      content: |
-        server {
-          listen 80 default_server;
-          listen [::]:80 default_server;
-
-          root /var/www/html;
-
-          # Add index.php to the list if you are using PHP
-          index index.html index.htm index.nginx-debian.html;
-
-          server_name _;
-
-          # Managing literal requests to the JupyterHub front end
-          location / {
-              proxy_pass http://localhost:8000;
-              proxy_set_header X-Real-IP $remote_addr;
-              proxy_set_header Host $host;
-              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-
-              # websocket headers
-              proxy_set_header Upgrade $http_upgrade;
-              proxy_set_header Connection $connection_upgrade;
+          import os
+          os.environ['EGICHECKIN_HOST'] = 'aai-dev.egi.eu'
+          c.JupyterHub.authenticator_class = 'oauthenticator.egicheckin.EGICheckinAuthenticator'
+          c.EGICheckinAuthenticator.client_id = '<your client id>'
+          c.EGICheckinAuthenticator.client_secret = '<your client secret>'
+          c.EGICheckinAuthenticator.oauth_callback_url = 'https://<url of jupyterhub>/hub/oauth_callback'
+          c.EGICheckinAuthenticator.scope = ['openid', 'profile', 'email', 'offline_access',
+                                             'eduperson_scoped_affiliation', 'eduperson_entitlement']
+          c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
+          notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan/work'
+          c.DockerSpawner.notebook_dir = notebook_dir
+          c.DockerSpawner.image = 'jupyter/scipy-notebook:latest'
+          c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
+          c.DockerSpawner.remove_containers = True
+          c.Spawner.default_url = '/lab'
+    - name: Create nginx connection.conf file
+      copy:
+        dest: /etc/nginx/conf.d/connection.conf
+        content: |
+          map $http_upgrade $connection_upgrade {
+            default upgrade;
+            '' close;
           }
-        }
+    - name: remove default nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+    - name: Proxy jupyterhub in nginx conf
+      copy:
+        dest: /etc/nginx/sites-enabled/jupyterhub
+        content: |
+          server {
+            listen 80 default_server;
+            listen [::]:80 default_server;
 
-  - name: Create systemd for jupyterhub
-    copy:
-      dest: /etc/systemd/system/jupyterhub.service
-      content: |
-        [Unit]
-        Description=Jupyterhub
-        After=syslog.target network.target
+            root /var/www/html;
 
-        [Service]
-        User=root
-        ExecStart=/usr/local/bin/jupyterhub -f /etc/jupyterhub/jupyterhub_config.py
+            # Add index.php to the list if you are using PHP
+            index index.html index.htm index.nginx-debian.html;
 
-        [Install]
-        WantedBy=multi-user.target
+            server_name _;
 
-  - name: Enable services
-    service:
-      name: "{{ item }}"
-      enabled: yes
-    with_items:
-      - nginx
-      - jupyterhub
+            # Managing literal requests to the JupyterHub front end
+            location / {
+                proxy_pass http://localhost:8000;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header Host $host;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+                # websocket headers
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection $connection_upgrade;
+            }
+          }
+    - name: Create systemd for jupyterhub
+      copy:
+        dest: /etc/systemd/system/jupyterhub.service
+        content: |
+          [Unit]
+          Description=Jupyterhub
+          After=syslog.target network.target
+
+          [Service]
+          User=root
+          ExecStart=/usr/local/bin/jupyterhub -f /etc/jupyterhub/jupyterhub_config.py
+
+          [Install]
+          WantedBy=multi-user.target
+    - name: Enable services
+      service:
+        name: "{{ item }}"
+        enabled: yes
+      with_items:
+        - nginx
+        - jupyterhub
 
 - hosts: all
   tasks:
-  - name: Include clean-up recipe
-    include_tasks: clean.yaml
+    - name: Include clean-up recipe
+      include_tasks: clean.yaml
 

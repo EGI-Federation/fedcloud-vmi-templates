@@ -71,7 +71,7 @@
   command: locale-gen --purge en_GB.utf8
 
 - name: clean log files
-  command:  find /var/log/ -type f -exec cp /dev/null {} \;
+  command: find /var/log/ -type f -exec cp /dev/null {} \;
 
 - name: fill disk with zeros
   shell: |
