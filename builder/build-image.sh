@@ -37,11 +37,13 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
 	builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
 	OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
 	SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
-	ls -lh $QCOW_FILE >>/var/log/image-build.log
-	openstack --os-cloud images --os-token "$OS_TOKEN" \
-		object create egi_endorsed_vas \
-		"$QCOW_FILE" >>/var/log/image-build.log
-	echo "SUCCESSFUL BUILD - $QCOW_FILE - $SHA" >>/var/log/image-build.log
+	{
+		ls -lh "$QCOW_FILE"
+		openstack --os-cloud images --os-token "$OS_TOKEN" \
+			object create egi_endorsed_vas \
+			"$QCOW_FILE"
+		echo "SUCCESSFUL BUILD - $QCOW_FILE - $SHA"
+	} >>/var/log/image-build.log
 fi
 
 echo "BUILD ENDED" >>/var/log/image-build.log
