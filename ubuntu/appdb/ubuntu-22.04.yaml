@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2023.10.24
+  version: 2024.08.06
   expireson: 6
-  notes: Update to Ubuntu 22.04.3
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.22.04-2023.10.24.ova
-  sha512: "7b9785170f756623850f93034050a2ce1044bbf8fead3180aafe329454ca6e05f7a68d5d116b123249ce26c68886631a6d23eb2c1b49b92d0d2ee409802a8b9c"
+  notes: Update to Ubuntu 22.04.4
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.22.04-2024.08.06.qcow2
+  sha512: "6549631b2447415857381ab90c480dd652e672740c34dff4420225402a5a649b30d5b4808323bd8a219f4185476028be68a0969892cf7d01a54be9b39e12c29e"
   arch: x86_64
   os:
     family: Linux
@@ -12,5 +12,5 @@ appdb:
     version: '22.04'
   ram:
     minimum: 1GB
-  format: OVA
-  hypervisor: VirtualBox
+  format: qcow2
+  hypervisor: kvm
