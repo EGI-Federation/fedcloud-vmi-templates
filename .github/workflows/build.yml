@@ -2,7 +2,7 @@
 name: Build images that changed
 
 on:
-  - push
+  - pull_request
 
 jobs:
   image-list:
@@ -87,7 +87,6 @@ jobs:
           terraform apply -auto-approve -var-file="$DEPLOY_SITE.tfvars"
       - name: Get VM ID
         id: terraform-vm-id
-#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           cd builder
           terraform output -raw instance-id
@@ -98,7 +97,6 @@ jobs:
           cd builder
           ./refresh.sh cloud.egi.eu "$REFRESH_TOKEN" backend
       - name: Get the status file from swift
-#        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         uses: nick-fields/retry@v3
         with:
           # this is about 40 minutes
@@ -111,7 +109,6 @@ jobs:
             openstack --os-cloud backend --os-token "$(yq -r .clouds.backend.auth.token clouds.yaml)" object delete fedcloud-vmi "${{ steps.terraform-vm-id.outputs.stdout }}"
       - name: Process output
         id: process-output
-        #if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           cd builder
           cat "${{ steps.terraform-vm-id.outputs.stdout }}"
