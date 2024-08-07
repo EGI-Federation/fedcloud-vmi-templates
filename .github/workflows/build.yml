@@ -116,7 +116,6 @@ jobs:
           cd builder
           cat "${{ steps.terraform-vm-id.outputs.stdout }}"
           # show the status in the build log
-          set -x
           {
             echo 'build-log<<BUILDEOF'
             echo "VM is ${{ steps.terraform-vm-id.outputs.stdout }}"
