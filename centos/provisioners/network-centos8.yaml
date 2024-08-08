@@ -1,7 +1,0 @@
----
-- name: Create /etc/sysconfig/network
-  copy:
-    content: |
-      NETWORKING=yes
-      NOZEROCONF=yes
-    dest: /etc/sysconfig/network
