@@ -32,7 +32,7 @@ source "qemu" "ubuntu-20-04" {
     "/casper/vmlinuz ",
     "initrd=/casper/initrd ",
     " autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
-    " PACKER_USER=ubuntu PACKER_AUTHORIZED_KEY={{ .SSHPublicKey | urlquery }}",
+    " PACKER_USER=ubuntu PACKER_AUTHORIZED_KEY={{ `${var.SSH_PUB_KEY}` | urlquery }}",
     "<wait><enter>"
   ]
   boot_wait                 = "3s"
