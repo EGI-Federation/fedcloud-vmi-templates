@@ -8,12 +8,12 @@ Initial work taken from [comfy](https://github.com/Misenko/comfy)
 ## Building the images
 
 The repository has a GitHub action workflow that will try to build images from
-changes detected in the `*.json` files. This starts a VM at an EGI site (SCAI)
+changes detected in the `*.hcl` files. This starts a VM at an EGI site (SCAI)
 that will:
 
 1. get the repository files at the current commit
 1. install packer
-1. build the image described in the json
+1. build the image described in the hcl templates
 1. upload to another site (IFCA-LCG2)
 
 AppDB can then be updated with that information.
@@ -45,7 +45,7 @@ There is a `tools/build.sh` script that can be used to build image and convert
 to OVA in one go. The script will create a temporary ssh key that's used by
 packer to connect to the VM as root (or privileged user).
 
-The script takes as parameter the `.json` that describe the build for packer.
+The script takes as parameter the `.hcl` that describe the build for packer.
 See sample build output:
 
 ```shell
