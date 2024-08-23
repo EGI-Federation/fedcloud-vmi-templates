@@ -23,7 +23,7 @@ AppDB can then be updated with that information.
 #### Requirements
 
 From a base Ubuntu 22.04, you can get a working building environment by
-installing `packer`, `ansible`, `qemu`, `jq` and `virtualbox`, e.g.:
+installing `packer`, `ansible`, `qemu`, and `jq`, e.g.:
 
 ```shell
 # get up to date system
@@ -33,7 +33,7 @@ $ curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
 $ sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 $ sudo apt-get update && sudo apt-get install -y packer
 # Install other tools
-$ sudo apt-get install -y ansible qemu-system-x86 qemu-utils jq virtualbox
+$ sudo apt-get install -y ansible qemu-system-x86 qemu-utils jq
 # Install packer plugins
 $ packer plugins install github.com/hashicorp/qemu
 $ packer plugins install github.com/hashicorp/ansible
@@ -214,13 +214,6 @@ Build 'qemu' finished after 13 minutes 10 seconds.
 
 ==> Builds finished. The artifacts of successful builds are:
 --> qemu: VM files in directory: output-qemu
-Virtual machine 'centos.7-2023.01.12' is created and registered.
-UUID: 3b3258fc-14c4-4c35-a458-26b6cedc22f6
-Settings file: '/root/VirtualBox VMs/centos.7-2023.01.12/centos.7-2023.01.12.vbox'
-0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
-Successfully exported 1 machine(s).
-0%...10%...20%...30%...40%...50%...60%...70%...80%...90%...100%
-Converted image available at centos.7-2023.01.12.ova
 ```
 
 ## Acknowledgements
