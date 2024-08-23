@@ -46,9 +46,7 @@ jobs:
           python-version: 3.x
       - name: Install environment
         run: |
-          curl -L https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 > jq
-          chmod +x jq
-          pip install yq simplejson fedcloudclient
+          pip install yq simplejson fedcloudclient jq
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
