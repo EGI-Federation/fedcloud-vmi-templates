@@ -22,14 +22,14 @@ AppDB can then be updated with that information.
 
 #### Requirements
 
-From a base Ubuntu 22.04, you can get a working building environment by
+From a base Ubuntu 24.04, you can get a working building environment by
 installing `packer`, `ansible`, `qemu`, and `jq`, e.g.:
 
 ```shell
 # get up to date system
 $ sudo apt-get update && sudo apt-get upgrade -y
 # Install packer
-$ curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+$ curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo tee /etc/apt/trusted.gpg.d/hashicorp.asc
 $ sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 $ sudo apt-get update && sudo apt-get install -y packer
 # Install other tools
