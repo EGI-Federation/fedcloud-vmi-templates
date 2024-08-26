@@ -7,7 +7,7 @@
 #
 # Will throw the OIDC TOKEN to output!
 
-set -e
+set -ex
 
 VO="$1"
 shift
