@@ -34,18 +34,19 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
 	QCOW_FILE="$VM_NAME.qcow2"
 	builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
 	OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
-	OUTPUT_DIR=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
-	OUTPUT_DIR="$(dirname "$IMAGE")/output-$OUTPUT_DIR"
-	cd "$OUTPUT_DIR"
-	{
-		qemu-img convert -O qcow2 -c "$VM_NAME" "$QCOW_FILE"
-		openstack --os-cloud images --os-token "$OS_TOKEN" \
-			object create egi_endorsed_vas \
-			"$QCOW_FILE"
-		ls -lh "$QCOW_FILE"
-		SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
-		echo "SUCCESSFUL BUILD - $QCOW_FILE - $SHA"
-	} >>/var/log/image-build.log 2>&1
+	OUTPUT_DIR=$(hcl2tojson $IMAGE | jq -r '.source[0].qemu | keys[]')
+	OUTPUT_DIR="$(dirname $IMAGE)/output-$OUTPUT_DIR"
+	echo "OUTPUT_DIR: $OUTPUT_DIR" >>/var/log/image-build.log
+	cd $OUTPUT_DIR
+	echo "qemu-img convert -O qcow2 -c $VM_NAME $QCOW_FILE" >>/var/log/image-build.log
+	qemu-img convert -O qcow2 -c "$VM_NAME" "$QCOW_FILE"
+	echo "openstack --os-cloud images --os-token $OS_TOKEN object create egi_endorsed_vas $QCOW_FILE" >>/var/log/image-build.log
+        openstack --os-cloud images --os-token "$OS_TOKEN" \
+                        object create egi_endorsed_vas \
+                        "$QCOW_FILE"
+        echo "ls -lh $QCOW_FILE" >>/var/log/image-build.log
+	SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
+	echo "SUCCESSFUL BUILD - $QCOW_FILE - $SHA" >>/var/log/image-build.log
 fi
 
 echo "BUILD ENDED" >>/var/log/image-build.log
