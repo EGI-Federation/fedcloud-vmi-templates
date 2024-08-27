@@ -1,12 +1,12 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
-function error_handler() {
-    cat " Error in line: ${1} " >> /var/log/image-build.log 2>&1
+error_handler() {
+    echo " Error in line: $1 " >> /var/log/image-build.log 2>&1
     shift
-    cat " Exit status: ${1} " >> /var/log/image-build.log 2>&1
+    echo " Exit status: $1 " >> /var/log/image-build.log 2>&1
     shift
-    cat " Command: ${@} " >> /var/log/image-build.log 2>&1
+    echo " Command: $* " >> /var/log/image-build.log 2>&1
 }
 
 trap 'error_handler ${LINENO} $? ${BASH_COMMAND}' ERR INT TERM
@@ -50,7 +50,7 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
     qemu-img convert -O qcow2 -c "$VM_NAME" "$QCOW_FILE"
     openstack --os-cloud images --os-token "$OS_TOKEN" \
         object create egi_endorsed_vas "$QCOW_FILE"
-    ls -lh $QCOW_FILE
+    ls -lh "$QCOW_FILE"
     SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
     echo "SUCCESSFUL BUILD - $QCOW_FILE - $SHA" >>/var/log/image-build.log
 fi
