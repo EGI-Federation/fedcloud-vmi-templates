@@ -7,7 +7,7 @@ FEDCLOUD_SECRET_LOCKER="$2"
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
 export PATH="$PWD/.venv/bin:$PATH"
-pip install fedcloudclient simplejson yq
+pip install fedcloudclient simplejson yq python-hcl2
 
 # Get openstack ready
 mkdir -p /etc/openstack/
@@ -34,7 +34,9 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
 	QCOW_FILE="$VM_NAME.qcow2"
 	builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
 	OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
-	cd "$(dirname "$IMAGE")/output-qemu"
+	OUTPUT_DIR=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
+	OUTPUT_DIR="$(dirname "$IMAGE")/output-$OUTPUT_DIR"
+	cd "$OUTPUT_DIR"
 	{
 		qemu-img convert -O qcow2 -c "$VM_NAME" "$QCOW_FILE"
 		openstack --os-cloud images --os-token "$OS_TOKEN" \
