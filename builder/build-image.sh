@@ -21,7 +21,7 @@ systemctl start notify
 
 # get packer
 export PACKER_CONFIG_DIR="$PWD"
-curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add -
+curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo tee /etc/apt/trusted.gpg.d/hashicorp.asc
 apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
 apt-get update && apt-get install -y packer
 packer plugins install github.com/hashicorp/qemu
