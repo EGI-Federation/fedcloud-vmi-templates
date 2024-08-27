@@ -24,7 +24,7 @@ jobs:
         with:
           matrix: true
           files: |
-             **/*.{json,hcl}
+             **/*.hcl
 
   build-images:
     name: Image builder
