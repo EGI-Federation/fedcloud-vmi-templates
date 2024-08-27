@@ -15,7 +15,7 @@
     	"boot",
     	"<enter>"
       ],
-      "boot_wait": "5s",
+      "boot_wait": "6s",
       "disk_size": 8000,
       "format": "qcow2",
       "headless": true,
@@ -34,7 +34,7 @@
       "qemuargs": [
           [ "-cpu", "host" ]
       ],
-      "vm_name": "Ubuntu.24.04-2024.04.30"
+      "vm_name": "Ubuntu.24.04-2024.08.27"
      }
   ],
   "provisioners": [

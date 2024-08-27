@@ -38,21 +38,27 @@ packer plugins install github.com/hashicorp/qemu
 packer plugins install github.com/hashicorp/ansible
 
 # do the build
-if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
-    # compress the resulting image
-    QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
-    VM_NAME=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu.'"$QEMU_SOURCE_ID"'.vm_name')
-    QCOW_FILE="$VM_NAME.qcow2"
-    builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
-    OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
-    OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
-    cd "$OUTPUT_DIR"
-    qemu-img convert -O qcow2 -c "$VM_NAME" "$QCOW_FILE"
-    openstack --os-cloud images --os-token "$OS_TOKEN" \
-        object create egi_endorsed_vas "$QCOW_FILE"
-    ls -lh "$QCOW_FILE"
-    SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
-    echo "SUCCESSFUL BUILD - $QCOW_FILE - $SHA" >>/var/log/image-build.log
-fi
+QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
+VM_NAME=$(hcl2tojson "$IMAGE" \
+	| jq -r '.source[0].qemu.'"$QEMU_SOURCE_ID"'.vm_name')
+QCOW_FILE="$VM_NAME.qcow2"
+
+{
+	if tools/build.sh "$IMAGE"; then
+		# compress the resulting image
+    		builder/refresh.sh vo.access.egi.eu \
+			"$(cat /var/tmp/egi/.refresh_token)" images
+    		OS_TOKEN="$(yq -r '.clouds.images.auth.token' \
+			/etc/openstack/clouds.yaml)"
+    		OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
+    		cd "$OUTPUT_DIR"
+    		qemu-img convert -O qcow2 -c "$VM_NAME" "$QCOW_FILE"
+    		openstack --os-cloud images --os-token "$OS_TOKEN" \
+        		object create egi_endorsed_vas "$QCOW_FILE"
+    		ls -lh "$QCOW_FILE"
+    		SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
+    		echo "SUCCESSFUL BUILD - $QCOW_FILE - $SHA"
+	fi
+} >>/var/log/image-build.log 2>&1
 
 echo "BUILD ENDED" >>/var/log/image-build.log
