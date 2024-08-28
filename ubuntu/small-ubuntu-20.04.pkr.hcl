@@ -21,7 +21,7 @@ variable "SSH_PUB_KEY" {
   default = ""
 }
 
-source "qemu" "small-ubuntu-20-04" {
+source "qemu" "small_ubuntu_20_04" {
   boot_command              = [
     "<enter><enter><f6><esc><wait>",
     "<bs><bs><bs><bs><bs><bs><bs><bs>",

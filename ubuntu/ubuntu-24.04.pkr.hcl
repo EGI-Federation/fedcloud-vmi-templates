@@ -21,7 +21,7 @@ variable "SSH_PUB_KEY" {
   default = ""
 }
 
-source "qemu" "ubuntu-24-04" {
+source "qemu" "ubuntu_24_4" {
   boot_command              = [
     "c<wait>",
     "linux /casper/vmlinuz --- autoinstall ds=\"nocloud-net;seedfrom=http://{{ .HTTPIP }}:{{ .HTTPPort }}/\"",
