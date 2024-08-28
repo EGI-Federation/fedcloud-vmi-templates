@@ -52,7 +52,7 @@ source "qemu" "datahub_jupyter_ubuntu_22_04" {
 }
 
 build {
-  sources = ["source.qemu.datahub-jupyter-ubuntu-22-04"]
+  sources = ["source.qemu.datahub_jupyter_ubuntu_22_04"]
 
   provisioner "ansible" {
     playbook_file = "provisioners/init.yaml"

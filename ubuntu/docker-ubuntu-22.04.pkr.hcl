@@ -54,7 +54,7 @@ source "qemu" "docker_ubuntu_22_04" {
 }
 
 build {
-  sources = ["source.qemu.docker-ubuntu-22-04"]
+  sources = ["source.qemu.docker_ubuntu_22_04"]
 
   provisioner "ansible" {
     playbook_file = "provisioners/init.yaml"

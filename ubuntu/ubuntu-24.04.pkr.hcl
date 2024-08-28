@@ -52,7 +52,7 @@ source "qemu" "ubuntu_24_4" {
 }
 
 build {
-  sources = ["source.qemu.ubuntu-24-04"]
+  sources = ["source.qemu.ubuntu_24_04"]
 
   provisioner "ansible" {
     extra_arguments = ["--extra-vars", "ansible_python_interpreter=/usr/bin/python3"]

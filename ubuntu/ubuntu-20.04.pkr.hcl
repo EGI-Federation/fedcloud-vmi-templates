@@ -55,7 +55,7 @@ source "qemu" "ubuntu_20_04" {
 }
 
 build {
-  sources = ["source.qemu.ubuntu-20-04"]
+  sources = ["source.qemu.ubuntu_20_04"]
 
   provisioner "ansible" {
     playbook_file = "provisioners/init.yaml"
