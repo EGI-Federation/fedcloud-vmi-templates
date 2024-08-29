@@ -1,0 +1,28 @@
+- name: Install cloud-init
+  dnf:
+    name:
+      - cloud-init
+      - cloud-utils-growpart
+      - dracut-config-generic
+
+- name: Enable cloud-init services
+  service:
+    name: "{{ item }}"
+    enabled: true
+  with_items:
+    - cloud-config
+    - cloud-init
+    - cloud-init-local
+    - cloud-final
+
+- name: Create fedcloud config
+  copy:
+    content: |
+      # EGI FedCloud configuration
+      
+      # Make sure to disable ssh password authentication
+      ssh_pwauth: 0
+      # Regenerate keys
+      ssh_deletekeys: True
+      ssh_genkeytypes: ['rsa', 'dsa']
+    dest: /etc/cloud/cloud.cfg.d/01_fedcloud.cfg
