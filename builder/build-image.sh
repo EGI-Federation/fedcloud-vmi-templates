@@ -55,8 +55,8 @@ else
 	{
 		if tools/build.sh "$IMAGE"; then
 			# refresh the token, it may have expired
-    			OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
-    			cd "$OUTPUT_DIR"
+			OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
+			cd "$OUTPUT_DIR"
 			# compress the resulting image
 			qemu-img convert -O qcow2 -c "$VM_NAME" "$QCOW_FILE"
 			builder/refresh.sh vo.access.egi.eu \
