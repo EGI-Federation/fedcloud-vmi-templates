@@ -41,6 +41,11 @@ write_files:
       curl -L -H "Accept: application/vnd.github.v3+raw" \
               "https://api.github.com/repos/EGI-Federation/fedcloud-vmi-templates/tarball/$COMMIT_SHA" | \
               tar xz --strip=1
+
+      # install external galaxy roles
+      ansible-galaxy role install -p /var/tmp/egi/ubuntu/provisioners/roles/ grycap.docker
+
+      # build image
       builder/build-image.sh "$IMAGE" "$FEDCLOUD_LOCKER_TOKEN"
     path: /var/lib/cloud/scripts/per-boot/build.sh
     permissions: '0755'
