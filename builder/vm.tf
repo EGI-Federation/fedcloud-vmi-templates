@@ -9,20 +9,22 @@ variable "net_id" {
   description = "The id of the network"
 }
 
-variable "image_id" {
-  type        = string
-  description = "VM image id"
-}
-
 variable "flavor_id" {
   type        = string
   description = "VM flavor id"
 }
 
+data "openstack_images_image_v2" "ubuntu-24" {
+  most_recent = true
+
+  properties = {
+    ad:appid = "1157"
+  }
+}
 
 resource "openstack_compute_instance_v2" "builder" {
   name            = "builder"
-  image_id        = var.image_id
+  image_id        = openstack_images_image_v2.ubuntu-24.id
   flavor_id       = var.flavor_id
   security_groups = ["default"]
   user_data       = file("cloud-init.yaml")
