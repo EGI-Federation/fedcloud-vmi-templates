@@ -23,8 +23,8 @@ data "openstack_images_image_v2" "ubuntu-24" {
 
 resource "openstack_compute_instance_v2" "builder" {
   name            = "builder"
-  image_id        = openstack_images_image_v2.ubuntu-24.id
-  flavor_id       = var.flavor_id
+  image_id        = "openstack_images_image_v2.ubuntu-24.id"
+  flavor_id       = "${var.flavor_id}"
   security_groups = ["default"]
   user_data       = file("cloud-init.yaml")
   network {
