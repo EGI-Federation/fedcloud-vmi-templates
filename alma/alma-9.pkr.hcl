@@ -43,7 +43,6 @@ source "qemu" "alma_9" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "90m"
   ssh_username              = "root"
-  ssh_password              = "rootpassword"
   vm_name                   = "alma.9-2024.08.29"
 }
 
