@@ -31,6 +31,10 @@ kexec-tools
 %end
 
 %post --erroronfail
+
+# based on:
+# https://developer.hashicorp.com/packer/integrations/hashicorp/qemu/latest/components/builder/qemu#ssh-key-pair-automation
+
 for x in $(cat /proc/cmdline)
 do
   case $x in
