@@ -16,9 +16,8 @@ variable "flavor_id" {
 
 data "openstack_images_image_v2" "ubuntu-24" {
   most_recent = true
-
   properties = {
-    ad:appid = "1157"
+    "ad:appid" = "1157"
   }
 }
 
