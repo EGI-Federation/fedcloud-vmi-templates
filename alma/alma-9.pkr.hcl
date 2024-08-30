@@ -41,7 +41,7 @@ source "qemu" "alma_9" {
   qemuargs                  = [["-cpu", "host"]]
   shutdown_command          = "shutdown -h now"
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
-  ssh_timeout               = "90m"
+  ssh_timeout               = "20m"
   ssh_username              = "root"
   vm_name                   = "alma.9-2024.08.29"
 }
