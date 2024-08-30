@@ -25,6 +25,7 @@ source "qemu" "alma_9" {
   boot_command              = [
     "<esc>",
     "linux inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/alma-9.cfg.tpl",
+    " PACKER_USER=root PACKER_AUTHORIZED_KEY={{ `${var.SSH_PUB_KEY}` | urlquery }}",
     "<enter>"
   ]
   boot_wait                 = "3s"
@@ -39,10 +40,10 @@ source "qemu" "alma_9" {
   memory                    = 1024
   qemuargs                  = [["-cpu", "host"]]
   shutdown_command          = "shutdown -h now"
-  ssh_clear_authorized_keys = true
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "90m"
   ssh_username              = "root"
+  ssh_password              = "rootpassword"
   vm_name                   = "alma.9-2024.08.29"
 }
 

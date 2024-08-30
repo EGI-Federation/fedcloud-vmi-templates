@@ -31,9 +31,20 @@ kexec-tools
 %end
 
 %post --erroronfail
-sed 's/^[#[:space:]]*PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
+for x in $(cat /proc/cmdline)
+do
+  case $x in
+    PACKER_AUTHORIZED_KEY=*)
+      # URL decode $encoded into $PACKER_AUTHORIZED_KEY
+      encoded=$(echo "${x#*=}" | tr '+' ' ')
+      printf -v PACKER_AUTHORIZED_KEY '%b' "${encoded//%/\\x}"
+      ;;
+  esac
+done
+
+echo "PermitRootLogin yes" > /etc/ssh/sshd_config.d/01-permitrootlogin.conf
 mkdir -p /root/.ssh
-/bin/sh -c "echo '%SSH_KEY%' > /root/.ssh/authorized_keys"
+echo $PACKER_AUTHORIZED_KEY >> /root/.ssh/authorized_keys
 chmod 400 /root/.ssh/authorized_keys
 %end
 
