@@ -17,7 +17,12 @@ FEDCLOUD_SECRET_LOCKER="$2"
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
 export PATH="$PWD/.venv/bin:$PATH"
-pip install fedcloudclient simplejson yq python-hcl2
+pip install fedcloudclient simplejson yq python-hcl2 IM-client
+
+# work with IGTF certificates
+# https://fedcloudclient.fedcloud.eu/install.html#installing-egi-core-trust-anchor-certificates
+wget https://raw.githubusercontent.com/tdviet/python-requests-bundle-certs/main/scripts/install_certs.sh
+bash install_certs.sh
 
 # Get openstack ready
 mkdir -p /etc/openstack/
@@ -46,8 +51,37 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
     builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
     OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
     OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
-    cd "$OUTPUT_DIR"
+    pushd "$OUTPUT_DIR"
     qemu-img convert -O qcow2 -c "$VM_NAME" "$QCOW_FILE"
+
+    # test the resulting image
+    # 1. upload VMI to cloud provider
+    builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" tests
+    OS_TOKEN="$(yq -r '.clouds.tests.auth.token' /etc/openstack/clouds.yaml)"
+    IMAGE_ID=$(openstack --os-cloud tests --os-token "$OS_TOKEN" \
+                   image create --disk-format qcow2 --file "$QCOW_FILE" \
+                   --column id --format value "$VM_NAME")
+
+    # 2. use IM-client to launch the test VM
+    popd
+    pushd builder
+    sed -i -e "s/%TOKEN%/$(cat .oidc_token)/" auth.dat
+    sed -i -e "s/%IMAGE%/$IMAGE_ID/" vm.yaml
+    im_client.py create vm.yaml
+    IM_INFRA_ID=$(im_client.py list | egrep -v 'im.egi.eu|ID')
+    # get SSH command to connect to the VM
+    # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
+    SSH_CMD=$(im_client.py ssh <vm-id> 1 | grep -v 'im.egi.eu')
+    # this is a placeholder for the tests we want to run via SSH
+    $SSH_CMD "hosname"
+    # delete test VM
+    im_client.py destroy $IM_INFRA_ID
+    # delete test VMI
+    openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
+
+    # All going well, upload the VMI for sharing in AppDB
+    popd
+    pushd "$OUTPUT_DIR"
     openstack --os-cloud images --os-token "$OS_TOKEN" \
         object create egi_endorsed_vas "$QCOW_FILE"
     ls -lh "$QCOW_FILE"
