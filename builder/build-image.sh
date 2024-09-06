@@ -72,8 +72,9 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
     # get SSH command to connect to the VM
     # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
     SSH_CMD=$(im_client.py ssh "$IM_INFRA_ID" 1 | grep -v 'im.egi.eu')
-    # this is a placeholder for the tests we want to run via SSH
+    # if the below works, the VM is up and running and responds to SSH
     $SSH_CMD "hosname"
+    # at this point we may want to run more sophisticated tests
     # delete test VM
     im_client.py destroy "$IM_INFRA_ID"
     # delete test VMI
