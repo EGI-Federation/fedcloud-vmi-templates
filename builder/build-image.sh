@@ -48,23 +48,18 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
     QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
     VM_NAME=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu.'"$QEMU_SOURCE_ID"'.vm_name')
     QCOW_FILE="$VM_NAME.qcow2"
-    builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
-    OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
     OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
-    pushd "$OUTPUT_DIR"
-    qemu-img convert -O qcow2 -c "$VM_NAME" "$QCOW_FILE"
+    qemu-img convert -O qcow2 -c "$OUTPUT_DIR/$VM_NAME" "$OUTPUT_DIR/$QCOW_FILE"
 
     # test the resulting image
     # test step 1/2: upload VMI to cloud provider
     builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" tests
     OS_TOKEN="$(yq -r '.clouds.tests.auth.token' /etc/openstack/clouds.yaml)"
     IMAGE_ID=$(openstack --os-cloud tests --os-token "$OS_TOKEN" \
-                   image create --disk-format qcow2 --file "$QCOW_FILE" \
+                   image create --disk-format qcow2 --file "$OUTPUT_DIR/$QCOW_FILE" \
                    --column id --format value "$VM_NAME")
 
     # test step 2/2: use IM-client to launch the test VM
-    popd
-    pushd builder
     sed -i -e "s/%TOKEN%/$(cat .oidc_token)/" auth.dat
     sed -i -e "s/%IMAGE%/$IMAGE_ID/" vm.yaml
     im_client.py create vm.yaml
@@ -73,7 +68,7 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
     # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
     SSH_CMD=$(im_client.py ssh "$IM_INFRA_ID" 1 | grep -v 'im.egi.eu')
     # if the below works, the VM is up and running and responds to SSH
-    $SSH_CMD "hosname"
+    "$SSH_CMD hosname"
     # at this point we may want to run more sophisticated tests
     # delete test VM
     im_client.py destroy "$IM_INFRA_ID"
@@ -81,12 +76,12 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
     openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
 
     # All going well, upload the VMI for sharing in AppDB
-    popd
-    pushd "$OUTPUT_DIR"
+    builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
+    OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
     openstack --os-cloud images --os-token "$OS_TOKEN" \
-        object create egi_endorsed_vas "$QCOW_FILE"
-    ls -lh "$QCOW_FILE"
-    SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
+        object create egi_endorsed_vas "$OUTPUT_DIR/$QCOW_FILE"
+    ls -lh "$OUTPUT_DIR/$QCOW_FILE"
+    SHA="$(sha512sum -z "$OUTPUT_DIR/$QCOW_FILE" | cut -f1 -d" ")"
     echo "SUCCESSFUL BUILD - $QCOW_FILE - $SHA" >>/var/log/image-build.log
 fi
 
