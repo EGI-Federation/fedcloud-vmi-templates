@@ -24,3 +24,11 @@ clouds:
       auth_url: https://api.cloud.ifca.es:5000/v3
       token:
       project_id: 999f045cb1ff4684a15ebb338af69460
+  tests:
+    site: TR-FC1-ULAKBIM
+    vo: vo.access.egi.eu
+    auth_type: token
+    auth:
+      auth_url: https://bulut.truba.gov.tr:5000/v3
+      token:
+      project_id: 2fa316a05d364de9b5a55ac78a45f8bf
