@@ -1,0 +1,2 @@
+id = im; type = InfrastructureManager; token = "%TOKEN%"
+id = vo.access.egi.eu-TR-FC1-ULAKBIM; type = EGI; host = TR-FC1-ULAKBIM; vo = vo.access.egi.eu; token = "%TOKEN%"
