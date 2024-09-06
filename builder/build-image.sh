@@ -62,7 +62,7 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
                    image create --disk-format qcow2 --file "$QCOW_FILE" \
                    --column id --format value "$VM_NAME")
 
-    # test step 2/2. use IM-client to launch the test VM
+    # test step 2/2: use IM-client to launch the test VM
     popd
     pushd builder
     sed -i -e "s/%TOKEN%/$(cat .oidc_token)/" auth.dat
@@ -71,11 +71,11 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
     IM_INFRA_ID=$(im_client.py list | egrep -v 'im.egi.eu|ID')
     # get SSH command to connect to the VM
     # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
-    SSH_CMD=$(im_client.py ssh <vm-id> 1 | grep -v 'im.egi.eu')
+    SSH_CMD=$(im_client.py ssh "$IM_INFRA_ID" 1 | grep -v 'im.egi.eu')
     # this is a placeholder for the tests we want to run via SSH
     $SSH_CMD "hosname"
     # delete test VM
-    im_client.py destroy $IM_INFRA_ID
+    im_client.py destroy "$IM_INFRA_ID"
     # delete test VMI
     openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
 
