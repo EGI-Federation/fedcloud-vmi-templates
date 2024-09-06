@@ -55,14 +55,14 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
     qemu-img convert -O qcow2 -c "$VM_NAME" "$QCOW_FILE"
 
     # test the resulting image
-    # 1. upload VMI to cloud provider
+    # test step 1/2: upload VMI to cloud provider
     builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" tests
     OS_TOKEN="$(yq -r '.clouds.tests.auth.token' /etc/openstack/clouds.yaml)"
     IMAGE_ID=$(openstack --os-cloud tests --os-token "$OS_TOKEN" \
                    image create --disk-format qcow2 --file "$QCOW_FILE" \
                    --column id --format value "$VM_NAME")
 
-    # 2. use IM-client to launch the test VM
+    # test step 2/2. use IM-client to launch the test VM
     popd
     pushd builder
     sed -i -e "s/%TOKEN%/$(cat .oidc_token)/" auth.dat
