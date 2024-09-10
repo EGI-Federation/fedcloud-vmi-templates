@@ -63,10 +63,10 @@ if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
     sed -i -e "s/%TOKEN%/$(cat .oidc_token)/" auth.dat
     sed -i -e "s/%IMAGE%/$IMAGE_ID/" vm.yaml
     im_client.py create vm.yaml
-    IM_INFRA_ID=$(im_client.py list | egrep -v 'im.egi.eu|ID')
+    IM_INFRA_ID=$(im_client.py list | grep --extended-regexp --invert-match 'im.egi.eu|ID')
     # get SSH command to connect to the VM
     # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
-    SSH_CMD=$(im_client.py ssh "$IM_INFRA_ID" 1 | grep -v 'im.egi.eu')
+    SSH_CMD=$(im_client.py ssh "$IM_INFRA_ID" 1 | grep --invert-match 'im.egi.eu')
     # if the below works, the VM is up and running and responds to SSH
     "$SSH_CMD hosname"
     # at this point we may want to run more sophisticated tests
