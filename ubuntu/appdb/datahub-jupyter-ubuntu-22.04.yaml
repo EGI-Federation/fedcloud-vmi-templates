@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2024.03.21
+  version: 2024.09.11
   expireson: 6
-  notes: Updated base OS to Ubuntu 22.04
-  url: "https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.22.04-2024.03.21.ova"
-  sha512: "f3ae1bfced91ea9e9b6813c82a2910457ea960718a0c3b6a35edc99627a1b0337cd2cb958da8fe107107745b9ebaf709c0357f88ec1427ff637dce6ff8b03060"
+  notes: Regular update
+  url: "https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.22.04-2024.09.11.qcow2"
+  sha512: "6d49685dcbfea67b22c006577a03468881f29b98222c34c2ab3be7cf04e82a65db4f403aea4f38fa6dc2178edf53c762732d2374e782bd67555f83f6588a3c26"
   arch: x86_64
   os:
     family: Linux
