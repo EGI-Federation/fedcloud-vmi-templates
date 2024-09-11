@@ -48,7 +48,7 @@ source "qemu" "datahub_jupyter_ubuntu_22_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "DataHub-Jupyter-Ubuntu.22.04-2024.03.21"
+  vm_name                   = "DataHub-Jupyter-Ubuntu.22.04-2024.09.11"
 }
 
 build {
