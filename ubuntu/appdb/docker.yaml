@@ -3,10 +3,11 @@ appdb:
   version: 2024.03.14
   expireson: 6
   notes: |
-    Upgrade to docker 25.0.4 and docker-compose 2.24.7
-    Upgrade kubernetes components to 1.28.7-1.1
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.22.04-2024.03.14.ova
-  sha512: "011a03a64dce27db4a213fdbdefcbcaadbe423335312ac32a0cead5ba79aba440603cbe8cfec70a50daa3bc6d48e9befdbb86f392b28b3e6f5d87cf5c64553c3"
+    Upgrade docker to 27.2.1
+    Upgrade docker-compose to 2.29.3
+    Upgrade kubernetes components to 1.30.5-1.1
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.22.04-2024.09.13.qcow2
+  sha512: ""
   arch: x86_64
   os:
     family: Linux
