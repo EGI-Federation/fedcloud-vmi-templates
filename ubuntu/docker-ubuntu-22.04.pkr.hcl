@@ -48,7 +48,7 @@ source "qemu" "docker_ubuntu_22_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "Docker.Ubuntu.22.04-2024.08.09"
+  vm_name                   = "Docker.Ubuntu.22.04-2024.09.13"
   vnc_port_max              = 5934
   vnc_port_min              = 5934
 }
