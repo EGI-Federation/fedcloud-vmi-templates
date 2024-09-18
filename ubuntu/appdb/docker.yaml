@@ -7,7 +7,7 @@ appdb:
     Upgrade docker-compose to 2.29.3
     Upgrade kubernetes components to 1.30.5-1.1
   url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Docker.Ubuntu.22.04-2024.09.13.qcow2
-  sha512: "9e19ff5c80a646c173b94bfe7401a38ed7fc87b7617edfea9183cdfc9dc3e9ab51258170cf51fd807d3a20ebf7bf6faa151a8dcabfb4d44d66bebd7d29d0121d"
+  sha512: "b9cd2673ac892d762b8a4986ef8c9c686fd055ee20a95683dbe6941a6bb01b94f68fd06551a1b91fdcbf4aa3e0f6887044c006d306b7c249a733e5ada62c34f1"
   arch: x86_64
   os:
     family: Linux
