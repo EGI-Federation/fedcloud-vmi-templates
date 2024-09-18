@@ -10,8 +10,8 @@
   include_role:
     name: grycap.docker
   vars:
-    docker_version: "5:25.0.4-1~ubuntu.22.04~jammy"
-    docker_compose_version: "v2.24.7"
+    docker_version: "5:27.2.1-1~ubuntu.22.04~jammy"
+    docker_compose_version: "v2.29.3"
     docker_install_pip: false
     docker_config_values:
       exec-opts:
@@ -38,18 +38,18 @@
 
 - name: Add repo key
   get_url:
-    url: "https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key"
+    url: "https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key"
     dest: /etc/apt/keyrings/kubernetes-apt-keyring.asc
 
 - name: Add kubernetes repo
   apt_repository:
-    repo: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /'
+    repo: 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /'
     state: present
     update_cache: yes
 
 - name: Install kubernetes packages
   vars:
-    kube_version: 1.28.7-1.1
+    kube_version: 1.30.5-1.1
   apt:
     name:
       - "kubelet={{ kube_version }}"
