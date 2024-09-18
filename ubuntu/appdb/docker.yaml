@@ -1,6 +1,6 @@
 ---
 appdb:
-  version: 2024.03.14
+  version: 2024.09.13
   expireson: 6
   notes: |
     Upgrade docker to 27.2.1
