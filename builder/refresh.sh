@@ -34,7 +34,6 @@ for cloud in "$@" ; do
 	OS_TOKEN="$(fedcloud openstack token issue --oidc-access-token "$OIDC_TOKEN" \
         			--site "$SITE" --vo "$VO" -j | jq -r '.[0].Result.id')"
 	[ -n "$GITHUB_ACTION" ] &&  echo "::add-mask::$OIDC_TOKEN"
-	echo "::add-mask::$OS_TOKEN"
 	yq -y -i '.clouds.'"$cloud"'.auth.token="'"$OS_TOKEN"'"'  $CLOUDS_YAML
 done
 

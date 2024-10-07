@@ -121,9 +121,9 @@ jobs:
             cat "${{ steps.terraform-vm-id.outputs.stdout }}"
             echo "BUILDEOF"
           } >> "$GITHUB_OUTPUT"
-          outcome=$((grep "^### BUILD-IMAGE: " \
-                     "${{ steps.terraform-vm-id.outputs.stdout }}" \
-                    || echo "ERROR") \
+          outcome=$( (grep "^### BUILD-IMAGE: " \
+                           "${{ steps.terraform-vm-id.outputs.stdout }}" \
+                      || echo "ERROR") \
                     | cut -f2 -d":" | cut -f1 -d"-" | tr -d " ")
           echo "outcome=$outcome" >> "$GITHUB_OUTPUT"
       - name: Update PR with build status

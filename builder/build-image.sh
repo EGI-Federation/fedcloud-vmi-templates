@@ -17,7 +17,7 @@ FEDCLOUD_SECRET_LOCKER="$2"
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
 export PATH="$PWD/.venv/bin:$PATH"
-pip install fedcloudclient simplejson yq python-hcl2
+pip install -qqq fedcloudclient simplejson yq python-hcl2
 
 # Get openstack ready
 mkdir -p /etc/openstack/
@@ -31,9 +31,9 @@ systemctl start notify
 
 # get packer
 export PACKER_CONFIG_DIR="$PWD"
-curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo tee /etc/apt/trusted.gpg.d/hashicorp.asc
+curl -fsSL https://apt.releases.hashicorp.com/gpg > /etc/apt/trusted.gpg.d/hashicorp.asc
 apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-apt-get update && apt-get install -y packer
+apt-get -q update && apt-get install -yq packer
 packer plugins install github.com/hashicorp/qemu
 packer plugins install github.com/hashicorp/ansible
 
