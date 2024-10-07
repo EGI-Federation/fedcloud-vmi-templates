@@ -2,11 +2,11 @@
 set -e
 
 error_handler() {
-    echo " Error in line: $1 " >> /var/log/image-build.log 2>&1
+    echo "### BUILD-IMAGE: ERROR - line $1"
     shift
-    echo " Exit status: $1 " >> /var/log/image-build.log 2>&1
+    echo " Exit status: $1"
     shift
-    echo " Command: $* " >> /var/log/image-build.log 2>&1
+    echo " Command: $*"
 }
 
 trap 'error_handler ${LINENO} $? ${BASH_COMMAND}' ERR INT TERM
@@ -49,9 +49,9 @@ if openstack --os-cloud images --os-token "$OS_TOKEN" \
 	object show egi_endorsed_vas \
 	"$QCOW_FILE"  > /dev/null ; then
 	# skip
-	echo "Skipped build as image is already uploaded" >>/var/log/image-build.log
+	echo "### BUILD-IMAGE: SKIP - Image $QCOW_FILE is already uploaded"
 else
-	if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
+	if tools/build.sh "$IMAGE"; then
 	    # compress the resulting image
 	    OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
 	    cd "$OUTPUT_DIR"
@@ -63,8 +63,8 @@ else
 		object create egi_endorsed_vas "$QCOW_FILE"
 	    ls -lh "$QCOW_FILE"
 	    SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
-	    echo "SUCCESSFUL BUILD - $QCOW_FILE - $SHA" >>/var/log/image-build.log
+	    echo "### BUILD-IMAGE: SUCCESS - qcow: $QCOW_FILE sha512sum: $SHA"
 	fi
 fi
 
-echo "BUILD ENDED" >>/var/log/image-build.log
+echo "### BUILD ENDED"

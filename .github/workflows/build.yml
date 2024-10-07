@@ -121,7 +121,7 @@ jobs:
             cat "${{ steps.terraform-vm-id.outputs.stdout }}"
             echo "BUILDEOF"
           } >> "$GITHUB_OUTPUT"
-          if grep "SUCCESSFUL BUILD" "${{ steps.terraform-vm-id.outputs.stdout }}"; then
+          if egrep "^### BUILD-IMAGE: (SUCCESS)|(SKIP) -" "${{ steps.terraform-vm-id.outputs.stdout }}"; then
             echo "outcome=success" >> "$GITHUB_OUTPUT"
           else
             echo "outcome=failure" >> "$GITHUB_OUTPUT"
