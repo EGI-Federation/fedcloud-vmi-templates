@@ -121,11 +121,11 @@ jobs:
             cat "${{ steps.terraform-vm-id.outputs.stdout }}"
             echo "BUILDEOF"
           } >> "$GITHUB_OUTPUT"
-          if egrep "^### BUILD-IMAGE: (SUCCESS)|(SKIP) -" "${{ steps.terraform-vm-id.outputs.stdout }}"; then
-            echo "outcome=success" >> "$GITHUB_OUTPUT"
-          else
-            echo "outcome=failure" >> "$GITHUB_OUTPUT"
-          fi
+          outcome=$((grep "^### BUILD-IMAGE: " \
+                     "${{ steps.terraform-vm-id.outputs.stdout }}" \
+                    || echo "ERROR") \
+                    | cut -f2 -d":" | cut -f1 -d"-" | tr -d " ")
+          echo "outcome=$outcome" >> "$GITHUB_OUTPUT"
       - name: Update PR with build status
         uses: actions/github-script@v7
         with:
