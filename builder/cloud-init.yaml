@@ -46,7 +46,7 @@ write_files:
       ansible-galaxy role install -p /var/tmp/egi/ubuntu/provisioners/roles/ grycap.docker
 
       # build image
-      builder/build-image.sh "$IMAGE" "$FEDCLOUD_LOCKER_TOKEN"
+      builder/build-image.sh "$IMAGE" "$FEDCLOUD_LOCKER_TOKEN" > /var/log/image-build.log 2>&1
     path: /var/lib/cloud/scripts/per-boot/build.sh
     permissions: '0755'
   - content: |
