@@ -33,7 +33,7 @@ systemctl start notify
 export PACKER_CONFIG_DIR="$PWD"
 curl -fsSL https://apt.releases.hashicorp.com/gpg > /etc/apt/trusted.gpg.d/hashicorp.asc
 apt-add-repository -y "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
-apt-get -q update && apt-get install -yq packer
+apt-get -qq update && apt-get -qq install -y packer
 packer plugins install github.com/hashicorp/qemu
 packer plugins install github.com/hashicorp/ansible
 
