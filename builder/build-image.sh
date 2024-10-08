@@ -81,7 +81,7 @@ else
       # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
       SSH_CMD=$(im_client.py ssh "$IM_INFRA_ID" 1 | grep --invert-match 'im.egi.eu')
       # if the below works, the VM is up and running and responds to SSH
-      "$SSH_CMD" hostname
+      "$SSH_CMD hostname"
       # at this point we may want to run more sophisticated tests
       # delete test VM
       im_client.py destroy "$IM_INFRA_ID"
