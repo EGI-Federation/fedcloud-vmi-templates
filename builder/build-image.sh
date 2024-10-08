@@ -78,11 +78,14 @@ else
       set -x
       IM_VM=$(im_client.py create vm.yaml)
       IM_INFRA_ID=$(echo "$IM_VM" | awk '/ID/ {print $NF}')
+      im_client.py wait "$IM_INFRA_ID"
+      # still getting: ssh: connect to host <> port 22: Connection refused, so waiting a bit more
+      sleep 30
       # get SSH command to connect to the VM
       # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
       SSH_CMD=$(im_client.py ssh "$IM_INFRA_ID" 1 | grep --invert-match 'im.egi.eu')
       # if the below works, the VM is up and running and responds to SSH
-      "$SSH_CMD true" || echo "Failed, still keep going"
+      $SSH_CMD hostname || echo "Failed, still keep going"
       # at this point we may want to run more sophisticated tests
       # delete test VM
       im_client.py destroy "$IM_INFRA_ID"
