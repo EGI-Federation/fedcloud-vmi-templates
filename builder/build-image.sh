@@ -75,8 +75,8 @@ else
       pushd builder
       sed -i -e "s/%TOKEN%/$(cat ../.oidc_token)/" auth.dat
       sed -i -e "s/%IMAGE%/$IMAGE_ID/" vm.yaml
-      im_client.py create vm.yaml
-      IM_INFRA_ID=$(im_client.py list | grep --extended-regexp --invert-match 'im.egi.eu|ID')
+      IM_VM=$(im_client.py create vm.yaml)
+      IM_INFRA_ID=$(echo "$IM_VM" | awk '/ID/ {print $NF}')
       # get SSH command to connect to the VM
       # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
       SSH_CMD=$(im_client.py ssh "$IM_INFRA_ID" 1 | grep --invert-match 'im.egi.eu')
