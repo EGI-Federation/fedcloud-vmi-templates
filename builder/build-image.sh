@@ -85,15 +85,13 @@ else
       # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
       SSH_CMD=$(im_client.py ssh "$IM_INFRA_ID" 1 | grep --invert-match 'im.egi.eu')
       # if the below works, the VM is up and running and responds to SSH
-      $SSH_CMD hostname || echo "Failed, still keep going"
+      $SSH_CMD hostname || echo "SSH failed, but keep running"
       # at this point we may want to run more sophisticated tests
       # delete test VM
       im_client.py destroy "$IM_INFRA_ID"
       # delete test VMI
       openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
       popd
-      # force failure to avoid uploading
-      exit 1
 
       # All going well, upload the VMI for sharing in AppDB
       builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
