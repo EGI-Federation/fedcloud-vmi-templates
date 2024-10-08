@@ -73,7 +73,7 @@ else
 
       # test step 2/2: use IM-client to launch the test VM
       pushd builder
-      sed -i -e "s/%TOKEN%/$(cat .oidc_token)/" auth.dat
+      sed -i -e "s/%TOKEN%/$(cat ../.oidc_token)/" auth.dat
       sed -i -e "s/%IMAGE%/$IMAGE_ID/" vm.yaml
       im_client.py create vm.yaml
       IM_INFRA_ID=$(im_client.py list | grep --extended-regexp --invert-match 'im.egi.eu|ID')
