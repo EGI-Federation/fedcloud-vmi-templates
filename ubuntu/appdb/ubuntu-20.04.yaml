@@ -1,9 +1,9 @@
 ---
 appdb:
-  version: 2024.04.22
+  version: 2024.10.07
   expireson: 6
-  notes: Regular update
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2024.04.22.ova
+  notes: Regular update with automated building, moving to qcow2
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2024.10.07.qcow2
   sha512: "f00770bbc5e13dc0b30b84bcbb7b0bd4282c33e6871cf195cbdf3946370bf562264bcd6055f3cd1a19834428c9aed5f428fbb1befb4d34ed2a8a0a0299b84a2f"
   arch: x86_64
   os:
@@ -12,5 +12,5 @@ appdb:
     version: '20.04'
   ram:
     minimum: 1GB
-  format: OVA
-  hypervisor: VirtualBox
+  format: qcow2
+  hypervisor: KVM
