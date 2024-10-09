@@ -75,7 +75,6 @@ else
       pushd builder
       sed -i -e "s/%TOKEN%/$(cat ../.oidc_token)/" auth.dat
       sed -i -e "s/%IMAGE%/$IMAGE_ID/" vm.yaml
-      set -x
       IM_VM=$(im_client.py create vm.yaml)
       IM_INFRA_ID=$(echo "$IM_VM" | awk '/ID/ {print $NF}')
       im_client.py wait "$IM_INFRA_ID"
