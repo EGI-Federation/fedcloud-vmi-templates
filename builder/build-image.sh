@@ -69,6 +69,7 @@ else
       OS_TOKEN="$(yq -r '.clouds.tests.auth.token' /etc/openstack/clouds.yaml)"
       IMAGE_ID=$(openstack --os-cloud tests --os-token "$OS_TOKEN" \
                      image create --disk-format qcow2 --file "$OUTPUT_DIR/$QCOW_FILE" \
+		     --tag "image-builder-action" \
                      --column id --format value "$VM_NAME")
 
       # test step 2/2: use IM-client to launch the test VM
