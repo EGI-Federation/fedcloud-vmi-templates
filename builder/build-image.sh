@@ -117,7 +117,7 @@ else
       openstack --os-cloud images --os-token "$OS_TOKEN" \
           object create egi_endorsed_vas "$QCOW_FILE"
       ls -lh "$QCOW_FILE"
-      SHA="$(sha512sum -z "$OUTPUT_DIR/$QCOW_FILE" | cut -f1 -d" ")"
+      SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
       echo "### BUILD-IMAGE: SUCCESS - qcow: $QCOW_FILE sha512sum: $SHA"
   fi
 fi
