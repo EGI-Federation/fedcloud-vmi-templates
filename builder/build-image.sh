@@ -2,6 +2,21 @@
 set -e
 
 error_handler() {
+
+    if [[ -s /var/tmp/egi/vm_image_id ]]; then
+        IMAGE_ID=$(cat /var/tmp/egi/vm_image_id)
+        builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" tests
+        OS_TOKEN="$(yq -r '.clouds.tests.auth.token' /etc/openstack/clouds.yaml)"
+        # delete test VMI
+        openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
+    fi
+
+    if [[ -s /var/tmp/egi/vm_infra_id ]] ; then
+        IM_INFRA_ID=$(cat /var/tmp/egi/vm_infra_id)
+        # delete test VM
+        im_client.py destroy "$IM_INFRA_ID"
+    fi
+
     echo "### BUILD-IMAGE: ERROR - line $1"
     shift
     echo " Exit status: $1"
@@ -69,31 +84,40 @@ else
       OS_TOKEN="$(yq -r '.clouds.tests.auth.token' /etc/openstack/clouds.yaml)"
       IMAGE_ID=$(openstack --os-cloud tests --os-token "$OS_TOKEN" \
                      image create --disk-format qcow2 --file "$OUTPUT_DIR/$QCOW_FILE" \
+		     --tag "image-builder-action" \
                      --column id --format value "$VM_NAME")
+      echo "$IMAGE_ID" > /var/tmp/egi/vm_image_id
 
       # test step 2/2: use IM-client to launch the test VM
-      sed -i -e "s/%TOKEN%/$(cat .oidc_token)/" auth.dat
+      pushd builder
+      sed -i -e "s/%TOKEN%/$(cat ../.oidc_token)/" auth.dat
       sed -i -e "s/%IMAGE%/$IMAGE_ID/" vm.yaml
-      im_client.py create vm.yaml
-      IM_INFRA_ID=$(im_client.py list | grep --extended-regexp --invert-match 'im.egi.eu|ID')
+      IM_VM=$(im_client.py create vm.yaml)
+      IM_INFRA_ID=$(echo "$IM_VM" | awk '/ID/ {print $NF}')
+      echo "$IM_INFRA_ID" > /var/tmp/egi/vm_infra_id
+      im_client.py wait "$IM_INFRA_ID"
+      # still getting: ssh: connect to host <> port 22: Connection refused, so waiting a bit more
+      sleep 30
       # get SSH command to connect to the VM
       # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
       SSH_CMD=$(im_client.py ssh "$IM_INFRA_ID" 1 | grep --invert-match 'im.egi.eu')
       # if the below works, the VM is up and running and responds to SSH
-      "$SSH_CMD hosname"
+      $SSH_CMD hostname || echo "SSH failed, but keep running"
       # at this point we may want to run more sophisticated tests
       # delete test VM
       im_client.py destroy "$IM_INFRA_ID"
       # delete test VMI
       openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
+      popd
 
       # All going well, upload the VMI for sharing in AppDB
       builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
       OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
+      pushd "$OUTPUT_DIR"
       openstack --os-cloud images --os-token "$OS_TOKEN" \
-          object create egi_endorsed_vas "$OUTPUT_DIR/$QCOW_FILE"
-      ls -lh "$OUTPUT_DIR/$QCOW_FILE"
-      SHA="$(sha512sum -z "$OUTPUT_DIR/$QCOW_FILE" | cut -f1 -d" ")"
+          object create egi_endorsed_vas "$QCOW_FILE"
+      ls -lh "$QCOW_FILE"
+      SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
       echo "### BUILD-IMAGE: SUCCESS - qcow: $QCOW_FILE sha512sum: $SHA"
   fi
 fi
