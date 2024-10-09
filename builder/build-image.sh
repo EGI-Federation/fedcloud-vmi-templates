@@ -113,9 +113,10 @@ else
       # All going well, upload the VMI for sharing in AppDB
       builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
       OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
+      pushd "$OUTPUT_DIR"
       openstack --os-cloud images --os-token "$OS_TOKEN" \
-          object create egi_endorsed_vas "$OUTPUT_DIR/$QCOW_FILE"
-      ls -lh "$OUTPUT_DIR/$QCOW_FILE"
+          object create egi_endorsed_vas "$QCOW_FILE"
+      ls -lh "$QCOW_FILE"
       SHA="$(sha512sum -z "$OUTPUT_DIR/$QCOW_FILE" | cut -f1 -d" ")"
       echo "### BUILD-IMAGE: SUCCESS - qcow: $QCOW_FILE sha512sum: $SHA"
   fi
