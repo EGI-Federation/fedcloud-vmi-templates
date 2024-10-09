@@ -2,6 +2,21 @@
 set -e
 
 error_handler() {
+
+    if [[ -s /var/tmp/egi/vm_image_id ]]; then
+        IMAGE_ID=$(cat /var/tmp/egi/vm_image_id)
+        builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" tests
+        OS_TOKEN="$(yq -r '.clouds.tests.auth.token' /etc/openstack/clouds.yaml)"
+        # delete test VMI
+        openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
+    fi
+
+    if [[ -s /var/tmp/egi/vm_infra_id ]] ; then
+        IM_INFRA_ID=$(cat /var/tmp/egi/vm_infra_id)
+        # delete test VM
+        im_client.py destroy "$IM_INFRA_ID"
+    fi
+
     echo "### BUILD-IMAGE: ERROR - line $1"
     shift
     echo " Exit status: $1"
@@ -70,6 +85,7 @@ else
       IMAGE_ID=$(openstack --os-cloud tests --os-token "$OS_TOKEN" \
                      image create --disk-format qcow2 --file "$OUTPUT_DIR/$QCOW_FILE" \
                      --column id --format value "$VM_NAME")
+      echo "$IMAGE_ID" > /var/tmp/egi/vm_image_id
 
       # test step 2/2: use IM-client to launch the test VM
       pushd builder
@@ -77,6 +93,7 @@ else
       sed -i -e "s/%IMAGE%/$IMAGE_ID/" vm.yaml
       IM_VM=$(im_client.py create vm.yaml)
       IM_INFRA_ID=$(echo "$IM_VM" | awk '/ID/ {print $NF}')
+      echo "$IM_INFRA_ID" > /var/tmp/egi/vm_infra_id
       im_client.py wait "$IM_INFRA_ID"
       # still getting: ssh: connect to host <> port 22: Connection refused, so waiting a bit more
       sleep 30
