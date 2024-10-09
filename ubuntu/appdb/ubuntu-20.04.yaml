@@ -4,7 +4,7 @@ appdb:
   expireson: 6
   notes: Regular update with automated building, moving to qcow2
   url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2024.10.07.qcow2
-  sha512: "f00770bbc5e13dc0b30b84bcbb7b0bd4282c33e6871cf195cbdf3946370bf562264bcd6055f3cd1a19834428c9aed5f428fbb1befb4d34ed2a8a0a0299b84a2f"
+  sha512: "30872a2da72db2669d9e741f0aadfa13d4f5deb4e34a845082c83bf7159d4fd1f46d0d7dfaee62c9ca1efbb2bd34fb0aa924754bf96f326d2bfc4970fb72e875"
   arch: x86_64
   os:
     family: Linux
