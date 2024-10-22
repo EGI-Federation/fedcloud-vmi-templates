@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2024.04.30
+  version: 2024.10.21
   expireson: 6
-  notes: First release of Ubuntu 24.04
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.24.04-2024.04.30.ova
-  sha512: "1bb7a28db0c460fef07b9faa4aa49651bd6142f24c669cd23f495ea5e8f8b6e3eca3fb4d332012fddb1dc6099376321969d1b9f6869a3cad10e2fa89e315bbb1"
+  notes: Update to Ubuntu 24.04.1
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.24.04-2024.10.21.qcow2
+  sha512: "590e13753d8739b4b5a4dbaeab41b7e5814dc1e4edbf0eb0549715653fd01656669d7a18d487a6d308ca2ee3eac28926df61e9a797e929b0d9b0a2cebecffe73"
   arch: x86_64
   os:
     family: Linux
@@ -12,5 +12,5 @@ appdb:
     version: '24.04'
   ram:
     minimum: 1GB
-  format: OVA
-  hypervisor: VirtualBox
+  format: qcow2
+  hypervisor: KVM
