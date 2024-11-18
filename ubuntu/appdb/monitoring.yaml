@@ -1,14 +1,14 @@
 ---
 appdb:
-  version: 2024.06.03
+  version: 2024.11.18
   expireson: 6
   notes: Regular image update
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.20.04-2024.06.03.ova
-  sha512: "224c59e6c766e3c1bd1056f63e00a8934e881301ad4c0f563425bfa12cdb12dafd5d12ee1f0777320a4cbefcbcaccfe34711fd445493d497a86e8cf0a4364843"
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.20.04-2024.11.18.qcow2
+  sha512: "36d89d299e5788030c7367805d8550e9da862733e7919f361bb82644147ab64082d71134c68acc89ed1a935494de4f51e3e91e09c166bfd76b12e77f6048b646"
   arch: x86_64
   os:
     family: Linux
     name: Ubuntu
     version: "20.04"
-  format: OVA
-  hypervisor: VirtualBox
+  format: qcow2
+  hypervisor: KVM

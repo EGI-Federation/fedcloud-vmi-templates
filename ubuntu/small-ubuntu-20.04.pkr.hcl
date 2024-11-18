@@ -51,7 +51,7 @@ source "qemu" "small_ubuntu_20_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "Small.Ubuntu.20.04-2024.06.03"
+  vm_name                   = "Small.Ubuntu.20.04-2024.11.18"
 }
 
 build {
