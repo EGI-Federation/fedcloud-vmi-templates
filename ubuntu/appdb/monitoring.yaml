@@ -3,7 +3,7 @@ appdb:
   version: 2024.11.18
   expireson: 6
   notes: Regular image update
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.20.04-2024.06.03.ova
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.20.04-2024.11.18.qcow2
   sha512: "224c59e6c766e3c1bd1056f63e00a8934e881301ad4c0f563425bfa12cdb12dafd5d12ee1f0777320a4cbefcbcaccfe34711fd445493d497a86e8cf0a4364843"
   arch: x86_64
   os:
