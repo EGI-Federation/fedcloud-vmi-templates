@@ -1,6 +1,6 @@
 ---
 appdb:
-  version: 2024.06.03
+  version: 2024.11.18
   expireson: 6
   notes: Regular image update
   url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Small.Ubuntu.20.04-2024.06.03.ova
@@ -10,5 +10,5 @@ appdb:
     family: Linux
     name: Ubuntu
     version: "20.04"
-  format: OVA
-  hypervisor: VirtualBox
+  format: qcow2
+  hypervisor: KVM
