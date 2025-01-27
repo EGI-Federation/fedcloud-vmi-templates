@@ -21,10 +21,10 @@ jobs:
       # Installs yq
       - name: Install yq
         run: |
-          sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CC86BB64
-          sudo add-apt-repository -y ppa:rmescandon/yq
-          sudo apt update
-          sudo apt install -y -q yq
+          VERSION=v4.2.0
+          BINARY=yq_linux_amd64
+          wget https://github.com/mikefarah/yq/releases/download/${VERSION}/${BINARY}.tar.gz -O - |\
+            tar xz && sudo mv ${BINARY} /usr/bin/yq
 
       # Runs the Super-Linter action
       - name: Calculate the sum for new images
