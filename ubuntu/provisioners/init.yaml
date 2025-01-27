@@ -11,13 +11,3 @@
   tasks:
     - name: update packages
       apt: upgrade=dist
-
-- hosts: all
-  become: true
-  tasks:
-    - name: Put skel files into ubuntu's home
-      copy:
-        remote_src: true
-        src: /etc/skel/
-        dest: /home/ubuntu/
-        owner: ubuntu
