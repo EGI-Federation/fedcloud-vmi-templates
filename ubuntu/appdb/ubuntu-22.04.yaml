@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2024.08.06
+  version: 2025.01.27
   expireson: 6
-  notes: Update to Ubuntu 22.04.4
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.22.04-2024.08.06.qcow2
-  sha512: "6549631b2447415857381ab90c480dd652e672740c34dff4420225402a5a649b30d5b4808323bd8a219f4185476028be68a0969892cf7d01a54be9b39e12c29e"
+  notes: Update to Ubuntu 22.04.5
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.22.04-2025.01.27.qcow2
+  sha512: "17d3ee51f7a393905e63168ebb82f9d9f28316065edd6ccdca25fd8d84dc2ebddb6c2de2484dfb6220ac55a14045ffb006fe9c919475a6f83f6b2a65cde1f2ee"
   arch: x86_64
   os:
     family: Linux
