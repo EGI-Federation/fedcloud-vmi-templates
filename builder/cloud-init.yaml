@@ -36,6 +36,7 @@ write_files:
       COMMIT_SHA="%REF%"
       IMAGE="%IMAGE%"
       FEDCLOUD_LOCKER_TOKEN="%FEDCLOUD_LOCKER_TOKEN%"
+      UPLOAD="%UPLOAD%"
 
       # get the repo code and untar at cwd
       curl -L -H "Accept: application/vnd.github.v3+raw" \
@@ -46,7 +47,7 @@ write_files:
       ansible-galaxy role install -p /var/tmp/egi/ubuntu/provisioners/roles/ grycap.docker
 
       # build image
-      builder/build-image.sh "$IMAGE" "$FEDCLOUD_LOCKER_TOKEN" > /var/log/image-build.log 2>&1
+      builder/build-image.sh "$IMAGE" "$FEDCLOUD_LOCKER_TOKEN" "$COMMIT_SHA" "$UPLOAD" > /var/log/image-build.log 2>&1
     path: /var/lib/cloud/scripts/per-boot/build.sh
     permissions: '0755'
   - content: |
