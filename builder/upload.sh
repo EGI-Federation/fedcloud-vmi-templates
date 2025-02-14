@@ -44,6 +44,10 @@ jq '.builds[0].custom_data' <"$(dirname "$IMAGE")/$MANIFEST_OUTPUT" \
 REPOSITORY=$(jq -r '.os_distro' "$OUTPUT_DIR/annotation.json")
 
 # Now do the upload to registry
+# tell oras that we have a home
+# otherwise it will fail with
+# Error: failed to get user home directory: $HOME is not defined
+export HOME="$PWD"
 jq -r '.registry_password' "$SECRETS" | \
         oras login -u "$(jq -r '.registry_user' "$SECRETS")"  \
         --password-stdin "$REGISTRY"
