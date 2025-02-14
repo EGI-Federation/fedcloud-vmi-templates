@@ -36,6 +36,7 @@ trap 'error_handler ${LINENO} $? ${BASH_COMMAND}' ERR INT TERM
 
 IMAGE="$1"
 FEDCLOUD_SECRET_LOCKER="$2"
+UPLOAD="$3"
 
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
@@ -111,16 +112,13 @@ if tools/build.sh "$IMAGE"; then
     openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
     popd
 
-    # All going well, upload the VMI for sharing in AppDB
-    builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
-    OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
-    pushd "$OUTPUT_DIR"
-    openstack --os-cloud images --os-token "$OS_TOKEN" \
-        object create egi_endorsed_vas "$QCOW_FILE"
-    ls -lh "$QCOW_FILE"
-    SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
+    # All going well, upload the VMI in the registry
+    # this should be done only if this is a push to main
+    if test "$UPLOAD" -eq 1; then
+            builder/upload.sh "$IMAGE" secrets.json
+    fi
     echo "### BUILD-RESULT: $(jq -cn --arg status "SUCCESS" \
-            --arg qcow "$QCOW_FILE" --arg sha512sum "$SHA" '$ARGS.named')"
+            --arg qcow "$QCOW_FILE" '$ARGS.named')"
 else
     echo "### BUILD-RESULT: $(jq -cn --arg status "ERROR" \
             --arg description "Packer build failed, check log" '$ARGS.named')"
