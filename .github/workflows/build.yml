@@ -66,6 +66,8 @@ jobs:
       - name: Deploy
         env:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
+          REGISTRY_PWD: ${{ secrets.REGISTRY_PWD }}
         run: |
           cd builder
           mkdir -p ~/.config/openstack
@@ -77,7 +79,12 @@ jobs:
                                    --oidc-access-token "$(cat .oidc_token)" \
                                    --ttl 1h --num-uses 2)"
           echo "::add-mask::$FEDCLOUD_LOCKER_TOKEN"
-          fedcloud secret put --locker-token "$FEDCLOUD_LOCKER_TOKEN" deploy "data=$REFRESH_TOKEN"
+          fedcloud secret put \
+              --locker-token "$FEDCLOUD_LOCKER_TOKEN" \
+              deploy \
+              "token=$REFRESH_TOKEN" \
+              "registry_user=$REGISTRY_USER" \
+              "registry_password=$REGISTRY_PWD"
           DEPLOY_SITE="$(yq -r .clouds.deploy.site clouds.yaml)"
           echo "DEPLOY_SITE=$DEPLOY_SITE" >> "$GITHUB_ENV"
           sed -i -e "s#%IMAGE%#${{ matrix.images }}#" cloud-init.yaml

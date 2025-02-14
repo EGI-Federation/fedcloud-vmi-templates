@@ -53,7 +53,9 @@ mkdir -p /etc/openstack/
 cp builder/clouds.yaml /etc/openstack/clouds.yaml
 TMP_SECRETS="$(mktemp)"
 fedcloud secret get --locker-token "$FEDCLOUD_SECRET_LOCKER" \
-        deploy data >"$TMP_SECRETS" && mv "$TMP_SECRETS"  .refresh_token
+        deploy -f json >"$TMP_SECRETS" && mv "$TMP_SECRETS" secrets.json
+
+jq -r '.token' < secrets.json > .refresh_token
 
 # monitor ourselves
 systemctl start notify
