@@ -2,6 +2,8 @@
 # Uploads an image to the registry
 set -e
 
+set -x
+
 IMAGE="$1"
 SECRETS="$2"
 
@@ -44,7 +46,7 @@ REPOSITORY=$(jq -r '.os_distro' "$OUTPUT_DIR/annotation.json")
 # Now do the upload to registry
 jq -r '.registry_password' "$SECRETS" | \
         oras login -u "$(jq -r '.registry_user' "$SECRETS")"  \
-                --password-stdin "$REGISTRY"
+        --password-stdin "$REGISTRY"
 oras push --artifact-type application/application-x-qemu-disk \
         "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
         "$OUTPUT_DIR/$QCOW_FILE"
