@@ -5,7 +5,8 @@ set -e
 set -x
 
 IMAGE="$1"
-SECRETS="$2"
+COMMIT_SHA="$2"
+SECRETS="$3"
 
 REGISTRY="registry.egi.eu"
 PROJECT="egi_vm_images"
@@ -45,6 +46,9 @@ echo "manifest"
 jq <"$(dirname "$IMAGE")/$MANIFEST_OUTPUT"
 echo "annotation"
 jq <"$OUTPUT_DIR/annotation.json"
+
+#"org.opencontainers.image.revision" $COMMIT_SHA
+#"org.opencontainers.image.source" "http://github.com/EGI-Federation/fedcloud-vmi-templates"
 
 REPOSITORY=$(jq -r '.os_distro' "$OUTPUT_DIR/annotation.json")
 
