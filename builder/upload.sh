@@ -52,5 +52,4 @@ jq -r '.registry_password' "$SECRETS" | \
         oras login -u "$(jq -r '.registry_user' "$SECRETS")"  \
         --password-stdin "$REGISTRY"
 oras push --artifact-type application/application-x-qemu-disk \
-        "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
-        "$OUTPUT_DIR/$QCOW_FILE"
+        "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" "$QCOW_FILE"
