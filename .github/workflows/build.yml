@@ -2,7 +2,12 @@
 name: Build images that changed
 
 on:
-  - pull_request
+  pull_request:
+  push:
+    branches:
+      - main
+
+
 
 jobs:
   image-list:
@@ -68,6 +73,7 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
           REGISTRY_PWD: ${{ secrets.REGISTRY_PWD }}
+          UPLOAD: ${{ github.event_name == 'pull_request' }}
         run: |
           cd builder
           mkdir -p ~/.config/openstack
@@ -92,7 +98,7 @@ jobs:
           sed -i -e "s/%REF%/${{ github.sha }}/" cloud-init.yaml
           sed -i -e "s/%SHORT_REF%/$(git rev-parse --short HEAD)/" cloud-init.yaml
           sed -i -e "s/%FEDCLOUD_LOCKER_TOKEN%/$FEDCLOUD_LOCKER_TOKEN/" cloud-init.yaml
-          sed -i -e "s/%UPLOAD%/1/" cloud-init.yaml
+          sed -i -e "s/%UPLOAD%/$UPLOAD/" cloud-init.yaml
           # terraform!
           terraform apply -auto-approve -var-file="$DEPLOY_SITE.tfvars"
       - name: Get VM ID
