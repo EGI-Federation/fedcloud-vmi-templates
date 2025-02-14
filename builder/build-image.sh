@@ -114,7 +114,7 @@ if tools/build.sh "$IMAGE"; then
 
     # All going well, upload the VMI in the registry
     # this should be done only if this is a push to main
-    if test "$UPLOAD" -eq 1; then
+    if test "$UPLOAD" == "true"; then
             builder/upload.sh "$IMAGE" secrets.json
     fi
     echo "### BUILD-RESULT: $(jq -cn --arg status "SUCCESS" \
