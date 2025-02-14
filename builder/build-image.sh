@@ -22,6 +22,14 @@ error_handler() {
     echo " Exit status: $1"
     shift
     echo " Command: $*"
+
+    LINE="$1"
+    shift
+    STATUS="$1"
+    shift
+    echo "### BUILD-RESULT: $(jq -cn --arg status "ERROR" \
+            --arg line "$LINE" --arg status "$STATUS" \
+            --arg command "$*" '$ARGS.named')"
 }
 
 trap 'error_handler ${LINENO} $? ${BASH_COMMAND}' ERR INT TERM
@@ -70,7 +78,9 @@ if openstack --os-cloud images --os-token "$OS_TOKEN" \
 	object show egi_endorsed_vas \
 	"$QCOW_FILE"  > /dev/null ; then
 	# skip
-	echo "### BUILD-IMAGE: SKIP - Image $QCOW_FILE is already uploaded"
+	echo "### BUILD-RESULT: $(jq -cn --arg status "SKIP" \
+		--arg description "Image $QCOW_FILE is already uploaded" \
+		'$ARGS.named')"
 else
   # do the build
   if tools/build.sh "$IMAGE" >/var/log/image-build.log 2>&1; then
@@ -118,7 +128,8 @@ else
           object create egi_endorsed_vas "$QCOW_FILE"
       ls -lh "$QCOW_FILE"
       SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
-      echo "### BUILD-IMAGE: SUCCESS - qcow: $QCOW_FILE sha512sum: $SHA"
+      echo "### BUILD-RESULT: $(jq -cn --arg status "SUCCESS" \
+	      --arg qcow "$QCOW_FILE" --arg sha512sum "$SHA" '$ARGS.named')"
   fi
 fi
 
