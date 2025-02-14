@@ -33,9 +33,6 @@ FEDCLOUD_SECRET_LOCKER="$2"
 COMMIT_SHA="$3"
 UPLOAD="$4"
 
-echo $UPLOAD
-exit 1
-
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
 export PATH="$PWD/.venv/bin:$PATH"

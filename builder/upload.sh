@@ -41,6 +41,11 @@ MANIFEST_OUTPUT="$(hcl2tojson "$IMAGE" | \
 jq '.builds[0].custom_data' <"$(dirname "$IMAGE")/$MANIFEST_OUTPUT" \
         >"$OUTPUT_DIR/annotation.json"
 
+echo "manifest"
+jq <"$(dirname "$IMAGE")/$MANIFEST_OUTPUT"
+echo "annotation"
+jq <"$OUTPUT_DIR/annotation.json"
+
 REPOSITORY=$(jq -r '.os_distro' "$OUTPUT_DIR/annotation.json")
 
 # Now do the upload to registry
