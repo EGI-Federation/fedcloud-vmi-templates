@@ -36,7 +36,8 @@ trap 'error_handler ${LINENO} $? ${BASH_COMMAND}' ERR INT TERM
 
 IMAGE="$1"
 FEDCLOUD_SECRET_LOCKER="$2"
-UPLOAD="$3"
+COMMIT_SHA="$3"
+UPLOAD="$4"
 
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
@@ -115,7 +116,7 @@ if tools/build.sh "$IMAGE"; then
     # All going well, upload the VMI in the registry
     # this should be done only if this is a push to main
     if test "$UPLOAD" == "true"; then
-            builder/upload.sh "$IMAGE" secrets.json
+            builder/upload.sh "$IMAGE" "$COMMIT_SHA" secrets.json
     fi
     echo "### BUILD-RESULT: $(jq -cn --arg status "SUCCESS" \
             --arg qcow "$QCOW_FILE" '$ARGS.named')"
