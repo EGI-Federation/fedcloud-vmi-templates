@@ -48,7 +48,7 @@ source "qemu" "ubuntu_24_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "Ubuntu.24.04-2024.10.21"
+  vm_name                   = "Ubuntu.24.04-2025.02.14"
 }
 
 build {
@@ -73,4 +73,15 @@ build {
     script = "provisioners/cleanup.sh"
   }
 
+  post-processor "manifest" {
+    output = "manifest.json"
+    strip_path = true
+    custom_data = {
+      "org.openstack.glance.os_distro" = "ubuntu"
+      "org.openstack.glance.os_version" = "24.04"
+      "org.openstack.glance.os_type" = "linux"
+      "org.openstack.glance.architecture" = "x86_64"
+      "org.opencontainers.image.title" = "EGI Ubuntu 24.04 image"
+    }
+  }
 }
