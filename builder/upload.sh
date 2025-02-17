@@ -34,16 +34,16 @@ QCOW_FILE="$OUTPUT_DIR/$VM_NAME.qcow2"
 ls -lh "$QCOW_FILE"
 # SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
 
-MANIFEST_OUTPUT="$(hcl2tojson "$IMAGE" | \
+MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
         jq -r '.build[0]."post-processor"[0].manifest.output')"
 
-# TODO(enolfc) need to figure out how to actually include metadata
-# into harbor, the annotation file here should follow this format
+# See annotation file format at:
 # https://oras.land/docs/how_to_guides/manifest_annotations
-jq '.builds[0].custom_data' <"$(dirname "$IMAGE")/$MANIFEST_OUTPUT" \
-        >"$OUTPUT_DIR/annotation.json"
-
-REPOSITORY=$(jq -r '.os_distro' "$OUTPUT_DIR/annotation.json")
+jq -n --argjson "$(basename "$QCOW_FILE")" \
+       "$(jq .builds[0].custom_data <"$MANIFEST_OUTPUT" | \
+               jq '.+={"org.opencontainers.image.revision":"'"$COMMIT_SHA"'",
+                       "org.opencontainers.image.source": "'"$BASE_URL"'"}')" \
+       '$ARGS.named' >"$OUTPUT_DIR/annotation.json"
 
 # Now do the upload to registry
 # tell oras that we have a home
@@ -54,4 +54,5 @@ jq -r '.registry_password' "$SECRETS" | \
         oras login -u "$(jq -r '.registry_user' "$SECRETS")"  \
         --password-stdin "$REGISTRY"
 oras push --artifact-type application/application-x-qemu-disk \
+       --annotation-file "$OUTPUT_DIR/annotation.json" \
         "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" "$QCOW_FILE"
