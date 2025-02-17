@@ -6,11 +6,13 @@
 set -e
 
 IMAGE="$1"
-SECRETS="$2"
+COMMIT_SHA="$2"
+SECRETS="$3"
 
 # Configuration, this may be passed as input
 REGISTRY="registry.egi.eu"
 PROJECT="egi_vm_images"
+SOURCE_URL="https://github.com/EGI-Federation/fedcloud-vmi-templates"
 
 # get oras
 # See https://oras.land/docs/installation
@@ -28,22 +30,24 @@ REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
 TAG=$(echo "$VM_NAME" | cut -f2- -d".")
 
 OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
-QCOW_FILE="$OUTPUT_DIR/$VM_NAME.qcow2"
+QCOW_FILE="$VM_NAME.qcow2"
 
-# these may be handy
-ls -lh "$QCOW_FILE"
-# SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
-
+#SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
 MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
         jq -r '.build[0]."post-processor"[0].manifest.output')"
 
 # See annotation file format at:
 # https://oras.land/docs/how_to_guides/manifest_annotations
-jq -n --argjson "$(basename "$QCOW_FILE")" \
+# We keep the format but do not push it as annotation as this
+# is not a OCI image
+jq -n --argjson "$QCOW_FILE" \
        "$(jq .builds[0].custom_data <"$MANIFEST_OUTPUT" | \
                jq '.+={"org.opencontainers.image.revision":"'"$COMMIT_SHA"'",
-                       "org.opencontainers.image.source": "'"$BASE_URL"'"}')" \
-       '$ARGS.named' >"$OUTPUT_DIR/annotation.json"
+                       "org.opencontainers.image.source": "'"$SOURCE_URL"'",
+                       "org.openstack.glance.disk_format": "qcow2",
+	               "org.openstack.glance.continaer_format": "bare"}')" \
+       '$ARGS.named' >"$OUTPUT_DIR/metadata.json"
+pushd $OUTPUT_DIR
 
 # Now do the upload to registry
 # tell oras that we have a home
@@ -53,6 +57,16 @@ export HOME="$PWD"
 jq -r '.registry_password' "$SECRETS" | \
         oras login -u "$(jq -r '.registry_user' "$SECRETS")"  \
         --password-stdin "$REGISTRY"
-oras push --artifact-type application/application-x-qemu-disk \
-       --annotation-file "$OUTPUT_DIR/annotation.json" \
-        "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" "$QCOW_FILE"
+
+echo "## debugging"
+echo "REPOSITORY: $REPOSITORY"
+echo "VM_NAME: $VM_NAME"
+echo "TAG: $TAG"
+echo "QEMU_SOURCE_ID: $QEMU_SOURCE_ID"
+echo "IMAGE: $IMAGE"
+echo "QCOW_FILE: $QCOW_FILE"
+ls -l "$QCOW_FILE"
+ls -l "metadata.json"
+
+oras push "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
+	"$QCOW_FILE" metadata.json
