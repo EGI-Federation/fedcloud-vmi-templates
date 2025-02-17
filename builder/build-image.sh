@@ -110,7 +110,7 @@ if tools/build.sh "$IMAGE"; then
     # All going well, upload the VMI in the registry
     # this should be done only if this is a push to main
     if test "$UPLOAD" == true ; then
-            builder/upload.sh "$IMAGE" secrets.json
+            builder/upload.sh "$IMAGE" "$COMMIT_SHA" secrets.json
     fi
     echo "### BUILD-RESULT: $(jq -cn --arg status "SUCCESS" \
             --arg qcow "$QCOW_FILE" --arg sha512sum "$SHA" '$ARGS.named')"

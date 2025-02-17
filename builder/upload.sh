@@ -8,6 +8,7 @@ IMAGE="$1"
 COMMIT_SHA="$2"
 SECRETS="$3"
 
+BASE_URL="https://github.com/EGI-Federation/fedcloud-vmi-templates"
 REGISTRY="registry.egi.eu"
 PROJECT="egi_vm_images"
 
@@ -36,20 +37,16 @@ ls -lh "$QCOW_FILE"
 MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
         jq -r '.build[0]."post-processor"[0].manifest.output')"
 
-# TODO(enolfc) need to figure out how to actually include metadata
-# into harbor, the annotation file here should follow this format
+# See annotation file format at:
 # https://oras.land/docs/how_to_guides/manifest_annotations
-jq -n --argjson "$(filename $QCOW_FILE)" \
-	"[(jq '.builds[0].custom_data' < $MANIFEST_OUTPUT)]" '$ARGS.named' \
-        >"$OUTPUT_DIR/annotation.json"
-
+jq -n --argjson "$(basename "$QCOW_FILE")" \
+	"$(jq .builds[0].custom_data <"$MANIFEST_OUTPUT" | \
+		jq '.+={"org.opencontainers.image.revision":"'"$COMMIT_SHA"'",
+		        "org.opencontainers.image.source": "'"$BASE_URL"'"}')" \
+	'$ARGS.named' >"$OUTPUT_DIR/annotation.json"
+	
 echo "annotation"
 jq <"$OUTPUT_DIR/annotation.json"
-
-#"org.opencontainers.image.revision" $COMMIT_SHA
-#"org.opencontainers.image.source" "http://github.com/EGI-Federation/fedcloud-vmi-templates"
-
-REPOSITORY=$(dirname $IMAGE)
 
 # Now do the upload to registry
 # tell oras that we have a home
