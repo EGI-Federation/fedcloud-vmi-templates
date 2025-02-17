@@ -77,10 +77,11 @@ build {
     output = "manifest.json"
     strip_path = true
     custom_data = {
-      os_distro = "ubuntu"
-      os_version = "24.04"
-      os_type = "linux"
-      architecture = "x86_64"
+      "org.openstack.glance.os_distro" = "ubuntu"
+      "org.openstack.glance.os_version" = "24.04"
+      "org.openstack.glance.os_type" = "linux"
+      "org.openstack.glance.architecture" = "x86_64"
+      "org.opencontainers.image.title" = "EGI Ubuntu 24.04 image"
     }
   }
 }
