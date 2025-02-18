@@ -38,19 +38,25 @@ MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
 
 TAG="$VERSIONED_TAG,$(jq -r '."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")"
 
+jq . <"$MANIFEST_OUTPUT"
+jq -r '."org.openstack.glance.os_version"' <"$MANIFEST_OUTPUT"
+
 # See annotation file format at:
 # https://oras.land/docs/how_to_guides/manifest_annotations
 # We keep the format but do not push it as annotation as this
 # is not a OCI image
-jq -n --argjson "$QCOW_FILE" \
+jq -n --argjson '$annotation' \
+	'{"org.opencontainers.image.revision":"'"$COMMIT_SHA"'",
+	  "org.opencontainers.image.source": "'"$SOURCE_URL"'"}' \
+      --argjson "$QCOW_FILE" \
        "$(jq .builds[0].custom_data <"$MANIFEST_OUTPUT" | \
-               jq '.+={"org.opencontainers.image.revision":"'"$COMMIT_SHA"'",
-                       "org.opencontainers.image.source": "'"$SOURCE_URL"'",
-                       "org.openstack.glance.disk_format": "qcow2",
+               jq '.+={"org.openstack.glance.disk_format": "qcow2",
 	               "org.openstack.glance.container_format": "bare"}')" \
        '$ARGS.named' >"$OUTPUT_DIR/metadata.json"
 
 pushd "$OUTPUT_DIR"
+
+jq . <metadata.json
 
 # Now do the upload to registry
 # tell oras that we have a home
