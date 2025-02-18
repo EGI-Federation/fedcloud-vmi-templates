@@ -45,7 +45,7 @@ jq -n --argjson "$QCOW_FILE" \
                jq '.+={"org.opencontainers.image.revision":"'"$COMMIT_SHA"'",
                        "org.opencontainers.image.source": "'"$SOURCE_URL"'",
                        "org.openstack.glance.disk_format": "qcow2",
-	               "org.openstack.glance.continaer_format": "bare"}')" \
+	               "org.openstack.glance.container_format": "bare"}')" \
        '$ARGS.named' >"$OUTPUT_DIR/metadata.json"
 pushd "$OUTPUT_DIR"
 
