@@ -35,7 +35,7 @@ source "qemu" "alma_9" {
   http_directory            = "httpdir"
   http_port_max             = 8550
   http_port_min             = 8500
-  iso_checksum              = "sha256:1e5d7da3d84d5d9a5a1177858a5df21b868390bfccf7f0f419b1e59acc293160"
+  iso_checksum              = "sha256:3038fb71a29d33c3c93117bd8f4c3f612cb152dce057c666b6b11dfa793fb65c"
   iso_url                   = "https://repo.almalinux.org/almalinux/9/isos/x86_64/AlmaLinux-9-latest-x86_64-boot.iso"
   memory                    = 1024
   qemuargs                  = [["-cpu", "host"]]
@@ -43,7 +43,7 @@ source "qemu" "alma_9" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "root"
-  vm_name                   = "alma.9-2024.08.29"
+  vm_name                   = "alma.9-2025.02.18"
 }
 
 build {
@@ -58,4 +58,15 @@ build {
     script = "provisioners/cleanup.sh"
   }
 
+  post-processor "manifest" {
+    output = "manifest.json"
+    strip_path = true
+    custom_data = {
+      "org.openstack.glance.os_distro" = "alma"
+      "org.openstack.glance.os_version" = "9"
+      "org.openstack.glance.os_type" = "linux"
+      "org.openstack.glance.architecture" = "x86_64"
+      "org.opencontainers.image.title" = "EGI Alma 9 image"
+    }
+  }
 }
