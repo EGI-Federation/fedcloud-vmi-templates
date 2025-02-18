@@ -47,7 +47,7 @@ jq -n --argjson "$QCOW_FILE" \
                        "org.openstack.glance.disk_format": "qcow2",
 	               "org.openstack.glance.continaer_format": "bare"}')" \
        '$ARGS.named' >"$OUTPUT_DIR/metadata.json"
-pushd $OUTPUT_DIR
+pushd "$OUTPUT_DIR"
 
 # Now do the upload to registry
 # tell oras that we have a home
