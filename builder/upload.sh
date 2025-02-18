@@ -27,7 +27,7 @@ VM_NAME=$(hcl2tojson "$IMAGE" \
 	| jq -r '.source[0].qemu.'"$QEMU_SOURCE_ID"'.vm_name')
 
 REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
-TAG=$(echo "$VM_NAME" | cut -f2- -d".")
+VERSIONED_TAG=$(echo "$VM_NAME" | cut -f2- -d".")
 
 OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
 QCOW_FILE="$VM_NAME.qcow2"
@@ -35,6 +35,8 @@ QCOW_FILE="$VM_NAME.qcow2"
 #SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
 MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
         jq -r '.build[0]."post-processor"[0].manifest.output')"
+
+TAG="$VERSIONED_TAG,$(jq -r '."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")"
 
 # See annotation file format at:
 # https://oras.land/docs/how_to_guides/manifest_annotations
@@ -47,6 +49,7 @@ jq -n --argjson "$QCOW_FILE" \
                        "org.openstack.glance.disk_format": "qcow2",
 	               "org.openstack.glance.container_format": "bare"}')" \
        '$ARGS.named' >"$OUTPUT_DIR/metadata.json"
+
 pushd "$OUTPUT_DIR"
 
 # Now do the upload to registry
