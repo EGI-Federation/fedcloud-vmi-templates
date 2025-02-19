@@ -45,7 +45,7 @@ jq -r '.builds[0].custom_data."org.openstack.glance.os_version"' <"$MANIFEST_OUT
 # https://oras.land/docs/how_to_guides/manifest_annotations
 # We keep the format but do not push it as annotation as this
 # is not a OCI image
-jq -n --argjson '$annotation' \
+jq -n --argjson '$manifest' \
 	'{"org.opencontainers.image.revision":"'"$COMMIT_SHA"'",
 	  "org.opencontainers.image.source": "'"$SOURCE_URL"'"}' \
       --argjson "$QCOW_FILE" \
@@ -74,9 +74,7 @@ echo "TAG: $TAG"
 echo "QEMU_SOURCE_ID: $QEMU_SOURCE_ID"
 echo "IMAGE: $IMAGE"
 echo "QCOW_FILE: $QCOW_FILE"
-ls -la
 
-set -x
 oras push --annotation-file metadata.json \
 	"$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
-	"$QCOW_FILE":application/vnd.vm-image-qcow2
+	"$QCOW_FILE"
