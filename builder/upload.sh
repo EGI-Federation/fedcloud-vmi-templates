@@ -36,21 +36,21 @@ QCOW_FILE="$VM_NAME.qcow2"
 MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
         jq -r '.build[0]."post-processor"[0].manifest.output')"
 
-TAG="$VERSIONED_TAG,$(jq -r '."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")"
+TAG="$VERSIONED_TAG,$(jq -r '.builds[0].custom_data."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")"
 
 # See annotation file format at:
 # https://oras.land/docs/how_to_guides/manifest_annotations
-# We keep the format but do not push it as annotation as this
-# is not a OCI image
-jq -n --argjson "$QCOW_FILE" \
+jq -n --argjson '$manifest' \
+	'{"org.opencontainers.image.revision":"'"$COMMIT_SHA"'",
+	  "org.opencontainers.image.source": "'"$SOURCE_URL"'"}' \
+      --argjson "$QCOW_FILE" \
        "$(jq .builds[0].custom_data <"$MANIFEST_OUTPUT" | \
-               jq '.+={"org.opencontainers.image.revision":"'"$COMMIT_SHA"'",
-                       "org.opencontainers.image.source": "'"$SOURCE_URL"'",
-                       "org.openstack.glance.disk_format": "qcow2",
+               jq '.+={"org.openstack.glance.disk_format": "qcow2",
 	               "org.openstack.glance.container_format": "bare"}')" \
        '$ARGS.named' >"$OUTPUT_DIR/metadata.json"
 
 pushd "$OUTPUT_DIR"
+
 
 # Now do the upload to registry
 # tell oras that we have a home
@@ -68,8 +68,11 @@ echo "TAG: $TAG"
 echo "QEMU_SOURCE_ID: $QEMU_SOURCE_ID"
 echo "IMAGE: $IMAGE"
 echo "QCOW_FILE: $QCOW_FILE"
-ls -l "$QCOW_FILE"
-ls -l "metadata.json"
+echo "Metadata:"
+jq . <metadata.json
 
-oras push "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
-	"$QCOW_FILE" metadata.json
+oras push --annotation-file metadata.json \
+	"$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
+	"$QCOW_FILE" || \
+	oras push  "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
+	"$QCOW_FILE"

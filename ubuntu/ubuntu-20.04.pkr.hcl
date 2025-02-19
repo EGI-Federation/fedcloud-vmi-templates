@@ -74,4 +74,16 @@ build {
     script = "provisioners/cleanup.sh"
   }
 
+  post-processor "manifest" {
+    output = "manifest.json"
+    strip_path = true
+    custom_data = {
+      "org.openstack.glance.os_distro" = "ubuntu"
+      "org.openstack.glance.os_version" = "20.04"
+      "org.openstack.glance.os_type" = "linux"
+      "org.openstack.glance.architecture" = "x86_64"
+      "eu.egi.cloud.description" = "EGI Ubuntu 20.04 image"
+    }
+  }
+
 }
