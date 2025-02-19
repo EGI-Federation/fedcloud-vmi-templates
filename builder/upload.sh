@@ -36,10 +36,10 @@ QCOW_FILE="$VM_NAME.qcow2"
 MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
         jq -r '.build[0]."post-processor"[0].manifest.output')"
 
-TAG="$VERSIONED_TAG,$(jq -r '."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")"
+TAG="$VERSIONED_TAG,$(jq -r '.builds[0].custom_data."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")"
 
 jq . <"$MANIFEST_OUTPUT"
-jq -r '."org.openstack.glance.os_version"' <"$MANIFEST_OUTPUT"
+jq -r '.builds[0].custom_data."org.openstack.glance.os_version"' <"$MANIFEST_OUTPUT"
 
 # See annotation file format at:
 # https://oras.land/docs/how_to_guides/manifest_annotations
@@ -77,5 +77,6 @@ echo "QCOW_FILE: $QCOW_FILE"
 ls -l "$QCOW_FILE"
 ls -l "metadata.json"
 
-oras push "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
-	"$QCOW_FILE" metadata.json
+oras push --annotation-file metadata.json \
+	"$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
+	"$QCOW_FILE"
