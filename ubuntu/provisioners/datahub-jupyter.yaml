@@ -26,8 +26,8 @@
         state: present
     - name: Install micromamba
       shell: |
-        curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
-        mv bin/micromamba /usr/local/bin/micromamba
+        curl https://github.com/mamba-org/micromamba-releases/releases/latest/download/micromamba-linux-64 -o "${HOME}/.local/bin/micromamba" -fsSL --compressed
+        chmod +x ${HOME}/.local/bin/micromamba
       args:
         creates: /usr/local/bin/micromamba
     - name: Install certbot
