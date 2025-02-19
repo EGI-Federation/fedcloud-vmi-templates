@@ -82,7 +82,7 @@ build {
       "org.openstack.glance.os_version" = "20.04"
       "org.openstack.glance.os_type" = "linux"
       "org.openstack.glance.architecture" = "x86_64"
-      "org.opencontainers.image.title" = "EGI Ubuntu 20.04 image"
+      "eu.egi.cloud.description" = "EGI Ubuntu 20.04 image"
     }
   }
 
