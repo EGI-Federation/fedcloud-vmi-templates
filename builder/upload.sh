@@ -79,4 +79,4 @@ ls -l "metadata.json"
 
 oras push --annotation-file metadata.json \
 	"$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
-	"$QCOW_FILE"
+	"$QCOW_FILE":application/vnd.vm-image
