@@ -66,7 +66,7 @@ build {
       "org.openstack.glance.os_version" = "9"
       "org.openstack.glance.os_type" = "linux"
       "org.openstack.glance.architecture" = "x86_64"
-      "org.opencontainers.image.title" = "EGI Alma 9 image"
+      "eu.egi.cloud.image.title" = "EGI Alma 9 image"
     }
   }
 }
