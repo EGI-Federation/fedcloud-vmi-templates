@@ -81,7 +81,7 @@ build {
       "org.openstack.glance.os_version" = "24.04"
       "org.openstack.glance.os_type" = "linux"
       "org.openstack.glance.architecture" = "x86_64"
-      "org.opencontainers.image.title" = "EGI Ubuntu 24.04 image"
+      "eu.egi.cloud.description" = "EGI Ubuntu 24.04 image"
     }
   }
 }

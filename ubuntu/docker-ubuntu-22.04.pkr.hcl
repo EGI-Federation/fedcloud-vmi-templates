@@ -74,3 +74,16 @@ build {
   }
 
 }
+
+  post-processor "manifest" {
+    output = "manifest.json"
+    strip_path = true
+    custom_data = {
+      "org.openstack.glance.os_distro" = "ubuntu"
+      "org.openstack.glance.os_version" = "22.04"
+      "org.openstack.glance.os_type" = "linux"
+      "org.openstack.glance.architecture" = "x86_64"
+      "eu.egi.cloud.description" = "EGI Docker image"
+    }
+  }
+}
