@@ -75,6 +75,10 @@ echo "QEMU_SOURCE_ID: $QEMU_SOURCE_ID"
 echo "IMAGE: $IMAGE"
 echo "QCOW_FILE: $QCOW_FILE"
 
+set -x
+jq . < metadata.json
 oras push --annotation-file metadata.json \
 	"$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
-	"$QCOW_FILE"
+	"$QCOW_FILE" ||
+oras push  "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
+ 	"$QCOW_FILE"
