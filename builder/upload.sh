@@ -74,9 +74,9 @@ echo "TAG: $TAG"
 echo "QEMU_SOURCE_ID: $QEMU_SOURCE_ID"
 echo "IMAGE: $IMAGE"
 echo "QCOW_FILE: $QCOW_FILE"
-ls -l "$QCOW_FILE"
-ls -l "metadata.json"
+ls -la
 
+set -x
 oras push --annotation-file metadata.json \
 	"$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
-	"$QCOW_FILE":application/vnd.vm-image
+	"$QCOW_FILE":application/vnd.vm-image-qcow2
