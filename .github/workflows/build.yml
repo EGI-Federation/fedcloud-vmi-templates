@@ -32,7 +32,7 @@ jobs:
   build-images:
     name: Image builder
     needs: image-list
-    if: ${{ needs.image-list.outputs.any_changed }}
+    if: ${{ needs.image-list.outputs.any_changed != '[]' && needs.image-list.outputs.any_changed != '' }}
     runs-on: ubuntu-latest
     strategy:
       # just run one build at a time
