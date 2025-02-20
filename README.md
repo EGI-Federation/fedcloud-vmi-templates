@@ -50,6 +50,8 @@ See sample build output:
 
 ```shell
 $ cd fedcloud-vmi-templates/ubuntu
+$ export PACKER_LOG=1
+$ export PACKER_LOG_PATH=packer.log
 $ sudo --preserve-env ../tools/build.sh ubuntu-20.04.pkr.hcl
 Generating public/private ed25519 key pair.
 Your identification has been saved in /tmp/tmp.isFiNAk2AM/key
