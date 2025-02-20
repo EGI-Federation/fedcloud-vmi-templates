@@ -28,6 +28,7 @@
           - bzip2
           - python3-pip
           - python3-venv
+          - python3-virtualenv
           - jq
         state: present
     - name: Install certbot
