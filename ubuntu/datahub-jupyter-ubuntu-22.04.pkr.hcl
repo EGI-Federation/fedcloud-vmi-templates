@@ -48,7 +48,7 @@ source "qemu" "datahub_jupyter_ubuntu_22_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "DataHub-Jupyter-Ubuntu.22.04-2024.09.11"
+  vm_name                   = "DataHub-Jupyter.22.04-2025.02.20"
 }
 
 build {
@@ -71,4 +71,15 @@ build {
     script = "provisioners/cleanup.sh"
   }
 
+  post-processor "manifest" {
+    output = "manifest.json"
+    strip_path = true
+    custom_data = {
+      "org.openstack.glance.os_distro" = "ubuntu"
+      "org.openstack.glance.os_version" = "22.04"
+      "org.openstack.glance.os_type" = "linux"
+      "org.openstack.glance.architecture" = "x86_64"
+      "eu.egi.cloud.description" = "EGI DataHub and Jupyter demo image"
+    }
+  }
 }
