@@ -26,8 +26,8 @@
         state: present
     - name: Install micromamba
       shell: |
-        curl https://github.com/mamba-org/micromamba-releases/releases/latest/download/micromamba-linux-64 -o "${HOME}/.local/bin/micromamba" -fsSL --compressed
-        chmod +x ${HOME}/.local/bin/micromamba
+        curl https://github.com/mamba-org/micromamba-releases/releases/latest/download/micromamba-linux-64 -o /usr/local/bin/micromamba -fsSL --compressed
+        chmod +x /usr/local/bin/micromamba
       args:
         creates: /usr/local/bin/micromamba
     - name: Install certbot
@@ -54,10 +54,10 @@
         mode: '0755'
     - name: Install jupyterhub using conda
       shell: |
-        micromamba install -y -c conda-forge -p /home/jovyan/micromamba jupyter jupyterlab jupyter-collaboration jq
+        micromamba install -y -c conda-forge --root-prefix /home/jovyan/micromamba jupyter jupyterlab jupyter-collaboration jq
     - name: Get micromamba env
       shell: |
-        micromamba shell init --shell=bash --prefix=/home/jovyan/micromamba || true
+        micromamba shell init --shell=bash --root-prefix=/home/jovyan/micromamba || true
     - name: mount helper
       ansible.builtin.copy:
         dest: /home/jovyan/mount.sh
