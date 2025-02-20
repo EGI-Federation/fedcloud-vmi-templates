@@ -71,14 +71,13 @@ packer plugins install github.com/hashicorp/qemu
 packer plugins install github.com/hashicorp/ansible
 
 QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
-VM_NAME=$(hcl2tojson "$IMAGE" \
-	| jq -r '.source[0].qemu.'"$QEMU_SOURCE_ID"'.vm_name')
-QCOW_FILE="$VM_NAME.qcow2"
 
 # do the build
 if tools/build.sh "$IMAGE"; then
     # compress the resulting image
     OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
+    VM_NAME="$(ls "$OUTPUT_DIR")"
+    QCOW_FILE="$VM_NAME.qcow2"
     qemu-img convert -O qcow2 -c "$OUTPUT_DIR/$VM_NAME" "$OUTPUT_DIR/$QCOW_FILE"
 
     # test the resulting image

@@ -23,13 +23,10 @@ tar -zxf oras_${VERSION}_*.tar.gz -C oras-install/
 export PATH="$PWD/oras-install:$PATH"
 
 QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
-VM_NAME=$(hcl2tojson "$IMAGE" \
-	| jq -r '.source[0].qemu.'"$QEMU_SOURCE_ID"'.vm_name')
-
-REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
-
 OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
+VM_NAME="$(ls "$OUTPUT_DIR")"
 QCOW_FILE="$VM_NAME.qcow2"
+REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
 
 #SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
 MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
