@@ -50,7 +50,7 @@
   tasks:
     - name: Install jupyter on virtualenv
       pip:
-        virtualenv: /user/home/.venv
+        virtualenv: /home/jovyan/.venv
         name:
           - jupyter
           - jupyterlab
