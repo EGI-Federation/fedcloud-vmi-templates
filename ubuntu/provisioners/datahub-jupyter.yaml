@@ -22,14 +22,14 @@
         shell: /bin/bash
     - name: install packages
       ansible.builtin.apt:
-        name: [nginx, acl, bzip2]
+        name:
+          - nginx
+          - acl
+          - bzip2
+          - python3-pip
+          - python3-venv
+          - jq
         state: present
-    - name: Install micromamba
-      shell: |
-        curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
-        mv bin/micromamba /usr/local/bin/micromamba
-      args:
-        creates: /usr/local/bin/micromamba
     - name: Install certbot
       community.general.snap:
         channel: latest
@@ -47,17 +47,13 @@
   become: true
   become_user: jovyan
   tasks:
-    - name: create micromamba directory
-      ansible.builtin.file:
-        path: /home/jovyan/micromamba
-        state: directory
-        mode: '0755'
-    - name: Install jupyterhub using conda
-      shell: |
-        micromamba install -y -c conda-forge -p /home/jovyan/micromamba jupyter jupyterlab jupyter-collaboration jq
-    - name: Get micromamba env
-      shell: |
-        micromamba shell init --shell=bash --prefix=/home/jovyan/micromamba || true
+    - name: Install jupyter on virtualenv
+      pip:
+        virtualenv: /user/home/.venv
+        name:
+          - jupyter
+          - jupyterlab
+          - jupyter-collaboration
     - name: mount helper
       ansible.builtin.copy:
         dest: /home/jovyan/mount.sh
@@ -94,7 +90,7 @@
           Type=simple
           PIDFile=/run/jupyter.pid
           WorkingDirectory=/home/jovyan
-          ExecStart=/home/jovyan/micromamba/bin/jupyter-lab --no-browser --notebook-dir=/home/jovyan --ServerApp.allow_remote_access=True --NotebookApp.allow_origin="*" --collaborative
+          ExecStart=/home/jovyan/.venv/bin/jupyter-lab --no-browser --notebook-dir=/home/jovyan --ServerApp.allow_remote_access=True --NotebookApp.allow_origin="*" --collaborative
           User=jovyan
           Group=jovyan
           Restart=always
