@@ -21,6 +21,10 @@ variable "SSH_PUB_KEY" {
   default = ""
 }
 
+local "date" {
+  expression = "${formatdate("YYYY-MM-DD", timestamp())}"
+}
+
 source "qemu" "ubuntu_24_04" {
   boot_command              = [
     "c<wait>",
@@ -48,7 +52,7 @@ source "qemu" "ubuntu_24_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "Ubuntu.24.04-2025.02.18"
+  vm_name                   = "Ubuntu.24.04-${local.date}"
 }
 
 build {
