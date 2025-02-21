@@ -21,6 +21,10 @@ variable "SSH_PUB_KEY" {
   default = ""
 }
 
+local "date" {
+  expression = "${formatdate("YYYY-MM-DD", timestamp())}"
+}
+
 source "qemu" "alma_9" {
   boot_command              = [
     "<esc>",
@@ -43,7 +47,7 @@ source "qemu" "alma_9" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "root"
-  vm_name                   = "alma.9-2025.02.18"
+  vm_name                   = "alma.9-${local.date}"
 }
 
 build {
