@@ -75,8 +75,11 @@ QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
 # do the build
 if tools/build.sh "$IMAGE"; then
     # compress the resulting image
+    QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
     OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
-    VM_NAME="$(ls "$OUTPUT_DIR")"
+    MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
+	            jq -r '.build[0]."post-processor"[0].manifest.output')"
+    VM_NAME=$(jq '.builds[0][files][name]' < "$MANIFEST_OUTPUT")
     QCOW_FILE="$VM_NAME.qcow2"
     qemu-img convert -O qcow2 -c "$OUTPUT_DIR/$VM_NAME" "$OUTPUT_DIR/$QCOW_FILE"
 
