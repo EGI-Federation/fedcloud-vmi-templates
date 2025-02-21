@@ -21,6 +21,10 @@ variable "SSH_PUB_KEY" {
   default = ""
 }
 
+local "date" {
+  expression = "${formatdate("YYYY-MM-DD", timestamp())}"
+}
+
 source "qemu" "datahub_jupyter_ubuntu_22_04" {
   boot_command              = [
     "c<wait>",
@@ -48,7 +52,7 @@ source "qemu" "datahub_jupyter_ubuntu_22_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "DataHub-Jupyter.22.04-2025.02.20"
+  vm_name                   = "DataHub-Jupyter.22.04-${local.date}"
 }
 
 build {
