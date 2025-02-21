@@ -29,6 +29,7 @@ jobs:
           files: |
              **/*.hcl
   build:
+    needs: image-list
     if: ${{ needs.image-list.outputs.any_changed != '[]' && needs.image-list.outputs.any_changed != '' }}
     uses: ./.github/workflows/build.yml
     with:
