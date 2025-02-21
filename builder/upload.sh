@@ -24,7 +24,7 @@ export PATH="$PWD/oras-install:$PATH"
 
 QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
 OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
-VM_NAME="$(ls "$OUTPUT_DIR")"
+VM_NAME="$(ls --hide="*.qcow2" "$OUTPUT_DIR")"
 QCOW_FILE="$VM_NAME.qcow2"
 REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
 
