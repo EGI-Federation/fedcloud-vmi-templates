@@ -18,9 +18,10 @@ jobs:
       - name: Get list of changes
         id: image-list
         run: |
-          echo "all_images=$(ls **/*.hcl | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
+          echo "all_images=$(find . -name "*.hcl" -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
   build:
-    if: ${{ needs.image-list.outputs.any_changed != '[]' && needs.image-list.outputs.any_changed != '' }}
+    needs: images
+    if: ${{ needs.images.outputs.any_changed != '[]' && needs.images.outputs.any_changed != '' }}
     uses: ./.github/workflows/build.yml
     with:
       images: ${{ needs.images.outputs.matrix }}
