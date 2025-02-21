@@ -3,7 +3,6 @@ name: "Trigger image build"
 
 on:
   workflow_dispatch:
-    types: [build]
 
 jobs:
   images:
