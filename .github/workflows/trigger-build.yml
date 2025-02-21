@@ -21,7 +21,7 @@ jobs:
           echo "all_images=$(find . -name "*.hcl" -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
   build:
     needs: images
-    if: ${{ needs.images.outputs.any_changed != '[]' && needs.images.outputs.any_changed != '' }}
+    if: ${{ needs.images.outputs.matrix != '[]' && needs.images.outputs.matrix != '' }}
     uses: ./.github/workflows/build.yml
     with:
       images: ${{ needs.images.outputs.matrix }}
