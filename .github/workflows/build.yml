@@ -6,6 +6,8 @@ on:
     inputs:
       images:
         required: true
+      upload:
+        required: true
 
 jobs:
   build-image:
@@ -48,7 +50,7 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
           REGISTRY_PWD: ${{ secrets.REGISTRY_PWD }}
-          UPLOAD: ${{ github.event_name == 'push' }}
+          UPLOAD: ${{ inputs.upload }}
         run: |
           cd builder
           mkdir -p ~/.config/openstack
