@@ -70,8 +70,6 @@ apt-get -qq update && apt-get -qq install -y packer
 packer plugins install github.com/hashicorp/qemu
 packer plugins install github.com/hashicorp/ansible
 
-QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
-
 # do the build
 if tools/build.sh "$IMAGE"; then
     # compress the resulting image
@@ -79,7 +77,7 @@ if tools/build.sh "$IMAGE"; then
     OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
     MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
 	            jq -r '.build[0]."post-processor"[0].manifest.output')"
-    VM_NAME=$(jq '.builds[0][files][name]' < "$MANIFEST_OUTPUT")
+    VM_NAME=$(jq '.builds[0]["files"][0]["name"]' < "$MANIFEST_OUTPUT")
     QCOW_FILE="$VM_NAME.qcow2"
     qemu-img convert -O qcow2 -c "$OUTPUT_DIR/$VM_NAME" "$OUTPUT_DIR/$QCOW_FILE"
 
