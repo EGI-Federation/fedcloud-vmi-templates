@@ -1,22 +1,24 @@
 # FedCloud VM Image templates
 
 This repository contains the packer templates used for creating the EGI Virtual
-Machine Images that are available at [AppDB](https://appdb.egi.eu/browse/cloud)
+Machine Images that are available at the [EGI Artefact Registry](https://registry.egi.eu)
 
 Initial work taken from [comfy](https://github.com/Misenko/comfy)
 
 ## Building the images
 
-The repository has a GitHub action workflow that will try to build images from
+The repository has a GitHub action workflow that will build images from
 changes detected in the `*.hcl` files. This starts a VM at an EGI site (SCAI)
 that will:
 
 1. get the repository files at the current commit
 1. install packer
 1. build the image described in the hcl templates
-1. upload to another site (IFCA-LCG2)
+1. upload the image to the local OpenStack glance and test it with IM
+1. clean up the image at glance
 
-AppDB can then be updated with that information.
+when a PR is merged it will also:
+1. upload the resulting image to the [EGI Artefact Registry](https://registry.egi.eu)
 
 ### Building manually
 
@@ -225,5 +227,5 @@ The work was supported by [EGI-ACE](https://www.egi.eu/project/egi-ace/) project
 with funding from the European Union’s Horizon 2020 research and innovation
 programme under grant agreement No. 101017567.
 
-This work is co-funded by the [EOSC-hub project](http://eosc-hub.eu/)
+This work was co-funded by the [EOSC-hub project](http://eosc-hub.eu/)
 (Horizon 2020) under Grant number 777536.
