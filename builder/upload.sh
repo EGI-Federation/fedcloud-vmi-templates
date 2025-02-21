@@ -24,14 +24,14 @@ export PATH="$PWD/oras-install:$PATH"
 
 QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
 OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
-VM_NAME="$(ls "$OUTPUT_DIR")"
-QCOW_FILE="$VM_NAME.qcow2"
-REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
 
 #SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
 MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
         jq -r '.build[0]."post-processor"[0].manifest.output')"
 
+VM_NAME=$(jq '.builds[0][files][name]' < "$MANIFEST_OUTPUT")
+QCOW_FILE="$VM_NAME.qcow2"
+REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
 OS_VERSION=$(jq -r '.builds[0].custom_data."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")
 VERSIONED_TAG="$OS_VERSION-$(date --iso-8601=date)"
 TAG="$VERSIONED_TAG,$OS_VERSION"
