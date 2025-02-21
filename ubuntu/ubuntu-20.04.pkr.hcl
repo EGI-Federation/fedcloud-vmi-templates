@@ -21,6 +21,10 @@ variable "SSH_PUB_KEY" {
   default = ""
 }
 
+local "date" {
+  expression = "${formatdate("YYYY-MM-DD", timestamp())}"
+}
+
 source "qemu" "ubuntu_20_04" {
   boot_command              = [
     "<enter><enter><f6><esc><wait>",
@@ -51,7 +55,7 @@ source "qemu" "ubuntu_20_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "Ubuntu.20.04-2024.10.07"
+  vm_name                   = "Ubuntu.20.04-${local.date}"
 }
 
 build {

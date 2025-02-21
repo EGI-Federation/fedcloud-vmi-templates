@@ -23,20 +23,18 @@ tar -zxf oras_${VERSION}_*.tar.gz -C oras-install/
 export PATH="$PWD/oras-install:$PATH"
 
 QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
-VM_NAME=$(hcl2tojson "$IMAGE" \
-	| jq -r '.source[0].qemu.'"$QEMU_SOURCE_ID"'.vm_name')
-
-REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
-VERSIONED_TAG=$(echo "$VM_NAME" | cut -f2- -d".")
-
 OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
+VM_NAME="$(ls "$OUTPUT_DIR")"
 QCOW_FILE="$VM_NAME.qcow2"
+REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
 
 #SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
 MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
         jq -r '.build[0]."post-processor"[0].manifest.output')"
 
-TAG="$VERSIONED_TAG,$(jq -r '.builds[0].custom_data."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")"
+OS_VERSION=$(jq -r '.builds[0].custom_data."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")
+VERSIONED_TAG="$OS_VERSION-$(date --iso-8601=date)"
+TAG="$VERSIONED_TAG,$OS_VERSION"
 
 # See annotation file format at:
 # https://oras.land/docs/how_to_guides/manifest_annotations

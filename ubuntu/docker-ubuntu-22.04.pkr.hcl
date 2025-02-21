@@ -21,6 +21,10 @@ variable "SSH_PUB_KEY" {
   default = ""
 }
 
+local "date" {
+  expression = "${formatdate("YYYY-MM-DD", timestamp())}"
+}
+
 source "qemu" "docker_ubuntu_22_04" {
   boot_command              = [
     "c<wait>",
@@ -48,7 +52,7 @@ source "qemu" "docker_ubuntu_22_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "Docker.Ubuntu.22.04-2024.09.13"
+  vm_name                   = "Docker.Ubuntu.22.04-${local.date}"
   vnc_port_max              = 5934
   vnc_port_min              = 5934
 }
@@ -73,4 +77,15 @@ build {
     script = "provisioners/cleanup.sh"
   }
 
+  post-processor "manifest" {
+    output = "manifest.json"
+    strip_path = true
+    custom_data = {
+      "org.openstack.glance.os_distro" = "ubuntu"
+      "org.openstack.glance.os_version" = "22.04"
+      "org.openstack.glance.os_type" = "linux"
+      "org.openstack.glance.architecture" = "x86_64"
+      "eu.egi.cloud.description" = "EGI Docker image"
+    }
+  }
 }
