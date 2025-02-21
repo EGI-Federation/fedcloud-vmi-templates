@@ -6,8 +6,10 @@ on:
     inputs:
       images:
         required: true
+        type: object 
       upload:
         required: true
+        type: bool
 
 jobs:
   build-image:
