@@ -1,44 +1,25 @@
 ---
-name: Build images that changed
+name: Build images
 
 on:
-  pull_request:
-  push:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      images:
+        required: true
+        type: string
+      upload:
+        required: true
+        type: boolean
 
 jobs:
-  image-list:
-    name: build images
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.change-list.outputs.all_changed_files }}
-      any_changed: ${{ steps.change-list.outputs.any_changed }}
-
-    steps:
-      - name: checkout code
-        uses: actions/checkout@v4
-        with:
-          # full git history needed to get proper list of changed files
-          fetch-depth: 0
-      - name: Get list of changes
-        id: change-list
-        uses: tj-actions/changed-files@v45
-        with:
-          matrix: true
-          files: |
-             **/*.hcl
-
-  build-images:
+  build-image:
     name: Image builder
-    needs: image-list
-    if: ${{ needs.image-list.outputs.any_changed != '[]' && needs.image-list.outputs.any_changed != '' }}
     runs-on: ubuntu-latest
     strategy:
       # just run one build at a time
       max-parallel: 1
       matrix:
-        images: ${{ fromJson(needs.image-list.outputs.matrix) }}
+        images: ${{ fromJson(inputs.images) }}
 
     steps:
       - name: Checkout
@@ -71,7 +52,7 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           REGISTRY_USER: ${{ secrets.REGISTRY_USER }}
           REGISTRY_PWD: ${{ secrets.REGISTRY_PWD }}
-          UPLOAD: ${{ github.event_name == 'push' }}
+          UPLOAD: ${{ inputs.upload }}
         run: |
           cd builder
           mkdir -p ~/.config/openstack

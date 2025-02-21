@@ -1,0 +1,29 @@
+---
+name: "Trigger image build"
+
+on:
+  repository_dispatch:
+    types: [build]
+
+jobs:
+  images:
+    name: build images
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.image-list.outputs.all_images }}
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+      - name: Get list of changes
+        id: image-list
+        run: |
+          echo "all_images=$(find . -name "*.hcl" -exec basename {} \; | jq -R -s -c 'split("\n")[:-1]')" >> "$GITHUB_OUTPUT"
+  build:
+    needs: images
+    if: ${{ needs.images.outputs.matrix != '[]' && needs.images.outputs.matrix != '' }}
+    uses: ./.github/workflows/build.yml
+    with:
+      images: ${{ needs.images.outputs.matrix }}
+      upload: true
+    secrets: inherit

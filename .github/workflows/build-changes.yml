@@ -1,0 +1,38 @@
+---
+name: "Build changed images"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  image-list:
+    name: build images
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.change-list.outputs.all_changed_files }}
+      any_changed: ${{ steps.change-list.outputs.any_changed }}
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+        with:
+          # full git history needed to get proper list of changed files
+          fetch-depth: 0
+      - name: Get list of changes
+        id: change-list
+        uses: tj-actions/changed-files@v45
+        with:
+          matrix: true
+          files: |
+             **/*.hcl
+  build:
+    needs: image-list
+    if: ${{ needs.image-list.outputs.any_changed != '[]' && needs.image-list.outputs.any_changed != '' }}
+    uses: ./.github/workflows/build.yml
+    with:
+      images: ${{ needs.image-list.outputs.matrix }}
+      upload: ${{ github.event_name == 'push' }}
+    secrets: inherit
