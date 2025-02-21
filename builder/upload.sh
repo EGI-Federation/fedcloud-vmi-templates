@@ -29,7 +29,7 @@ OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
 MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
         jq -r '.build[0]."post-processor"[0].manifest.output')"
 
-VM_NAME=$(jq '.builds[0]["files"][0]["name"]' < "$MANIFEST_OUTPUT")
+VM_NAME=$(jq -r '.builds[0]["files"][0]["name"]' <"$MANIFEST_OUTPUT")
 QCOW_FILE="$VM_NAME.qcow2"
 REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
 OS_VERSION=$(jq -r '.builds[0].custom_data."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")

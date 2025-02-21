@@ -17,12 +17,6 @@ error_handler() {
         im_client.py destroy "$IM_INFRA_ID"
     fi
 
-    echo "### BUILD-IMAGE: ERROR - line $1"
-    shift
-    echo " Exit status: $1"
-    shift
-    echo " Command: $*"
-
     LINE="$1"
     shift
     STATUS="$1"
@@ -30,6 +24,10 @@ error_handler() {
     echo "### BUILD-RESULT: $(jq -cn --arg status "ERROR" \
             --arg line "$LINE" --arg status "$STATUS" \
             --arg command "$*" '$ARGS.named')"
+    echo "### BUILD-IMAGE: ERROR - line $LINE"
+    echo " Exit status: $STATUS"
+    echo " Command: $*"
+
 }
 
 trap 'error_handler ${LINENO} $? ${BASH_COMMAND}' ERR INT TERM
@@ -77,7 +75,7 @@ if tools/build.sh "$IMAGE"; then
     OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
     MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
 	            jq -r '.build[0]."post-processor"[0].manifest.output')"
-    VM_NAME=$(jq '.builds[0]["files"][0]["name"]' < "$MANIFEST_OUTPUT")
+    VM_NAME=$(jq -r '.builds[0]["files"][0]["name"]' <"$MANIFEST_OUTPUT")
     QCOW_FILE="$VM_NAME.qcow2"
     qemu-img convert -O qcow2 -c "$OUTPUT_DIR/$VM_NAME" "$OUTPUT_DIR/$QCOW_FILE"
 
