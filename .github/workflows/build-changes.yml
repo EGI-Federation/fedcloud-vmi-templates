@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 0
       - name: Get list of changes
         id: change-list
-        uses: tj-actions/changed-files@v45
+        uses: tj-actions/changed-files@v46
         with:
           matrix: true
           files: |
