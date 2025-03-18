@@ -9,8 +9,7 @@ jobs:
     name: build images
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.change-list.outputs.all_changed_files }}
-      any_changed: ${{ steps.change-list.outputs.any_changed }}
+      changes: ${{ steps.change-list.outputs.changed_files }}
 
     steps:
       - name: checkout code
@@ -20,22 +19,26 @@ jobs:
           fetch-depth: 0
       - name: Get list of changes
         id: change-list
-        uses: tj-actions/changed-files@v45
-        with:
-          matrix: true
-          files: |
-             **/*.hcl
+        run: |
+          CHANGES=()
+          REF="${{ github.event.pull_request.base.sha }}"
+          for f in $(git diff --name-only "$REF" | grep "\.hcl$")
+          do
+            [ -e "$f" ] || continue
+            CHANGES+=("$f")
+          done
+          echo "changed_files=$(jq -nc '$ARGS.positional' --args "${CHANGES[@]}")" >>"$GITHUB_OUTPUT"
 
   build-images:
     name: Image builder
     needs: image-list
-    if: ${{ needs.image-list.outputs.any_changed }}
+    if: ${{ needs.image-list.outputs.changes != '[]' && needs.image-list.outputs.changes != '' }}
     runs-on: ubuntu-latest
     strategy:
       # just run one build at a time
       max-parallel: 1
       matrix:
-        images: ${{ fromJson(needs.image-list.outputs.matrix) }}
+        images: ${{ fromJson(needs.image-list.outputs.changes) }}
 
     steps:
       - name: Checkout
