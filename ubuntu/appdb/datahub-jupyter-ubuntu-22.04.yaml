@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2024.09.11
+  version: 2025.02.25
   expireson: 6
   notes: Regular update
-  url: "https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.22.04-2024.09.11.qcow2"
-  sha512: "6d49685dcbfea67b22c006577a03468881f29b98222c34c2ab3be7cf04e82a65db4f403aea4f38fa6dc2178edf53c762732d2374e782bd67555f83f6588a3c26"
+  url: "https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/DataHub-Jupyter-Ubuntu.22.04-2025.02.25.qcow2"
+  sha512: "ad52b0936e2836dd07099ee3ad05f4290cbb8fa7544ca0d800d453e6405b9c6863f655c1a8d528e722f30a62c01dfeb8d14d824daf9c44143114c9e0cdfa1329"
   arch: x86_64
   os:
     family: Linux
