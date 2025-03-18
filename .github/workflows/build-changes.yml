@@ -12,8 +12,7 @@ jobs:
     name: build images
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.change-list.outputs.all_changed_files }}
-      any_changed: ${{ steps.change-list.outputs.any_changed }}
+      changes: ${{ steps.change-list.outputs.changed_files }}
 
     steps:
       - name: checkout code
@@ -23,16 +22,21 @@ jobs:
           fetch-depth: 0
       - name: Get list of changes
         id: change-list
-        uses: tj-actions/changed-files@v46
-        with:
-          matrix: true
-          files: |
-             **/*.hcl
+        run: |
+          CHANGES=()
+          for f in $(git diff --name-only \
+                     "${{ github.event.pull_request.base.sha }}" \
+                     | grep "\.hcl$")
+          do
+            [ -e "$f" ] || continue
+            CHANGES+=("$f")
+          done
+          echo "changed_files=$(jq -nc '$ARGS.positional' --args "${CHANGES[@]}")" >>"$GITHUB_OUTPUT"
   build:
     needs: image-list
-    if: ${{ needs.image-list.outputs.any_changed != '[]' && needs.image-list.outputs.any_changed != '' }}
+    if: ${{ needs.image-list.outputs.changes != '[]' && needs.image-list.outputs.changes != '' }}
     uses: ./.github/workflows/build.yml
     with:
-      images: ${{ needs.image-list.outputs.matrix }}
+      images: ${{ needs.image-list.outputs.changes }}
       upload: ${{ github.event_name == 'push' }}
     secrets: inherit
