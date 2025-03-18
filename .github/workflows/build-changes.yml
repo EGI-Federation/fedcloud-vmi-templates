@@ -24,9 +24,12 @@ jobs:
         id: change-list
         run: |
           CHANGES=()
-          for f in $(git diff --name-only \
-                     "${{ github.event.pull_request.base.sha }}" \
-                     | grep "\.hcl$")
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            REF="${{ github.event.before }}"
+          else
+            REF="${{ github.event.pull_request.base.sha }}"
+          fi
+          for f in $(git diff --name-only "$REF" | grep "\.hcl$")
           do
             [ -e "$f" ] || continue
             CHANGES+=("$f")
