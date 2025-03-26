@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2024.10.07
+  version: 2025.03.25
   expireson: 6
-  notes: Regular update with automated building, moving to qcow2
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2024.10.07.qcow2
-  sha512: "30872a2da72db2669d9e741f0aadfa13d4f5deb4e34a845082c83bf7159d4fd1f46d0d7dfaee62c9ca1efbb2bd34fb0aa924754bf96f326d2bfc4970fb72e875"
+  notes: Regular update
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.20.04-2025.03.25.qcow2
+  sha512: "ca3e50824450ddc5b090fa4d24941f0b8b676dc7e949746b506eaf9a40fe1cdbaf83571edbd67ee9f8900519093882b1121ff07404cde05efe4ed5268bf8a1be"
   arch: x86_64
   os:
     family: Linux
