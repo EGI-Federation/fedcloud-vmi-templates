@@ -1,10 +1,10 @@
 ---
 appdb:
-  version: 2024.10.21
+  version: 2025.04.14
   expireson: 6
-  notes: Update to Ubuntu 24.04.1
-  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.24.04-2024.10.21.qcow2
-  sha512: "590e13753d8739b4b5a4dbaeab41b7e5814dc1e4edbf0eb0549715653fd01656669d7a18d487a6d308ca2ee3eac28926df61e9a797e929b0d9b0a2cebecffe73"
+  notes: Update to Ubuntu 24.04.2
+  url: https://api.cloud.ifca.es:8080/swift/v1/egi_endorsed_vas/Ubuntu.24.04-2025.04.14.qcow2
+  sha512: "b9e2b96f955a34b4239319e965d2bcd292a721e8715e8042ca7d5b9d71d4eefac31f89f9c1b8198f9129dfae66cae45d10966c23bfb81fb8e644c572d2f42d53"
   arch: x86_64
   os:
     family: Linux
