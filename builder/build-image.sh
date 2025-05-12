@@ -5,7 +5,7 @@ error_handler() {
 
     if [[ -s /var/tmp/egi/vm_image_id ]]; then
         IMAGE_ID=$(cat /var/tmp/egi/vm_image_id)
-        builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" tests
+        refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" tests
         OS_TOKEN="$(yq -r '.clouds.tests.auth.token' /etc/openstack/clouds.yaml)"
         # delete test VMI
         openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
@@ -31,7 +31,7 @@ FEDCLOUD_SECRET_LOCKER="$2"
 
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
-export PATH="$PWD/.venv/bin:$PATH"
+export PATH="$PWD/.venv/bin:$PWD/builder:$PATH"
 pip install -qqq fedcloudclient simplejson yq python-hcl2 IM-client
 
 # work with IGTF certificates
@@ -64,7 +64,7 @@ VM_NAME=$(hcl2tojson "$IMAGE" \
 QCOW_FILE="$VM_NAME.qcow2"
 
 # Check if the image is already there
-builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
+refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
 OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
 if openstack --os-cloud images --os-token "$OS_TOKEN" \
 	object show egi_endorsed_vas \
@@ -80,7 +80,7 @@ else
 
       # test the resulting image
       # test step 1/2: upload VMI to cloud provider
-      builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" tests
+      refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" tests
       OS_TOKEN="$(yq -r '.clouds.tests.auth.token' /etc/openstack/clouds.yaml)"
       IMAGE_ID=$(openstack --os-cloud tests --os-token "$OS_TOKEN" \
                      image create --disk-format qcow2 --file "$OUTPUT_DIR/$QCOW_FILE" \
@@ -111,7 +111,7 @@ else
       popd
 
       # All going well, upload the VMI for sharing in AppDB
-      builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
+      refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" images
       OS_TOKEN="$(yq -r '.clouds.images.auth.token' /etc/openstack/clouds.yaml)"
       pushd "$OUTPUT_DIR"
       openstack --os-cloud images --os-token "$OS_TOKEN" \
