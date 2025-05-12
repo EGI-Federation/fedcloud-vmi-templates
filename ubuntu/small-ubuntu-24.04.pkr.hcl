@@ -33,7 +33,7 @@ source "qemu" "small_ubuntu_24_04" {
     "<enter>"
   ]
   boot_wait                 = "6s"
-  disk_size                 = 3500
+  disk_size                 = 4000
   format                    = "qcow2"
   headless                  = true
   http_directory            = "httpdir"
