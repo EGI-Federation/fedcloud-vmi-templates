@@ -3,6 +3,8 @@ set -e
 
 error_handler() {
 
+    cd $INITIAL_PWD
+
     if [[ -s /var/tmp/egi/vm_image_id ]]; then
         IMAGE_ID=$(cat /var/tmp/egi/vm_image_id)
         builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" tests
@@ -13,6 +15,9 @@ error_handler() {
 
     if [[ -s /var/tmp/egi/vm_infra_id ]] ; then
         IM_INFRA_ID=$(cat /var/tmp/egi/vm_infra_id)
+        # print out extra information about deployment
+        im_client.py getcontmsg "$IM_INFRA_ID"
+        im_client.py getstate "$IM_INFRA_ID"
         # delete test VM
         im_client.py destroy "$IM_INFRA_ID"
     fi
@@ -36,6 +41,9 @@ IMAGE="$1"
 FEDCLOUD_SECRET_LOCKER="$2"
 COMMIT_SHA="$3"
 UPLOAD="$4"
+
+# save initial PWD
+INITIAL_PWD=$PWD
 
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
