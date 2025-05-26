@@ -93,7 +93,7 @@ if tools/build.sh "$IMAGE"; then
     echo "$IMAGE_ID" > /var/tmp/egi/vm_image_id
 
     # test step 2/2: use IM-client to launch the test VM
-    sed -i -e "s/%TOKEN%/$(cat ../.oidc_token)/" builder/auth.dat
+    sed -i -e "s/%TOKEN%/$(cat .oidc_token)/" builder/auth.dat
     sed -i -e "s/%IMAGE%/$IMAGE_ID/" builder/vm.yaml
     IM_VM=$(im_client.py --rest-url=https://im.egi.eu/im --auth_file=builder/auth.dat create builder/vm.yaml)
     IM_INFRA_ID=$(echo "$IM_VM" | awk '/ID/ {print $NF}')
