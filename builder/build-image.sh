@@ -3,8 +3,6 @@ set -e
 
 error_handler() {
 
-    cd $INITIAL_PWD
-
     if [[ -s /var/tmp/egi/vm_image_id ]]; then
         IMAGE_ID=$(cat /var/tmp/egi/vm_image_id)
         builder/refresh.sh vo.access.egi.eu "$(cat /var/tmp/egi/.refresh_token)" tests
@@ -16,10 +14,10 @@ error_handler() {
     if [[ -s /var/tmp/egi/vm_infra_id ]] ; then
         IM_INFRA_ID=$(cat /var/tmp/egi/vm_infra_id)
         # print out extra information about deployment
-        im_client.py getcontmsg "$IM_INFRA_ID"
-        im_client.py getstate "$IM_INFRA_ID"
+        im_client.py --rest-url=https://im.egi.eu/im --auth_file=builder/auth.dat getcontmsg "$IM_INFRA_ID"
+        im_client.py --rest-url=https://im.egi.eu/im --auth_file=builder/auth.dat getstate "$IM_INFRA_ID"
         # delete test VM
-        im_client.py destroy "$IM_INFRA_ID"
+        im_client.py --rest-url=https://im.egi.eu/im --auth_file=builder/auth.dat destroy "$IM_INFRA_ID"
     fi
 
     LINE="$1"
@@ -41,9 +39,6 @@ IMAGE="$1"
 FEDCLOUD_SECRET_LOCKER="$2"
 COMMIT_SHA="$3"
 UPLOAD="$4"
-
-# save initial PWD
-INITIAL_PWD=$PWD
 
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
@@ -98,26 +93,24 @@ if tools/build.sh "$IMAGE"; then
     echo "$IMAGE_ID" > /var/tmp/egi/vm_image_id
 
     # test step 2/2: use IM-client to launch the test VM
-    pushd builder
-    sed -i -e "s/%TOKEN%/$(cat ../.oidc_token)/" auth.dat
-    sed -i -e "s/%IMAGE%/$IMAGE_ID/" vm.yaml
-    IM_VM=$(im_client.py create vm.yaml)
+    sed -i -e "s/%TOKEN%/$(cat ../.oidc_token)/" builder/auth.dat
+    sed -i -e "s/%IMAGE%/$IMAGE_ID/" builder/vm.yaml
+    IM_VM=$(im_client.py --rest-url=https://im.egi.eu/im --auth_file=builder/auth.dat create builder/vm.yaml)
     IM_INFRA_ID=$(echo "$IM_VM" | awk '/ID/ {print $NF}')
     echo "$IM_INFRA_ID" > /var/tmp/egi/vm_infra_id
-    im_client.py wait "$IM_INFRA_ID"
+    im_client.py --rest-url=https://im.egi.eu/im --auth_file=builder/auth.dat wait "$IM_INFRA_ID"
     # still getting: ssh: connect to host <> port 22: Connection refused, so waiting a bit more
     sleep 30
     # get SSH command to connect to the VM
     # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
-    SSH_CMD=$(im_client.py ssh "$IM_INFRA_ID" 1 | grep --invert-match 'im.egi.eu')
+    SSH_CMD=$(im_client.py --rest-url=https://im.egi.eu/im --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 1 | grep --invert-match 'im.egi.eu')
     # if the below works, the VM is up and running and responds to SSH
     $SSH_CMD hostname || echo "SSH failed, but keep running"
     # at this point we may want to run more sophisticated tests
     # delete test VM
-    im_client.py destroy "$IM_INFRA_ID"
+    im_client.py --rest-url=https://im.egi.eu/im --auth_file=builder/auth.dat destroy "$IM_INFRA_ID"
     # delete test VMI
     openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
-    popd
 
     # All going well, upload the VMI in the registry
     # this should be done only if this is a push to main
