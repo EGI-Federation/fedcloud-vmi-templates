@@ -103,9 +103,9 @@ if tools/build.sh "$IMAGE"; then
     sleep 30
     # get SSH command to connect to the VM
     # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
-    SSH_CMD=$(im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 1 | grep --invert-match 'im.egi.eu')
+    SSH_CMD=$(im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 1 | grep --invert-match 'appsgrycap.i3m.upv.es')
     # if the below works, the VM is up and running and responds to SSH
-    $SSH_CMD hostname || echo "SSH failed, but keep running"
+    $SSH_CMD hostname || echo "SSH failed, but keep running; SSH command was: $SSH_CMD"
     # at this point we may want to run more sophisticated tests
     # delete test VM
     im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat destroy "$IM_INFRA_ID"
