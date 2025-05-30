@@ -43,7 +43,7 @@ UPLOAD="$4"
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
 export PATH="$PWD/.venv/bin:$PATH"
-pip install -qqq fedcloudclient simplejson yq python-hcl2 IM-client
+pip install -qqq fedcloudclient simplejson yq python-hcl2 IM-client>=1.8.2
 
 # work with IGTF certificates
 # https://fedcloudclient.fedcloud.eu/install.html#installing-egi-core-trust-anchor-certificates
@@ -101,12 +101,13 @@ if tools/build.sh "$IMAGE"; then
     im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat wait "$IM_INFRA_ID"
     # still getting: ssh: connect to host <> port 22: Connection refused, so waiting a bit more
     sleep 30
-    # get SSH command to connect to the VM
-    # do pay attention to the "1" parameter, it corresponds to the "show_only" flag
-    SSH_CMD=$(im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 1 | grep --invert-match 'appsgrycap.i3m.upv.es')
-    # if the below works, the VM is up and running and responds to SSH
-    $SSH_CMD hostname || echo "SSH failed, but keep running; SSH command was: $SSH_CMD"
-    # at this point we may want to run more sophisticated tests
+    # as of im-client >= 1.8.2, bash commands can be sent to a VM via SSH
+    # https://github.com/grycap/im-client/releases/tag/v1.8.2
+    # do pay attention to the "0" parameter, it corresponds to the "show_only" flag
+    # "0" means run command
+    # "1" means show command
+    im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname"
+    # note that we could replace the "hostname" command for something more complicated/meaningful
     # delete test VM
     im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat destroy "$IM_INFRA_ID"
     # delete test VMI
