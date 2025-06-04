@@ -45,8 +45,8 @@ jq -n --argjson '$manifest' \
       --argjson "$QCOW_FILE" \
        "$(jq .builds[0].custom_data <"$MANIFEST_OUTPUT" | \
                 jq '.+={"org.openstack.glance.disk_format": "qcow2",
-                        "eu.egi.cloud.sha": "'"$SHA"',
-                        "eu.egi.cloud.tag": "'"$IMAGE_TAG"',
+                        "eu.egi.cloud.sha": "'"$SHA"'",
+                        "eu.egi.cloud.tag": "'"$IMAGE_TAG"'",
                         "org.openstack.glance.container_format": "bare"}')" \
        '$ARGS.named' >"$OUTPUT_DIR/metadata.json"
 
