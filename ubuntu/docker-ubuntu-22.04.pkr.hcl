@@ -21,8 +21,9 @@ variable "SSH_PUB_KEY" {
   default = ""
 }
 
-local "date" {
-  expression = "${formatdate("YYYY-MM-DD", timestamp())}"
+variable "image_tag" {
+  type    = string
+  default = ""
 }
 
 source "qemu" "docker_ubuntu_22_04" {
@@ -52,7 +53,7 @@ source "qemu" "docker_ubuntu_22_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "Docker.Ubuntu.22.04-${local.date}"
+  vm_name                   = "Docker.Ubuntu.22.04-${var.image_tag}"
   vnc_port_max              = 5934
   vnc_port_min              = 5934
 }

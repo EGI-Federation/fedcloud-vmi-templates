@@ -7,7 +7,8 @@ set -e
 
 IMAGE="$1"
 COMMIT_SHA="$2"
-SECRETS="$3"
+IMAGE_TAG="$3"
+SECRETS="$4"
 
 # Configuration, this may be passed as input
 REGISTRY="registry.egi.eu"
@@ -16,10 +17,10 @@ SOURCE_URL="https://github.com/EGI-Federation/fedcloud-vmi-templates"
 
 # get oras
 # See https://oras.land/docs/installation
-VERSION="1.2.2"
-curl -LO "https://github.com/oras-project/oras/releases/download/v${VERSION}/oras_${VERSION}_linux_amd64.tar.gz"
+ORAS_VERSION="1.2.2"
+curl -LO "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz"
 mkdir -p oras-install/
-tar -zxf oras_${VERSION}_*.tar.gz -C oras-install/
+tar -zxf oras_${ORAS_VERSION}_*.tar.gz -C oras-install/
 export PATH="$PWD/oras-install:$PATH"
 
 QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
@@ -33,18 +34,20 @@ VM_NAME=$(jq -r '.builds[0]["files"][0]["name"]' <"$MANIFEST_OUTPUT")
 QCOW_FILE="$VM_NAME.qcow2"
 REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
 OS_VERSION=$(jq -r '.builds[0].custom_data."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")
-VERSIONED_TAG="$OS_VERSION-$(date --iso-8601=date)"
-TAG="$VERSIONED_TAG,$OS_VERSION"
+LONG_TAG="$OS_VERSION-$IMAGE_TAG"
+TAG="$LONG_TAG,$OS_VERSION"
 
 # See annotation file format at:
 # https://oras.land/docs/how_to_guides/manifest_annotations
 jq -n --argjson '$manifest' \
-	'{"org.opencontainers.image.revision":"'"$COMMIT_SHA"'",
-	  "org.opencontainers.image.source": "'"$SOURCE_URL"'"}' \
+        '{"org.opencontainers.image.revision":"'"$COMMIT_SHA"'",
+          "org.opencontainers.image.source": "'"$SOURCE_URL"'"}' \
       --argjson "$QCOW_FILE" \
        "$(jq .builds[0].custom_data <"$MANIFEST_OUTPUT" | \
-               jq '.+={"org.openstack.glance.disk_format": "qcow2",
-	               "org.openstack.glance.container_format": "bare"}')" \
+                jq '.+={"org.openstack.glance.disk_format": "qcow2",
+                        "eu.egi.cloud.sha": "'"$SHA"',
+                        "eu.egi.cloud.tag": "'"$IMAGE_TAG"',
+                        "org.openstack.glance.container_format": "bare"}')" \
        '$ARGS.named' >"$OUTPUT_DIR/metadata.json"
 
 pushd "$OUTPUT_DIR"
