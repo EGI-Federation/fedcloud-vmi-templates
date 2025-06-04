@@ -71,6 +71,11 @@ apt-get -qq update && apt-get -qq install -y packer
 packer plugins install github.com/hashicorp/qemu
 packer plugins install github.com/hashicorp/ansible
 
+# Image version is YYYY.MM.DD-short hash
+IMAGE_VERSION="$(date "+%Y.%m.%d")-$(echo "$COMMIT_HASH" | cut -n 8)"
+# make it visible for Packer
+export PKR_VAR_image_version="$IMAGE_VERSION"
+
 # do the build
 if tools/build.sh "$IMAGE"; then
     # compress the resulting image
@@ -115,7 +120,7 @@ if tools/build.sh "$IMAGE"; then
     # All going well, upload the VMI in the registry
     # this should be done only if this is a push to main
     if test "$UPLOAD" == "true"; then
-	    builder/upload.sh "$IMAGE" "$COMMIT_SHA" "$(realpath secrets.json)"
+	    builder/upload.sh "$IMAGE" "$COMMIT_SHA" "$IMAGE_VERSION" "$(realpath secrets.json)"
     fi
     echo "### BUILD-RESULT: $(jq -cn --arg status "SUCCESS" \
             --arg qcow "$QCOW_FILE" '$ARGS.named')"

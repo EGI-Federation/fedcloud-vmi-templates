@@ -21,8 +21,9 @@ variable "SSH_PUB_KEY" {
   default = ""
 }
 
-local "date" {
-  expression = "${formatdate("YYYY-MM-DD", timestamp())}"
+variable "image_version" {
+  type    = string
+  default = ""
 }
 
 source "qemu" "ubuntu_24_04" {
@@ -52,7 +53,7 @@ source "qemu" "ubuntu_24_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "Ubuntu.24.04-${local.date}"
+  vm_name                   = "Ubuntu.24.04-${var.image_version}"
 }
 
 build {
