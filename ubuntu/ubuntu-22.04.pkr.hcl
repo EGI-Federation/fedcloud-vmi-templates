@@ -53,7 +53,7 @@ source "qemu" "ubuntu_22_04" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
-  vm_name                   = "Ubuntu.22.04-${var.image_date}"
+  vm_name                   = "Ubuntu.22.04-${var.image_version}"
 }
 
 build {
