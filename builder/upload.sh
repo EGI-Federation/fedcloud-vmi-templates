@@ -7,7 +7,7 @@ set -e
 
 IMAGE="$1"
 COMMIT_SHA="$2"
-IMAGE_VERSION="$3"
+IMAGE_TAG="$3"
 SECRETS="$4"
 
 # Configuration, this may be passed as input
@@ -18,7 +18,7 @@ SOURCE_URL="https://github.com/EGI-Federation/fedcloud-vmi-templates"
 # get oras
 # See https://oras.land/docs/installation
 ORAS_VERSION="1.2.2"
-curl -LO "https://github.com/oras-project/oras/releases/download/v${VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz"
+curl -LO "https://github.com/oras-project/oras/releases/download/v${ORAS_VERSION}/oras_${ORAS_VERSION}_linux_amd64.tar.gz"
 mkdir -p oras-install/
 tar -zxf oras_${ORAS_VERSION}_*.tar.gz -C oras-install/
 export PATH="$PWD/oras-install:$PATH"
@@ -34,8 +34,8 @@ VM_NAME=$(jq -r '.builds[0]["files"][0]["name"]' <"$MANIFEST_OUTPUT")
 QCOW_FILE="$VM_NAME.qcow2"
 REPOSITORY=$(echo "$VM_NAME" | cut -f1 -d"." | tr '[:upper:]' '[:lower:]')
 OS_VERSION=$(jq -r '.builds[0].custom_data."org.openstack.glance.os_version"' < "$MANIFEST_OUTPUT")
-VERSIONED_TAG="$OS_VERSION-$IMAGE_VERSION"
-TAG="$VERSIONED_TAG,$OS_VERSION"
+LONG_TAG="$OS_VERSION-$IMAGE_TAG"
+TAG="$LONG_TAG,$OS_VERSION"
 
 # See annotation file format at:
 # https://oras.land/docs/how_to_guides/manifest_annotations
@@ -46,7 +46,7 @@ jq -n --argjson '$manifest' \
        "$(jq .builds[0].custom_data <"$MANIFEST_OUTPUT" | \
                 jq '.+={"org.openstack.glance.disk_format": "qcow2",
                         "eu.egi.cloud.sha": "'"$SHA"',
-                        "eu.egi.cloud.version": "'"$IMAGE_VERSION"',
+                        "eu.egi.cloud.tag": "'"$IMAGE_TAG"',
                         "org.openstack.glance.container_format": "bare"}')" \
        '$ARGS.named' >"$OUTPUT_DIR/metadata.json"
 

@@ -21,7 +21,7 @@ variable "SSH_PUB_KEY" {
   default = ""
 }
 
-variable "image_version" {
+variable "image_tag" {
   type = string
   default = ""
 }
@@ -48,7 +48,7 @@ source "qemu" "alma_9" {
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"
   ssh_timeout               = "20m"
   ssh_username              = "root"
-  vm_name                   = "alma.9-${var.version}"
+  vm_name                   = "alma.9-${var.image_tag}"
 }
 
 build {
