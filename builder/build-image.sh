@@ -72,7 +72,7 @@ packer plugins install github.com/hashicorp/qemu
 packer plugins install github.com/hashicorp/ansible
 
 # Image version is YYYY.MM.DD-short hash
-IMAGE_VERSION="$(date "+%Y.%m.%d")-$(echo "$COMMIT_HASH" | cut -n 8)"
+IMAGE_VERSION="$(date "+%Y.%m.%d")-$(echo "$COMMIT_HASH" | cut -c 8)"
 # make it visible for Packer
 export PKR_VAR_image_version="$IMAGE_VERSION"
 
