@@ -26,7 +26,6 @@ export PATH="$PWD/oras-install:$PATH"
 QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
 OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
 
-#SHA="$(sha512sum -z "$QCOW_FILE" | cut -f1 -d" ")"
 MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
         jq -r '.build[0]."post-processor"[0].manifest.output')"
 
@@ -45,7 +44,6 @@ jq -n --argjson '$manifest' \
       --argjson "$QCOW_FILE" \
        "$(jq .builds[0].custom_data <"$MANIFEST_OUTPUT" | \
                 jq '.+={"org.openstack.glance.disk_format": "qcow2",
-                        "eu.egi.cloud.sha": "'"$SHA"'",
                         "eu.egi.cloud.tag": "'"$IMAGE_TAG"'",
                         "org.openstack.glance.container_format": "bare"}')" \
        '$ARGS.named' >"$OUTPUT_DIR/metadata.json"
