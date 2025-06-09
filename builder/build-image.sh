@@ -105,10 +105,10 @@ if tools/build.sh "$IMAGE"; then
     echo "$IM_INFRA_ID" > /var/tmp/egi/vm_infra_id
     im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat wait "$IM_INFRA_ID"
     # still getting: ssh: connect to host <> port 22: Connection refused, so waiting a bit more
-    TOTAL=5
-    N=0
+    ATTEMPTS_MAX=5
+    ATTEMPTS_NUMBER=0
     IM_SSH_RESULT=1
-    while [[ "$IM_SSH_RESULT" == "1" ]] && [[ "$N" != "$TOTAL" ]] ;
+    while [[ "$IM_SSH_RESULT" == "1" ]] && [[ "$ATTEMPTS_NUMBER" != "$ATTEMPTS_MAX" ]] ;
     do
         sleep 30
         # as of im-client >= 1.8.2, bash commands can be sent to a VM via SSH
@@ -119,7 +119,7 @@ if tools/build.sh "$IMAGE"; then
         im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname" || echo "SSH failed, but keep trying"
         # note that we could replace the "hostname" command for something more complicated/meaningful
         IM_SSH_RESULT=$?
-        N=$(($N+1))
+        ATTEMPTS_NUMBER=$((ATTEMPTS_NUMBER + 1))
     done
     # run test again to trigger clean up in case of failure
     im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname"
