@@ -72,7 +72,7 @@ packer plugins install github.com/hashicorp/qemu
 packer plugins install github.com/hashicorp/ansible
 
 # Image tag is YYYY.MM.DD-short hash
-IMAGE_TAG="$(date "+%Y.%m.%d")-$(echo "$COMMIT_SHA" | cut -c 1-8)"
+IMAGE_TAG="$(date --iso-8601=date)-$(echo "$COMMIT_SHA" | cut -c 1-8)"
 # make it visible for Packer
 export PKR_VAR_image_tag="$IMAGE_TAG"
 
