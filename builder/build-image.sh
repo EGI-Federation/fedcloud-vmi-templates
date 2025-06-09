@@ -108,7 +108,7 @@ if tools/build.sh "$IMAGE"; then
     ATTEMPTS_MAX=5
     ATTEMPTS_NUMBER=0
     IM_SSH_RESULT=1
-    while [[ "$IM_SSH_RESULT" == "1" ]] && [[ "$ATTEMPTS_NUMBER" != "$ATTEMPTS_MAX" ]] ;
+    while [[ "$IM_SSH_RESULT" != "0" ]] && [[ "$ATTEMPTS_NUMBER" != "$ATTEMPTS_MAX" ]] ;
     do
         sleep 30
         # as of im-client >= 1.8.2, bash commands can be sent to a VM via SSH
