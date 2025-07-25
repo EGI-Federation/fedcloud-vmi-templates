@@ -72,6 +72,6 @@ jq . <metadata.json
 
 oras push --annotation-file metadata.json \
 	"$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
-	"$QCOW_FILE" || \
+	"$QCOW_FILE:application/x-qemu-disk" || \
 	oras push  "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
-	"$QCOW_FILE"
+	"$QCOW_FILE:application/x-qemu-disk"
