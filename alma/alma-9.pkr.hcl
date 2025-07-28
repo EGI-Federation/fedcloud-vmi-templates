@@ -68,6 +68,7 @@ build {
     strip_path = true
     custom_data = {
       "org.openstack.glance.os_distro" = "alma"
+      "org.openstack.glance.os_admin_user" = "almalinux"
       "org.openstack.glance.os_version" = "9"
       "org.openstack.glance.os_type" = "linux"
       "org.openstack.glance.architecture" = "x86_64"
