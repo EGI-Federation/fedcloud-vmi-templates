@@ -1,0 +1,5 @@
+fedcloudclient
+simplejson
+yq
+python-hcl2
+IM-client
