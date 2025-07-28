@@ -44,8 +44,6 @@ UPLOAD="$4"
 python3 -m venv "$PWD/.venv"
 export PATH="$PWD/.venv/bin:$PATH"
 pip install -qqq -r builder/requirements.txt
-# This is for debugging 
-pip freeze
 
 # work with IGTF certificates
 # https://fedcloudclient.fedcloud.eu/install.html#installing-egi-core-trust-anchor-certificates
