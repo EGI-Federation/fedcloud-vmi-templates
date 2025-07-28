@@ -6,3 +6,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+
+  # Maintain dependencies for Python requirements.txt
+  - package-ecosystem: "pip"
+    directory: "/builder"
+    schedule:
+      interval: "weekly"
