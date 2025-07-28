@@ -81,7 +81,6 @@ build {
     strip_path = true
     custom_data = {
       "org.openstack.glance.os_distro" = "ubuntu"
-      "fake" = "ubuntu"
       "org.openstack.glance.os_version" = "22.04"
       "org.openstack.glance.os_type" = "linux"
       "org.openstack.glance.architecture" = "x86_64"
