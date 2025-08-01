@@ -76,7 +76,7 @@ build {
 
   provisioner "shell" {
     inline = [
-      "trivy rootfs --scanners vuln,secret --format cyclonedx --output /tmp/sbom.cdx.json",
+      "trivy rootfs --scanners vuln --format cyclonedx --output /tmp/sbom.cdx.json /",
     ]
   }
 
