@@ -1,0 +1,14 @@
+---
+- name: trivy key 
+  ansible.builtin.shell: |
+    curl https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor > /usr/share/keyrings/trivy.gpg 
+
+- name: trivy repo 
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb generic main"
+    state: present
+
+- name: install trivy 
+  ansible.builtin.apt:
+    name: [trivy]
+    state: latest 
