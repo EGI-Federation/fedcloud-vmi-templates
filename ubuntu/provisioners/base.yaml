@@ -2,4 +2,5 @@
   become: true
   roles:
   - cloud-init
+  - trivy
   - cleanup
