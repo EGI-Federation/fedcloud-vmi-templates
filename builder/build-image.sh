@@ -83,9 +83,9 @@ if tools/build.sh "$IMAGE"; then
     # compress the resulting image
     QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
     OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
-    echo "OUTPUT"
-    ls "$OUTPUT_DIR"
-    hcl2tojson "$IMAGE"
+    echo "REMOVE"
+    ls .
+    echo "REMOVE"
     MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
 	            jq -r '.build[0]."post-processor"[0].manifest.output')"
     VM_NAME=$(jq -r '.builds[0]["files"][0]["name"]' <"$MANIFEST_OUTPUT")
