@@ -103,7 +103,12 @@ if tools/build.sh "$IMAGE"; then
     # test step 2/2: use IM-client to launch the test VM
     sed -i -e "s/%TOKEN%/$(cat .oidc_token)/" builder/auth.dat
     sed -i -e "s/%IMAGE%/$IMAGE_ID/" builder/vm.yaml
-    IM_VM=$(im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat create builder/vm.yaml)
+    # taken from https://stackoverflow.com/a/12451419
+    # Get IM output as well in the stdout
+    exec 5>&1
+    IM_VM=$(im_client.py \
+                --rest-url=http://appsgrycap.i3m.upv.es/im-dev \
+                --auth_file=builder/auth.dat create builder/vm.yaml | tee >(cat - >&5))
     IM_INFRA_ID=$(echo "$IM_VM" | awk '/ID/ {print $NF}')
     echo "$IM_INFRA_ID" > /var/tmp/egi/vm_infra_id
     im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat wait "$IM_INFRA_ID"
