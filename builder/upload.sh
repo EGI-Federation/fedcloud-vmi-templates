@@ -50,7 +50,6 @@ jq -n --argjson '$manifest' \
 
 pushd "$OUTPUT_DIR"
 
-
 # Now do the upload to registry
 # tell oras that we have a home
 # otherwise it will fail with
@@ -75,3 +74,14 @@ oras push --annotation-file metadata.json \
 	"$QCOW_FILE:application/x-qemu-disk" || \
 	oras push  "$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
 	"$QCOW_FILE:application/x-qemu-disk"
+
+popd
+
+# SBOM
+pushd"$(dirname "$IMAGE")"
+SBOM_FILE="sbom.cdx.json"
+if [ -f "$SBOM_FILE"]; then
+	oras attach --artifact-type application/vnd.cyclonedx+json \
+	"$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
+	"$SBOM_FILE"
+fi
