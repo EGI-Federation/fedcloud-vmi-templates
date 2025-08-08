@@ -80,7 +80,7 @@ popd
 # SBOM
 pushd"$(dirname "$IMAGE")"
 SBOM_FILE="sbom.cdx.json"
-if [ -f "$SBOM_FILE"]; then
+if [ -f "$SBOM_FILE" ]; then
 	oras attach --artifact-type application/vnd.cyclonedx+json \
 	"$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
 	"$SBOM_FILE"
