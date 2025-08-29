@@ -45,7 +45,7 @@ UPLOAD="$4"
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
 export PATH="$PWD/.venv/bin:$PATH"
-pip install -qqq fedcloudclient simplejson yq python-hcl2 IM-client>=1.8.2
+pip install -qqq -r builder/requirements.txt
 
 # work with IGTF certificates
 # https://fedcloudclient.fedcloud.eu/install.html#installing-egi-core-trust-anchor-certificates
@@ -79,7 +79,7 @@ IMAGE_TAG="$(date --iso-8601=date)-$(echo "$COMMIT_SHA" | cut -c 1-8)"
 export PKR_VAR_image_tag="$IMAGE_TAG"
 
 # do the build
-if tools/build.sh "$IMAGE"; then
+if builder/build.sh "$IMAGE"; then
     # compress the resulting image
     QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
     OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
