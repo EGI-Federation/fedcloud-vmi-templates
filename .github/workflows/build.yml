@@ -111,7 +111,7 @@ jobs:
           {
             echo 'build-log<<BUILDEOF'
             echo "VM is ${{ steps.terraform-vm-id.outputs.stdout }}"
-            cat "${{ steps.terraform-vm-id.outputs.stdout }}"
+            sed -e 's#\$#\\\$#' <"${{ steps.terraform-vm-id.outputs.stdout }}"
             echo "BUILDEOF"
           } >> "$GITHUB_OUTPUT"
           (

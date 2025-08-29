@@ -16,8 +16,9 @@ variable "flavor_id" {
 
 data "openstack_images_image_v2" "ubuntu-24" {
   most_recent = true
+  name_regex  = "ubuntu:24.04"
   properties = {
-    "ad:appid" = "1157"
+    image_list = "egi_vm_images"
   }
 }
 
