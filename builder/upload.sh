@@ -78,7 +78,7 @@ oras push --annotation-file metadata.json \
 popd
 
 # SBOM
-pushd"$(dirname "$IMAGE")"
+pushd "$(dirname "$IMAGE")"
 SBOM_FILE="sbom.cdx.json"
 if [ -f "$SBOM_FILE" ]; then
 	oras attach --artifact-type application/vnd.cyclonedx+json \
