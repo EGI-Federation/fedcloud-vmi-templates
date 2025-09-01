@@ -46,7 +46,7 @@ source "qemu" "datahub_jupyter_ubuntu_22_04" {
   http_port_min             = 8500
   iso_checksum              = "sha256:9bc6028870aef3f74f4e16b900008179e78b130e6b0b9a140635434a46aa98b0"
   iso_url                   = "https://releases.ubuntu.com/jammy/ubuntu-22.04.5-live-server-amd64.iso"
-  memory                    = 1024
+  memory                    = 2048
   qemuargs                  = [["-cpu", "host"]]
   shutdown_command          = "sudo -- sh -c 'rm /etc/sudoers.d/99-egi-installation && shutdown -h now'"
   ssh_clear_authorized_keys = true
