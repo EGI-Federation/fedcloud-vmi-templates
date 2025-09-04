@@ -82,6 +82,6 @@ pushd "$(dirname "$IMAGE")"
 SBOM_FILE="sbom.cdx.json"
 if [ -f "$SBOM_FILE" ]; then
 	oras attach --artifact-type application/vnd.cyclonedx+json \
-	"$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
+	"$REGISTRY/$PROJECT/$REPOSITORY:$LONG_TAG" \
 	"$SBOM_FILE"
 fi
