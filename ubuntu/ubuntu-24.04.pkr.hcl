@@ -46,7 +46,7 @@ source "qemu" "ubuntu_24_04" {
   http_port_min             = 8500
   iso_checksum              = "sha256:c3514bf0056180d09376462a7a1b4f213c1d6e8ea67fae5c25099c6fd3d8274b"
   iso_url                   = "https://releases.ubuntu.com/24.04/ubuntu-24.04.3-live-server-amd64.iso"
-  memory                    = 1024
+  memory                    = 2048
   qemuargs                  = [["-cpu", "host"]]
   shutdown_command          = "sudo -- sh -c 'rm /etc/sudoers.d/99-egi-installation && shutdown -h now'"
   ssh_clear_authorized_keys = true
