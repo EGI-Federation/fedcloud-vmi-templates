@@ -10,10 +10,11 @@ COMMIT_SHA="$2"
 IMAGE_TAG="$3"
 SECRETS="$4"
 
-# Configuration, this may be passed as input
+# Configuration, this may be passed as input if needed
 REGISTRY="registry.egi.eu"
 PROJECT="egi_vm_images"
 SOURCE_URL="https://github.com/EGI-Federation/fedcloud-vmi-templates"
+KEEP_TAGS=4
 
 # get oras
 # See https://oras.land/docs/installation
@@ -85,3 +86,27 @@ if [ -f "$SBOM_FILE" ]; then
 	"$REGISTRY/$PROJECT/$REPOSITORY:$TAG" \
 	"$SBOM_FILE"
 fi
+
+#
+# Clean up old images, keep up to $KEEP_TAGS
+#
+# API call was crafted with the swagger UI
+curl -X "GET" \
+  -u "$(jq -r '.registry_user' "$SECRETS"):$(jq -r '.registry_password' "$SECRETS")" \
+  "https://$REGISTRY/api/v2.0/projects/$PROJECT/$REPOSITORY/artifacts?with_tag=true" \
+  -H 'accept: application/json' > images.json
+
+
+# Get those tags matching the OS_VERSION
+# Sort by pushtime, reverse and skip first $KEEP_TAGS
+# Then just take the tage names
+tags_to_delete=$(jq -r --arg version "$OS_VERSION" \
+  --argjson keep "$KEEP_TAGS" '
+  [.[] | select(.tags[]? | any(.name; startswith($version)))]
+  | sort_by(.push_time) | reverse | .[$keep:] | map(.tags[]|.name)| .[]' images.json)
+
+# Loop over the older tags
+for tag in $tags_to_delete; do
+  echo "Deleting tag: $tag"
+  oras delete "$REGISTRY/$PROJECT/$REPOSITORY:$tag"
+done
