@@ -99,7 +99,7 @@ curl -X "GET" \
 
 # Get those tags matching the OS_VERSION
 # Sort by pushtime, reverse and skip first $KEEP_TAGS
-# Then just take the tage names
+# Then just take the tag names
 tags_to_delete=$(jq -r --arg version "$OS_VERSION" \
   --argjson keep "$KEEP_TAGS" '
   [.[] | select(.tags[]? | any(.name; startswith($version)))]
