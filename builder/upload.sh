@@ -93,7 +93,7 @@ fi
 # API call was crafted with the swagger UI
 curl -X "GET" \
   -u "$(jq -r '.registry_user' "$SECRETS"):$(jq -r '.registry_password' "$SECRETS")" \
-  "https://$REGISTRY/api/v2.0/projects/$PROJECT/$REPOSITORY/artifacts?with_tag=true" \
+  "https://$REGISTRY/api/v2.0/projects/$PROJECT/respositories/$REPOSITORY/artifacts?with_tag=true" \
   -H 'accept: application/json' > images.json
 
 
