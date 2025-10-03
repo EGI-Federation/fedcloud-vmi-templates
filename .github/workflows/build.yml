@@ -95,7 +95,7 @@ jobs:
         uses: nick-fields/retry@v3
         with:
           # this is about 40 minutes
-          max_attempts: 60
+          max_attempts: 65
           retry_wait_seconds: 40
           timeout_minutes: 5
           command: >
