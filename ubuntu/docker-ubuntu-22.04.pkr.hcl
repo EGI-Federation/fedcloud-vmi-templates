@@ -54,8 +54,6 @@ source "qemu" "docker_ubuntu_22_04" {
   ssh_timeout               = "20m"
   ssh_username              = "ubuntu"
   vm_name                   = "Docker.Ubuntu.22.04-${var.image_tag}"
-  vnc_port_max              = 5934
-  vnc_port_min              = 5934
 }
 
 build {
