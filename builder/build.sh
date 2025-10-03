@@ -1,7 +1,7 @@
 #!/bin/bash
 # Takes as argument the json file describing the build for packer
 # e.g. build.sh centos-7.json
-set -e
+set -es nullglob
 
 TEMPLATE_DIR="$(dirname "$1")"
 pushd "$TEMPLATE_DIR"
