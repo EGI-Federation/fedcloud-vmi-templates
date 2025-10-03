@@ -42,7 +42,7 @@ source "qemu" "alma_9" {
   http_port_min             = 8500
   iso_checksum              = "sha256:113521ec7f28aa4ab71ba4e5896719da69a0cc46cf341c4ebbd215877214f661"
   iso_url                   = "https://repo.almalinux.org/almalinux/9/isos/x86_64/AlmaLinux-9.6-x86_64-boot.iso"
-  memory                    = 1024
+  memory                    = 2048
   qemuargs                  = [["-cpu", "host"]]
   shutdown_command          = "shutdown -h now"
   ssh_private_key_file      = "${var.SSH_PRIVATE_KEY_FILE}"

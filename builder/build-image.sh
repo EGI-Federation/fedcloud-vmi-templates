@@ -109,7 +109,7 @@ if builder/build.sh "$IMAGE"; then
           --auth_file=builder/auth.dat create builder/vm.yaml | tee >(cat - >&5))
     IM_INFRA_ID=$(echo "$IM_VM" | awk '/ID/ {print $NF}')
     echo "$IM_INFRA_ID" > /var/tmp/egi/vm_infra_id
-    im_client.py --rest-url="$IM_URL" --auth_file=builder/auth.dat wait "$IM_INFRA_ID"
+    im_client.py --rest-url="$IM_URL" --auth_file=builder/auth.dat wait "$IM_INFRA_ID" 120
     # still getting: ssh: connect to host <> port 22: Connection refused, so waiting a bit more
     ATTEMPTS_MAX=5
     ATTEMPTS_NUMBER=0
@@ -137,9 +137,7 @@ if builder/build.sh "$IMAGE"; then
 
     # All going well, upload the VMI in the registry
     # this should be done only if this is a push to main
-    if test "$UPLOAD" == "true"; then
-	    builder/upload.sh "$IMAGE" "$COMMIT_SHA" "$IMAGE_TAG" "$(realpath secrets.json)"
-    fi
+    builder/upload.sh "$UPLOAD" "$IMAGE" "$COMMIT_SHA" "$IMAGE_TAG" "$(realpath secrets.json)"
     echo "### BUILD-RESULT: $(jq -cn --arg status "SUCCESS" \
             --arg qcow "$QCOW_FILE" '$ARGS.named')"
 else

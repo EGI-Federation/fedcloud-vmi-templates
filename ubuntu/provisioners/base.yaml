@@ -1,6 +1,5 @@
 - hosts: all
   become: true
   roles:
-  - cloud-init
-  - trivy
-  - cleanup
+    - cloud-init
+    - cleanup

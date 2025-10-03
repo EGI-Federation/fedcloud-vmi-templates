@@ -37,7 +37,7 @@ source "qemu" "datahub_jupyter_ubuntu_22_04" {
     "boot",
     "<enter>"
   ]
-  boot_wait                 = "5s"
+  boot_wait                 = "4s"
   disk_size                 = 8000
   format                    = "qcow2"
   headless                  = true

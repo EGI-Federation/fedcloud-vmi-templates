@@ -19,7 +19,7 @@
   copy:
     content: |
       # EGI FedCloud configuration
-      
+
       # Make sure to disable ssh password authentication
       ssh_pwauth: 0
       # Regenerate keys
