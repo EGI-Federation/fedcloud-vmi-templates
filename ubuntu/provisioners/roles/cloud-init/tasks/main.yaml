@@ -1,8 +1,8 @@
 ---
-- name: install cloud-init and extra packages 
+- name: install cloud-init and extra packages
   apt:
     name: [cloud-init, curl]
-    state: latest 
+    state: latest
 
 - name: distro specific cloud-init mods
   include_tasks: cloud-init-{{ansible_distribution_release }}.yaml
@@ -11,7 +11,7 @@
   copy:
     content: |
       # EGI FedCloud configuration
-      
+
       # Make sure to disable ssh password authentication
       ssh_pwauth: 0
 

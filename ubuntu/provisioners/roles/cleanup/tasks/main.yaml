@@ -63,6 +63,22 @@
     - "/var/lib/systemd/credential.secret"
     - "/etc/machine-info"
 
+- name: Find temporary files
+  find:
+    file_type: any
+    paths:
+      - /tmp
+      - /var/tmp
+    patterns: '*'
+  register: tmp_files
+
+- name: Remove temporary files
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ tmp_files.files }}"
+  loop_control:
+    label: "{{ item.path }}"
 
 - name: keep apt-get working
   command: apt-get clean

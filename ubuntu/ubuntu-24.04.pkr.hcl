@@ -75,18 +75,6 @@ build {
   }
 
   provisioner "shell" {
-    inline = [
-      "trivy rootfs --quiet --scanners vuln --format cyclonedx --output /tmp/sbom.cdx.json /",
-    ]
-  }
-
-  provisioner "file" {
-    source = "/tmp/sbom.cdx.json"
-    destination = "sbom.cdx.json"
-    direction = "download"
-  }
-
-  provisioner "shell" {
     script = "provisioners/cleanup.sh"
   }
 
