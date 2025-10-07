@@ -140,7 +140,9 @@ if test "$DO_UPLOAD" == "true"; then
 	# Loop over the older tags
 	for tag in $tags_to_delete; do
 		echo "Deleting tag: $tag"
-		oras delete "$REGISTRY/$PROJECT/$REPOSITORY:$tag"
+		curl -X "DELETE" \
+		  -u "$(jq -r '.registry_user' "$SECRETS"):$(jq -r '.registry_password' "$SECRETS")" \
+		  "https://$REGISTRY/api/v2.0/projects/$PROJECT/repositories/$REPOSITORY/artifacts/$tag"
 	done
 else
 	echo "Skipping deletion of older images"
