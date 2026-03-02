@@ -35,8 +35,6 @@ jobs:
           pip install yq simplejson fedcloudclient
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v4
-        with:
-          terraform_version: 1.2.9
       - name: Terraform Format
         id: fmt
         run: |
