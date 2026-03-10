@@ -54,7 +54,7 @@ See sample build output:
 $ cd fedcloud-vmi-templates/ubuntu
 $ export PACKER_LOG=1
 $ export PACKER_LOG_PATH=packer.log
-$ sudo --preserve-env ../tools/build.sh ubuntu-20.04.pkr.hcl
+$ sudo --preserve-env ../builder/build.sh ubuntu-22.04.pkr.hcl
 Generating public/private ed25519 key pair.
 Your identification has been saved in /tmp/tmp.isFiNAk2AM/key
 Your public key has been saved in /tmp/tmp.isFiNAk2AM/key.pub
