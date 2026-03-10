@@ -40,8 +40,8 @@ source "qemu" "alma_9" {
   http_directory            = "httpdir"
   http_port_max             = 8550
   http_port_min             = 8500
-  iso_checksum              = "sha256:113521ec7f28aa4ab71ba4e5896719da69a0cc46cf341c4ebbd215877214f661"
-  iso_url                   = "https://repo.almalinux.org/almalinux/9/isos/x86_64/AlmaLinux-9.6-x86_64-boot.iso"
+  iso_checksum              = "sha256:494d09f608b325ef42899b5ce38ba1b17755a639f5558b9b98a031b0696e694a"
+  iso_url                   = "https://repo.almalinux.org/almalinux/9/isos/x86_64/AlmaLinux-9.7-x86_64-boot.iso"
   memory                    = 2048
   qemuargs                  = [["-cpu", "host"]]
   shutdown_command          = "shutdown -h now"
