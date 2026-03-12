@@ -45,7 +45,7 @@ UPLOAD="$4"
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
 export PATH="$PWD/.venv/bin:$PATH"
-pip install -qqq -r builder/requirements.txt
+pip install -r builder/requirements.txt
 
 # work with IGTF certificates
 # https://fedcloudclient.fedcloud.eu/install.html#installing-egi-core-trust-anchor-certificates
