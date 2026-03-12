@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-IM_URL="https://appsgrycap.i3m.upv.es/im-dev"
+IM_URL="https://im.egi.eu/im"
 
 error_handler() {
 
