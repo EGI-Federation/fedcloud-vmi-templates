@@ -122,14 +122,14 @@ if builder/build.sh "$IMAGE"; then
         # do pay attention to the "0" parameter, it corresponds to the "show_only" flag
         # "0" means run command
         # "1" means show command
-        im_client --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname" && \
+        im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname" && \
 		IM_SSH_RESULT=0 || \
 		echo "SSH failed, but keep trying"
         # note that we could replace the "hostname" command for something more complicated/meaningful
         ATTEMPTS_NUMBER=$((ATTEMPTS_NUMBER + 1))
     done
     # run test again to trigger clean up in case of failure
-    im_client --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname"
+    im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname"
     # delete test VM
     im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat destroy "$IM_INFRA_ID"
     # delete test VMI
