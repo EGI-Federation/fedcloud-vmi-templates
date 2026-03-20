@@ -19,7 +19,7 @@ error_handler() {
         im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat getcontmsg "$IM_INFRA_ID"
         im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat getstate "$IM_INFRA_ID"
         # delete test VM
-        im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat destroy "$IM_INFRA_ID"
+        im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat destroy "$IM_INFRA_ID" --yes
     fi
 
     LINE="$1"
@@ -131,7 +131,7 @@ if builder/build.sh "$IMAGE"; then
     # run test again to trigger clean up in case of failure
     im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname"
     # delete test VM
-    im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat destroy "$IM_INFRA_ID"
+    im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat destroy "$IM_INFRA_ID" --yes
     # delete test VMI
     openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
 
