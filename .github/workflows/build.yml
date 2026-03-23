@@ -90,7 +90,7 @@ jobs:
           cd builder
           ./refresh.sh cloud.egi.eu "$REFRESH_TOKEN" backend
       - name: Get the status file from swift
-        uses: nick-fields/retry@v3
+        uses: nick-fields/retry@v4
         with:
           # this is about 40 minutes
           max_attempts: 65
