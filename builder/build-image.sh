@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-IM_URL="https://appsgrycap.i3m.upv.es/im-dev"
+IM_URL="https://im.egi.eu/im"
 
 error_handler() {
 
@@ -16,10 +16,10 @@ error_handler() {
     if [[ -s /var/tmp/egi/vm_infra_id ]] ; then
         IM_INFRA_ID=$(cat /var/tmp/egi/vm_infra_id)
         # print out extra information about deployment
-        im_client.py --rest-url="$IM_URL" --auth_file=builder/auth.dat getcontmsg "$IM_INFRA_ID"
-        im_client.py --rest-url="$IM_URL" --auth_file=builder/auth.dat getstate "$IM_INFRA_ID"
+        im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat getcontmsg "$IM_INFRA_ID"
+        im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat getstate "$IM_INFRA_ID"
         # delete test VM
-        im_client.py --rest-url="$IM_URL" --auth_file=builder/auth.dat destroy "$IM_INFRA_ID"
+        im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat destroy "$IM_INFRA_ID" --yes
     fi
 
     LINE="$1"
@@ -45,7 +45,7 @@ UPLOAD="$4"
 # create a virtual env for fedcloudclient
 python3 -m venv "$PWD/.venv"
 export PATH="$PWD/.venv/bin:$PATH"
-pip install -qqq -r builder/requirements.txt
+pip install -r builder/requirements.txt
 
 # work with IGTF certificates
 # https://fedcloudclient.fedcloud.eu/install.html#installing-egi-core-trust-anchor-certificates
@@ -105,11 +105,11 @@ if builder/build.sh "$IMAGE"; then
     # taken from https://stackoverflow.com/a/12451419
     # Get IM output as well in the stdout
     exec 5>&1
-    IM_VM=$(im_client.py --rest-url="$IM_URL" \
+    IM_VM=$(im_client --rest-url="$IM_URL" \
           --auth_file=builder/auth.dat create builder/vm.yaml | tee >(cat - >&5))
     IM_INFRA_ID=$(echo "$IM_VM" | awk '/ID/ {print $NF}')
     echo "$IM_INFRA_ID" > /var/tmp/egi/vm_infra_id
-    im_client.py --rest-url="$IM_URL" --auth_file=builder/auth.dat wait "$IM_INFRA_ID" 120
+    im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat wait "$IM_INFRA_ID" 120
     # still getting: ssh: connect to host <> port 22: Connection refused, so waiting a bit more
     ATTEMPTS_MAX=5
     ATTEMPTS_NUMBER=0
@@ -122,16 +122,16 @@ if builder/build.sh "$IMAGE"; then
         # do pay attention to the "0" parameter, it corresponds to the "show_only" flag
         # "0" means run command
         # "1" means show command
-        im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname" && \
+        im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname" && \
 		IM_SSH_RESULT=0 || \
 		echo "SSH failed, but keep trying"
         # note that we could replace the "hostname" command for something more complicated/meaningful
         ATTEMPTS_NUMBER=$((ATTEMPTS_NUMBER + 1))
     done
     # run test again to trigger clean up in case of failure
-    im_client.py --rest-url=http://appsgrycap.i3m.upv.es/im-dev --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname"
+    im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat ssh "$IM_INFRA_ID" 0 "hostname"
     # delete test VM
-    im_client.py --rest-url="$IM_URL" --auth_file=builder/auth.dat destroy "$IM_INFRA_ID"
+    im_client --rest-url="$IM_URL" --auth_file=builder/auth.dat destroy "$IM_INFRA_ID" --yes
     # delete test VMI
     openstack --os-cloud tests --os-token "$OS_TOKEN" image delete "$IMAGE_ID"
 
