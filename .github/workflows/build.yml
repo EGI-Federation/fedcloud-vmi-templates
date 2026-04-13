@@ -119,7 +119,7 @@ jobs:
           ) | cut -f2- -d":" > outcome.json
           echo "outcome=$(jq -r .status < outcome.json)" >> "$GITHUB_OUTPUT"
       - name: Update PR with build status
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
