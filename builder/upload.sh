@@ -26,10 +26,10 @@ mkdir -p oras-install/
 tar -zxf oras_${ORAS_VERSION}_*.tar.gz -C oras-install/
 export PATH="$PWD/oras-install:$PATH"
 
-QEMU_SOURCE_ID=$(hcl2tojson "$IMAGE" | jq -r '.source[0].qemu | keys[]')
+QEMU_SOURCE_ID=$(hcl2tojson --strip-string-quotes "$IMAGE" | jq -r '.source[0].qemu | keys[]')
 OUTPUT_DIR="$(dirname "$IMAGE")/output-$QEMU_SOURCE_ID"
 
-MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson "$IMAGE" | \
+MANIFEST_OUTPUT="$(dirname "$IMAGE")/$(hcl2tojson --strip-string-quotes "$IMAGE" | \
         jq -r '.build[0]."post-processor"[0].manifest.output')"
 
 VM_NAME=$(jq -r '.builds[0]["files"][0]["name"]' <"$MANIFEST_OUTPUT")
