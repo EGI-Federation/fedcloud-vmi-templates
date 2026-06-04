@@ -37,7 +37,7 @@ source "qemu" "ubuntu_26_04" {
     "boot",
     "<enter>"
   ]
-  boot_wait                 = "6s"
+  boot_wait                 = "5s"
   disk_size                 = 8000
   format                    = "qcow2"
   headless                  = true

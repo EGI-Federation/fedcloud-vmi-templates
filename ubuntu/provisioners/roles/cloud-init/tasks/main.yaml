@@ -4,8 +4,16 @@
     name: [cloud-init, curl]
     state: latest
 
-- name: distro specific cloud-init mods
-  include_tasks: cloud-init-{{ansible_distribution_release }}.yaml
+- name: Include distro-specific cloud-init mods (with fallback)
+  include_tasks: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - "cloud-init-{{ ansible_distribution_release }}.yaml"
+        - "cloud-init-default.yaml"
+      paths:
+        - "{{ role_path }}/tasks"
+
 
 - name: Create fedcloud config
   copy:
