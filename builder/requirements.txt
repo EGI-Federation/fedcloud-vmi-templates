@@ -2,4 +2,4 @@ fedcloudclient==1.4.7
 im-client==1.8.4
 python-hcl2==8.1.4
 simplejson==4.2.0
-yq==4.4.0
+yq==4.4.5
